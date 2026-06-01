@@ -1,0 +1,6 @@
+These SFXs (Sound Effects) will surely also be in the Front End, in the Unity project.
+
+If we still put our SFXs in this folder and not only in the Unity project's Assets folder.
+It's because it will contain only the final SFXs, not all created during this project.
+
+So, to keep a history of all SFX created, we will put them in this folder.
