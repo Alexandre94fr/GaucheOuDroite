@@ -1,0 +1,73 @@
+Ce bloc-note contient un résumé de ce que le projet sera.
+Il contiendra les features principales, et l'idée générale du projet.
+
+=====================================================================
+
+Idée générale :
+---------------
+
+Actuellement je passe le permis de conduire.
+Pendant mes heures de conduite j'ai pu constater que j'avais encore beaucoup de mal à rapidement savoir où était la gauche ou la droite.
+
+Ça a donné lieu à de quelques moments dangereux sur la route, où je me suis diriger dans la mauvaise direction, car j'avais confondu ma gauche et ma droite.
+
+Il faut savoir que j'ai un moyen mnémotechnique pour savoir où est la gauche et la droite.
+J'imagine une carte de l'Europe et me dit qu'à gauche c'est l'Ouest et à droite l'Est.
+Cependant cette stratégie prend trop de temps par rapport aux standards de la route.
+
+Par conséquent depuis quelques temps, j'essaie de m'entrainer à très rapidement identifier ma gauche et ma droite.
+Cependant ce n'est pas encore suffisant.
+
+
+Au vu de mon futur passage de l'épreuve de CDA (Concepteur Développeur d'Application), j'ai décidé de mêler l'utile à l'agréable.
+Je vais créer une application validant les compétences requise pour l'obtention de mon diplôme CDA en plus de régler mon problème de gauche et de droite.
+L'application aura pour but d'apprendre à très rapidement identifier la gauche et la droite.
+
+L'application va se présenter un peu sous la forme d'un jeu dynamique avec différents niveaux, plus les niveau avanceront, plus il faudra répondre rapidement à quelle direction correspond la gauche ou la droite.
+Selon les performances du joueur (vitesse pour répondre + le moins d'erreur possible), il aura validé le niveau avec 1, 2 ou 3 étoiles (conversion d'un score en point en étoile).
+
+Pour répondre au demande du CDA, l'application aura un système de création et de connexion de compte.
+La progression du joueur sera alors sauvegardée dans une base de données.
+
+---------------------------------------------------------------------
+
+Features :
+----------
+
+NOTE : Ici on liste juste les features en surface, toutes les détails / features techniques qui permettront de mettre en place les features, se fera ailleurs.
+
+- Création d'un compte (via pseudo + mot de passe)
+- Connexion à un compte existant (via pseudo + mot de passe)
+- Pouvoir supprimer son compte et donc ses données (bonne idée pour respecter la RGPD)
+
+- Sauvegarde de la progression du joueur (niveaux complétés, score)
+- Récupération de la progression du joueur (niveaux complétés, score)
+
+- Système de niveau :
+- - Récupération des données concernant X niveau (temps maximal entre chaque réponse, liste de réponse gauche ou droite dans l'ordre d'apparition)
+
+- - Détection des inputs du joueur :
+- - - Répondre gauche : Pression Q, Pression flèche directionnel gauche, Cliquer sur le UI en forme de flèche à gauche
+- - - Répondre droite : Pression D, Pression flèche directionnel droit, Cliquer sur le UI en forme de flèche à droite
+
+- - Système gameplay :
+- - - Détecte les inputs du joueur et agit en conséquence
+
+- - Menu pause
+- - - Permet de recommencer rapidement le niveau
+- - - Permet de quitter le niveau (retour au menu principal [choix de niveau])
+
+---------------------------------------------------------------------
+
+Features optionnelles :
+-----------------------
+
+- Avoir un niveau infini, il choisi aléatoirement une direction (gauche ou droite), plus le temps passe, plus le temps pour répondre diminue jusqu'à arriver à un minimum.
+Le niveau s'arrête quand le joueur échoue à répondre correctement à une direction.
+Le score de ce niveau se fait en point pas en étoile, il affichera aussi le record de réponse réussi d'affilées.
+
+- Essayer de distraire / déconcentrer le joueur pendant le niveau.
+
+- Faire que le UI en forme de flèche ne spawn pas toujours à l'exact même endroit sur l'écran (exemple : pas tout le temps au centre gauche, ou centre droit).
+
+---------------------------------------------------------------------

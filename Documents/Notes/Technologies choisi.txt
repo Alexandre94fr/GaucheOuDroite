@@ -1,0 +1,52 @@
+Ce bloc-note contient les technologies utilisées (ou qui ont prévu d'être utilisées) pour produire ce projet / application.
+
+===========================================================================================================================
+
+Technologies utilisées :
+------------------------
+
+FRONT :
+- Unity
+- C#
+
+BACKEND :
+- ASP.NET Core Web API
+
+BDD :
+- SQLite
+
+ORM (Mapping objet-relationnel, l'API entre le FRONT et le BACKEND) :
+- Entity Framework Core
+
+AUTH :
+- JWT (JSON Web Token)
+
+VERSIONNING :
+- GitHub (GitHub Desktop)
+
+DEPLOIEMENT :
+- En localhost (les données seront sauvegardées de manière persistantes via SQLite, via le fichier DataBase.sqlite)
+
+DOCKER (OPTIONNEL, à faire quand le projet sera completement fonctionnel, si il reste encore du temps) :
+- Dockerfile
+- Docker Compose
+
+---------------------------------------------------------------------
+
+Questions :
+-----------
+
+Pourquoi Unity ?
+Unity a été choisi car le projet possède une forte composante interactive et temps réel, et car cette technologie permet un développement rapide du gameplay.
+
+Pourquoi ASP.NET Core ?
+ASP.NET Core a été choisi afin de conserver un environnement 100% C#, simplifiant le développement et réduisant le coût d’apprentissage des technologies backend.
+
+Pourquoi SQLite ?
+SQLite a été choisi afin de réduire la complexité d’installation et de configuration du projet dans un contexte de temps limité, tout en conservant une base de données relationnelle SQL suffisante pour les besoins fonctionnels de l’application et les demandes du CDA.
+
+Pourquoi l'API REST ?
+L'API REST permet une séparation claire entre frontend et backend dans une architecture multicouche.
+
+Pourquoi Localhost ?
+Étant donné que je n'ai que 2 semaines (7 jours ouvrés) pour créer le projet de toute pièce, il faut que je limite le plus possible les éléments complexes qui pourraient me ralentir voir m'empêcher de finir le projet dans les temps.

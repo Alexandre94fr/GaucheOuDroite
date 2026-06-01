@@ -1,0 +1,10 @@
+Ce bloc-note contient des informations intéressantes / utilisables plus tard.
+Pratique quand on ne veut pas oublier quelque chose.
+
+=====================================================================
+
+- Pour faire des tests sur le back-end, voir : Postman
+
+- Faire un Wireframe pour les UI du jeu
+
+- IL FAUT VRAIMENT QUE JE REVISE LES MÉTHODES AGILES : https://blog-gestion-de-projet.com/gestion-de-projet/outils-methodes-gestion-projet/

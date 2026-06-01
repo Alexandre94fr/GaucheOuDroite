@@ -1,0 +1,91 @@
+Ce bloc-note contient une liste, la plus exhaustive possible,
+des tâches qui seront à faire durant le développement du projet.
+
+Les tâches seront découpées en plusieurs catégories.
+
+================================================================
+
+GAMEPLAY :
+----------
+
+
+Selection de niveau :
+- - - - - - - - - - -
+
+- [CODE] Implémenter le système de selection de niveau
+- [CODE] Implémenter le système de déconnection de compte (utilise peut-être l'API)
+- [CODE] Implémenter le système de suppression de compte (utilise l'API)
+
+- [UI + CODE] Implémenter le bouton de selection de niveau :
+
+- - Implémenter les systèmes qui permettent de modifier le UI d'un sélecteur de niveau selon des valeurs (viendront de la BDD) :
+- - - NOTE : Il faut que chaque UI en jeu est un ID associé, il doit être le même dans la BDD.
+             C'est grâce à ça que les bonnes valeurs seront envoyé au bon sélecteur de niveau.
+- - - Changement de sprite + couleur des stars
+- - - Changement du texte de score
+- - - Changement du texte de nom du niveau
+- - - Changement du texte + couleur de la difficulté du niveau
+
+
+
+- Implémenter le système de point de score :
+- - Lorsqu'on lance une Scene (pour jouer à un niveau), un ScoreManager va être créé, c'est 
+
+
+
+Niveau :
+- - - - 
+
+Score :
+- - - -
+
+Pause :
+- - - -
+
+Fin de niveau fin / partie :
+- - - - - - - - - - - - - -
+
+
+AUTHENTIFICATION :
+------------------
+
+
+API :
+-----
+
+
+BASE DE DONNÉES :
+-----------------
+
+- [PUR CODE] Implémenter la BDD afin qu'elle contienne toutes les données nécessaire au jeu :
+
+- - Users :
+- - - Id
+- - - Username
+- - - PasswordHash
+
+- - Levels :
+- - - Id
+- - - Name
+- - - Difficulty
+- - - MaxResponseTimeInSeconds
+- - - IsInfinite
+- - - ResponseSequence (stocké sous la forme d'une chaine de caractère : 'LRLRRLLL', L = Left, R = Right )
+- - - Star1MinimumScore
+- - - Star2MinimumScore
+- - - Star3MinimumScore
+
+- - UserProgressions
+- - - Id
+- - - UserId
+- - - LevelId
+- - - IsUnlocked
+- - - BestScore (la valeur d'étoile (Stars) est calculé par le client)
+
+
+
+
+
+
+
+

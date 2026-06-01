@@ -1,0 +1,280 @@
+Ce bloc-note liste les features / compétences requises pour obtenir le CDA.
+
+===========================================================================
+
+1. GESTION DE PROJET
+
+À implémenter :
+- Définition du besoin utilisateur
+- Cahier des charges simplifié
+- Backlog des fonctionnalités
+- Planning de développement
+- Découpage des tâches
+- Gestion des priorités
+- Dépôt GitHub
+
+2. ANALYSE ET CONCEPTION
+
+À produire :
+- Diagramme de cas d’utilisation
+- Diagramme de classes
+- Diagramme de séquence
+- Architecture multicouche
+- MCD / MLD de la base de données
+- Wireframes / maquettes UI
+- Description des règles métier
+
+3. ARCHITECTURE LOGICIELLE MULTICOUCHE
+
+Frontend Unity :
+- Couche UI
+- Menus
+- Boutons
+- Affichage score
+- Affichage timer
+- Pause
+
+Couche Gameplay :
+- Gestion des niveaux
+- Validation réponses
+- Calcul score
+- Calcul étoiles
+- Gestion timer
+
+Couche Services :
+- Communication API
+- Gestion authentification
+- Gestion sauvegarde
+
+Couche Models :
+- User
+- Score
+- Progression
+- LevelData
+
+Backend ASP.NET :
+- Controllers
+- AuthController
+- ProgressionController
+- ScoreController
+
+Services :
+- AuthService
+- ProgressionService
+- ScoreService
+
+Repositories :
+- UserRepository
+- ProgressionRepository
+- ScoreRepository
+
+Database :
+- SQLite
+- Entity Framework
+
+4. BASE DE DONNÉE (BDD)
+
+Tables minimales
+
+Users :
+- Id
+- Username
+- PasswordHash
+
+Levels :
+- Id
+- MaxResponseTime
+- ResponseSequence (stocké sous la forme d'une chaine de caractère : 'LRLRRLLL', L = Left, R = Right )
+
+Progressions
+- UserId
+- LevelId
+- IsUnlocked
+- BestScore
+Note : La valeur d'étoile (Stars) est calculé par le client.
+
+5. AUTHENTIFICATION
+
+À implémenter :
+- Création de compte
+- Vérification pseudo existant
+- Hash mot de passe
+
+Connexion :
+- Vérification identifiants
+- Génération token JWT
+
+Suppression de compte
+- Suppression données utilisateur
+- Suppression progression
+
+6. SÉCURITÉ
+
+Obligatoire CDA
+
+À implémenter :
+- Hash mot de passe
+- Validation des inputs
+- Validation des données envoyées au serveur :
+- - pseudo vide
+- - mot de passe trop court
+- - score invalide
+- Gestion erreurs serveur
+- - Catch les erreurs, et les logs afin de faciliter de debugging
+- Vérification accès utilisateur
+- Variables d’environnement
+- Pas de mot de passe en clair
+- Protection routes API
+- Protection anti-injection de code
+
+7. GAMEPLAY
+
+À implémenter :
+- Système de niveau
+- Liste directions
+- Temps limite
+- Détection erreur
+
+Inputs :
+- Touche Q
+- Touche D
+- Flèches clavier
+- Boutons UI
+
+Score :
+- Temps de réponse
+- Erreurs
+- Conversion étoiles
+
+Progression :
+- Déblocage niveau
+- Sauvegarde score
+
+Pause :
+- Logique de la pause
+- Reprendre
+- Recommencer
+- Quitter
+
+8. COMMUNICATION FRONT <-> BACK
+
+API REST
+
+Routes minimales :
+- Auth
+- POST /register
+- POST /login
+- DELETE /account
+
+Progression :
+- GET /progression
+- POST /progression
+
+Score :
+- POST /score
+
+9. TESTS
+
+Tests backend :
+- Création compte
+- Connexion
+- Sauvegarde progression
+
+Tests gameplay :
+- Validation score
+- Validation étoiles
+- Validation input joueur
+
+Plan de tests :
+- Cas nominal
+- Cas erreur
+- Résultat attendu
+
+10. DOCUMENTATION TECHNIQUE
+
+README :
+- Installation
+- Lancement projet
+- Architecture
+- Technologies utilisées
+
+Documentation API
+- Endpoints
+- Paramètres
+- Réponses
+
+Documentation technique
+- Structure projet
+- Explication couches
+- Explication BDD
+
+11. DÉPLOIEMENT
+
+Minimum acceptable CDA
+
+À implémenter :
+- Dockerfile backend (voir si il y a pas autre chose / mieux pour le déploiement)
+- Docker Compose
+- Variables environnement
+
+12. VERSIONNING
+
+GitHub
+
+À montrer :
+- Commits réguliers
+- Messages propres
+- Historique projet
+
+13. ACCESSIBILITÉ / QUALITÉ
+
+À montrer :
+- UI
+- Lisibilité
+- Contraste correct
+- Interface claire
+
+Code :
+- Commentaires utiles
+- Nommage cohérent
+- Architecture propre
+- Possibilité d'afficher toutes les actions faites via des logs (très utile pour le debugging), c'est option est activable / désactivable pour chaque script / objet.
+- Évitage au maximal de créer des erreurs, si une erreurs est détectée, elle doit être converti en warning, et doit permettre au reste du code de continuer son exécution. 
+
+14. COMPÉTENCES CDA "INVISIBLE" MAIS IMPORTANTES
+
+Dois pouvoir expliquer
+
+Pourquoi :
+- SQLite
+- Unity
+- API REST (REpresentational State Transfer, voir https://www.redhat.com/fr/topics/api/what-is-a-rest-api)
+- Architecture multicouche
+- JWT
+- Entity Framework
+
+Ne fais PAS faire :
+- microservices,
+- cloud,
+- Kubernetes,
+- architecture complexe,
+- système temps réel,
+- leaderboard online,
+- websocket,
+- multijoueur.
+
+Objectif réel
+
+PAS : faire un excellent jeu
+MAIS : prouver que j'ai les compétences du référentiel CDA avec un projet suffisamment propre.
+
+Ce que le jury va probablement aimer à propos du projet
+
+- problème réel
+- motivation personnelle
+- application concrète
+- gameplay simple
+- scope raisonnable
+- sujet facile à comprendre
+
+Il faut donc le mettre en avant dans la présentation écrite et orale.

@@ -1,0 +1,34 @@
+GitHub documentation :
+======================
+
+⤵️.. = Merge d'une branche, un deuxième émoji suis le premier, il dit le sujet de la branche.
+
+
+📗 = Création / modification de documentation
+📙 = Création / modification de préset de template de script
+
+🔧 = Fix de bug / modification légère 
+🎫 = Renommage de variable / objet / autres
+➡️ = Déplacement de fichier 
+📂 = Création d'un dossier de fichier (pour l'instant vide)
+
+📊 = Création / modification de statistiques / propriétés / attributs / autres
+
+📡 = Ajout de RemoteEvent / Signal / autres events
+
+📜 = Ajout / implémentation de nouveau script (globalement de logique)
+📃 = Création / modification d'enum 
+📑 = Création / modification d'un type
+📱 = Ajout / implémentation de nouveau script (UIs)
+🎮 = Ajout / implémentation de nouveau script (input joueur)
+🏃 = Ajout / implémentation de nouveau script (logique de mouvement de joueur)
+
+✅ = Unit test
+
+🔨 = Création d'un tool
+📦 = Création d'une Build / ajout d'un package externe au projet
+
+🔁 = Synchronisation des Roblox et des ficher sur l'ordinateur
+‼️ = Information importante à dire via commit
+
+🔰 = Commits de début de projet
