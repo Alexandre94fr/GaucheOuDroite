@@ -18,10 +18,32 @@ public class InputsReceiver : MonoBehaviour
         if (IsDebugModeOn)
             Debug.Log("DEBUG: DirectionChoice input pressed.");
 
-        //var e = p_callbackContext.ReadValue<Single>();
-        // The ReadValue<Single>() will return -1 or 1
+        // The ReadValue<Single>() should return -1 or 1
+        float directionNumber = p_callbackContext.ReadValue<Single>();
+        
+        // Converting the 'directionNumber' into a boolean
+        bool isChoosenDirectionRight = true;
 
-        // TODO: Must fire the OnDirectionChoice Action
+        if (directionNumber == -1)
+        {
+            isChoosenDirectionRight = false;
+        }
+        else if (directionNumber == 1)
+        {
+            isChoosenDirectionRight = true;
+        }
+        else
+        {
+            Debug.LogWarning($"WARNING: Received a direction number not equal to -1 or 1, got: '{directionNumber}'. Returning");
+            return;
+        }
+
+
+        // Firing the Event
+        if (IsDebugModeOn)
+            Debug.Log($"DEBUG: Trying firing the OnDirectionChoiceInputEvent: EventHandler.OnDirectionChoiceInputEvent?.Invoke({isChoosenDirectionRight}).");
+
+        EventHandler.OnDirectionChoiceInputEvent?.Invoke(isChoosenDirectionRight);
     }
 
     public void OnPauseInput(InputAction.CallbackContext p_callbackContext)
@@ -35,6 +57,11 @@ public class InputsReceiver : MonoBehaviour
         if (IsDebugModeOn)
             Debug.Log("DEBUG: Pause input pressed.");
 
-        // TODO: Must fire the OnPause Action
+
+        // Firing the Event
+        if (IsDebugModeOn)
+            Debug.Log($"DEBUG: Trying firing the OnPauseInputEvent: EventHandler.OnPauseInputEvent?.Invoke().");
+
+        EventHandler.OnPauseInputEvent?.Invoke();
     }
 }
