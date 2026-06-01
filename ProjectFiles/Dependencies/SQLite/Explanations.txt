@@ -1,0 +1,11 @@
+These dependencies are not fully required.
+
+The reason why there are here is because of the SQLite pluging on Visual Studio Code.
+This plugin is somewhat buggy, doing a query like that:
+'ALTER TABLE Recipes DROP Title;'
+Cause a syntax error, saying that the DROP key word doesn't exist (which is false).
+
+To fix that, the plugin developer said in the official documentation of the plugin, we can download the SQLite files from the official SQLite site.
+And path down the path of the 'sqlite3.exe' file in the User parameter.
+
+Doing this fixes the bug; however, doing this also creates a bug that (with the plugin) makes the SQLite Explorer unusable.
