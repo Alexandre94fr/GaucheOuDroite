@@ -19,13 +19,13 @@ GitHub documentation :
 📜 = Ajout / implémentation de nouveau script (globalement de logique)
 📃 = Création / modification d'enum 
 📑 = Création / modification d'un type
-📱 = Ajout / implémentation de nouveau script (UIs)
 🎮 = Ajout / implémentation de nouveau script (input joueur)
 🏃 = Ajout / implémentation de nouveau script (logique de mouvement de joueur)
 
 🎴 = Ajout / modification d'un ou plusieurs Assets graphiques
 🎼 = Ajout / modification d'un ou plusieurs Assets sonores
 
+📱 = Ajout / modification d'un ou plusieurs UIs ou scripts liés à un ou plusieurs UIs
 🌄 = Ajout / modification d'une ou plusieurs Scenes
 
 ✅ = Unit test
