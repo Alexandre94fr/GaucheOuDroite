@@ -812,6 +812,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 888107794}
     m_Modifications:
+    - target: {fileID: 16194029937354004, guid: 184c28a3abf5d304eb09b7984d6ecfa2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: LogInMenu
+      objectReference: {fileID: 0}
     - target: {fileID: 1085393298581179657, guid: 184c28a3abf5d304eb09b7984d6ecfa2, type: 3}
       propertyPath: m_Name
       value: SignUp
@@ -851,6 +855,10 @@ PrefabInstance:
     - target: {fileID: 4148046144472626907, guid: 184c28a3abf5d304eb09b7984d6ecfa2, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -17.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320541451340836868, guid: 184c28a3abf5d304eb09b7984d6ecfa2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7399501517028219767, guid: 184c28a3abf5d304eb09b7984d6ecfa2, type: 3}
       propertyPath: m_Pivot.x
