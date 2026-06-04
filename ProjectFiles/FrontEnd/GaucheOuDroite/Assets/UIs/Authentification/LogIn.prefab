@@ -12,6 +12,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Se connecter
       objectReference: {fileID: 0}
+    - target: {fileID: 1532935535681493007, guid: ff0cbc1393701844a991f18fe5b66f3e, type: 3}
+      propertyPath: _doesSignUp
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1532935535681493007, guid: ff0cbc1393701844a991f18fe5b66f3e, type: 3}
+      propertyPath: _authenticationMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1801031777405605861, guid: ff0cbc1393701844a991f18fe5b66f3e, type: 3}
       propertyPath: m_text
       value: Inscrivez-vous
@@ -158,6 +166,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5236496413182055793, guid: ff0cbc1393701844a991f18fe5b66f3e, type: 3}
       propertyPath: m_ChildForceExpandWidth
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6723023635146130116, guid: ff0cbc1393701844a991f18fe5b66f3e, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8288765439359252210, guid: ff0cbc1393701844a991f18fe5b66f3e, type: 3}
