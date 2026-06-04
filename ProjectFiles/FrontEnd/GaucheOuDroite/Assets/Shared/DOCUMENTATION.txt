@@ -1,0 +1,23 @@
+DOCUMENTATION:
+==============
+
+If you add new files or folders inside the Shared folder, it will update the Unity version of Shared.
+
+Here is how to create the link:
+
+1.
+Start the CDM (console command) in Admin mode
+
+2.
+mklink /j "C:\Mes jeux\Projet CDA\GaucheOuDroite\ProjectFiles\FrontEnd\GaucheOuDroite\Assets\Shared" "C:\Mes jeux\Projet CDA\GaucheOuDroite\ProjectFiles\Shared"
+
+OR
+
+mklink /d "C:\Mes jeux\Projet CDA\GaucheOuDroite\ProjectFiles\FrontEnd\GaucheOuDroite\Assets\Shared" "C:\Mes jeux\Projet CDA\GaucheOuDroite\ProjectFiles\Shared"
+
+
+Annexe:
+If you want to cancel the link, you need to delete the folders.
+
+Official documentation:
+https://learn.microsoft.com/fr-fr/windows-server/administration/windows-commands/mklink
