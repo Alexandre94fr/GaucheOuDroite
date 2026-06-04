@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "com.audune.utils.dictionary": "https://github.com/audunegames/serializabledictionary.git",
+    "com.audune.utils.unityeditor": "https://github.com/audunegames/unityeditor-utils.git",
     "com.unity.2d.animation": "13.0.5",
     "com.unity.2d.aseprite": "3.0.2",
     "com.unity.2d.psdimporter": "12.0.2",
