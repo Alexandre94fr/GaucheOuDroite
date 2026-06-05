@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using GaucheOuDroiteBackEnd.DTOs;
 using GaucheOuDroiteBackEnd.Services;
+
 using Shared.Constants;
+using Shared.DTOs;
 
 
 namespace GaucheOuDroiteBackEnd.API.Controllers

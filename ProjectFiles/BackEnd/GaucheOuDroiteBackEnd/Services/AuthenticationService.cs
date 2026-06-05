@@ -1,5 +1,5 @@
-﻿using GaucheOuDroiteBackEnd.DTOs;
-using Shared.Constants;
+﻿using Shared.Constants;
+using Shared.DTOs;
 
 namespace GaucheOuDroiteBackEnd.Services
 {
