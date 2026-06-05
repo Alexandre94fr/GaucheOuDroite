@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 
 using VariableCheckerPackage;
+using Shared.Constants;
 
 public class Authenticator : MonoBehaviour
 {
