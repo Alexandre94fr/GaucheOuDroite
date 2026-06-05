@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GaucheOuDroiteBackEnd")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a38812b8de626bd84384aae2fb83dfead94b5692")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d5af8baf89cea8618f171272104aecd6019dc4e5")]
 [assembly: System.Reflection.AssemblyProductAttribute("GaucheOuDroiteBackEnd")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GaucheOuDroiteBackEnd")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

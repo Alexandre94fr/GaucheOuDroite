@@ -1,17 +1,9 @@
 {
-  "openapi": "3.1.1",
+  "openapi": "3.0.4",
   "info": {
-    "title": "GaucheOuDroiteBackEnd | v1",
-    "version": "1.0.0"
+    "title": "GaucheOuDroiteBackEnd",
+    "version": "1.0"
   },
-  "servers": [
-    {
-      "url": "https://localhost:7280"
-    },
-    {
-      "url": "http://localhost:5131"
-    }
-  ],
   "paths": {
     "/api/authentication/signup": {
       "post": {
@@ -35,8 +27,7 @@
                 "$ref": "#/components/schemas/SignUpDTO"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -67,8 +58,7 @@
                 "$ref": "#/components/schemas/LogInDTO"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -121,33 +111,39 @@
     "schemas": {
       "LogInDTO": {
         "required": [
-          "username",
-          "password"
+          "password",
+          "username"
         ],
         "type": "object",
         "properties": {
           "username": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "password": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "SignUpDTO": {
         "required": [
-          "username",
-          "password"
+          "password",
+          "username"
         ],
         "type": "object",
         "properties": {
           "username": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "password": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "WeatherForecast": {
         "type": "object",
@@ -157,28 +153,20 @@
             "format": "date"
           },
           "temperatureC": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "int32"
           },
           "temperatureF": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
-            "format": "int32"
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
           },
           "summary": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": "string",
+            "nullable": true
           }
-        }
+        },
+        "additionalProperties": false
       }
     }
   },
