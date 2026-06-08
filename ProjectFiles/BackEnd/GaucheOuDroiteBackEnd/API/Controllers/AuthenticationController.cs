@@ -25,6 +25,12 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
         }
 
 
+        // Note:
+        // It seems like the code of the SignUp and LogIn methods are almost perfectly the same.
+        // And that we should abstract it.
+        // But no, maybe in the future, the SignUp and LogIn methods will have to do differents things,
+        // having them separatly will allow us to modify faster the code base.
+
         [HttpPost("sign-up")]
         public async Task<IActionResult> SignUp(SignUpDTO p_signUpDTO)
         {
@@ -36,7 +42,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
             };
 
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] Receiving request from FrontEnd, starting validating received values.");
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Receiving a SignUp request from FrontEnd, starting validating received values.");
 
             #region Validating the given data
 
@@ -99,33 +105,56 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
         [HttpPost("log-in")]
         public async Task<IActionResult> LogIn(LogInDTO p_logInDTO)
         {
+            // Theses variable's values will be changed during the method flow.
+            LogInResultDTO logInResult = new()
+            {
+                HasSucceeded = false,
+                AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty
+            };
+
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Receiving a LogIn request from FrontEnd, starting validating received values.");
+
+            #region Validating the given data
+
             if (p_logInDTO == null)
             {
-                if (IS_DEBUG_MODE_ON)
-                    // TODO: Print a log
+                logInResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty;
 
-                return BadRequest(AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty);
+                if (IS_DEBUG_MODE_ON)
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package is null. Returning:\n{GetResultToString(logInResult)}");
+
+                return BadRequest(logInResult);
             }
 
 
             if (string.IsNullOrEmpty(p_logInDTO.Username))
             {
-                if (IS_DEBUG_MODE_ON)
-                    // TODO: Print a log
+                logInResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty;
 
-                return BadRequest(AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty);
+                if (IS_DEBUG_MODE_ON)
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Username is null or empty. Returning:\n{GetResultToString(logInResult)}");
+
+                return BadRequest(logInResult);
             }
 
             if (string.IsNullOrEmpty(p_logInDTO.Password))
             {
-                if (IS_DEBUG_MODE_ON)
-                    // TODO: Print a log
+                logInResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.PasswordIsEmpty;
 
-                return BadRequest(AuthenticationProperties.AuthenticationErrorReasons.PasswordIsEmpty);
+                if (IS_DEBUG_MODE_ON)
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Password is null or empty. Returning:\n{GetResultToString(logInResult)}");
+
+                return BadRequest(logInResult);
             }
 
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] The received values are valid, starting AuthenticationService.");
 
-            LogInResultDTO logInResult = await _authenticationService.LogInAsync(
+            #endregion
+
+
+            logInResult = await _authenticationService.LogInAsync(
                 p_logInDTO.Username,
                 p_logInDTO.Password
             );
@@ -133,18 +162,15 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
             if (!logInResult.HasSucceeded)
             {
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] TODO.");
-                    // TODO: Print a log
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The LogIn request has failed. Returning:\n{GetResultToString(logInResult)}");
 
-                return BadRequest(logInResult.AuthenticationError);
+                return BadRequest(logInResult);
             }
 
-            return Ok(new
-            {
-                HasSucceeded = true // TODO: Is that necessary?
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] The LogIn request has succeeded. Returning:\n{GetResultToString(logInResult)}");
 
-                // TODO: Put the real data here
-            });
+            return Ok(logInResult);
         }
     }
 }
