@@ -134,3 +134,4 @@ C:\Mes jeux\Projet CDA\GaucheOuDroite\ProjectFiles\BackEnd\GaucheOuDroiteBackEnd
 C:\Mes jeux\Projet CDA\GaucheOuDroite\ProjectFiles\BackEnd\GaucheOuDroiteBackEnd\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Mes jeux\Projet CDA\GaucheOuDroite\ProjectFiles\BackEnd\GaucheOuDroiteBackEnd\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Mes jeux\Projet CDA\GaucheOuDroite\ProjectFiles\BackEnd\GaucheOuDroiteBackEnd\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Mes jeux\Projet CDA\GaucheOuDroite\ProjectFiles\BackEnd\GaucheOuDroiteBackEnd\bin\Debug\net10.0\Newtonsoft.Json.dll
