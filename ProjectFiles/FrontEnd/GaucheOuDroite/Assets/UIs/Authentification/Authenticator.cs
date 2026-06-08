@@ -345,6 +345,9 @@ public class Authenticator : MonoBehaviour
         // Handling not "Ok" case
         if (request.result != UnityWebRequest.Result.Success)
         {
+            // TODO: The 'ProtocolError' is the not an ERROR, can be like: 'Mot de passe trop petit'.
+            // Add a special case for him.
+
             Debug.LogError(
                 $"ERROR: [{GetType().Name}] Request failed, reason: {request.error}"
             );

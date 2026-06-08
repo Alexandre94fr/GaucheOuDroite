@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using Newtonsoft.Json;
+
 using GaucheOuDroiteBackEnd.Services;
 
 using Shared.Constants;
 using Shared.DTOs;
+
 
 namespace GaucheOuDroiteBackEnd.API.Controllers
 {
@@ -16,48 +19,65 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
         readonly AuthenticationService _authenticationService = p_authenticationService;
 
 
+        static string GetResultToString(object p_result, Formatting p_formating = Formatting.Indented)
+        {
+            return $"{JsonConvert.SerializeObject(p_result, p_formating)}";
+        }
+
+
         [HttpPost("sign-up")]
         public async Task<IActionResult> SignUp(SignUpDTO p_signUpDTO)
         {
-            // TODO: Le p_signUpDTO arrive Empty (des strings vide : "")
-            // Va check le code de Unity pour qu'il serialise bien le package a envoyer
+            // Theses variable's values will be changed during the method flow.
+            SignUpResultDTO signUpResult = new()
+            {
+                HasSucceeded = false,
+                AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty
+            };
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Receiving request from FrontEnd, starting validating received values.");
 
+            #region Validating the given data
+
             if (p_signUpDTO == null)
             {
-                if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package is null. Returning '{AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty}'.");
+                signUpResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty;
 
-                return BadRequest(AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty);
+                if (IS_DEBUG_MODE_ON)
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package is null. Returning:\n{GetResultToString(signUpResult)}");
+
+                return BadRequest(signUpResult);
             }
 
 
             if (string.IsNullOrEmpty(p_signUpDTO.Username))
             {
+                signUpResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty;
+
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Username is null or empty. Returning '{AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty}'.");
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Username is null or empty. Returning:\n{GetResultToString(signUpResult)}");
 
-                // TODO: Faire que les BadRequest est renvoie toujours un SignUpResultDTO, ça permettra à Unity et au BackEnd de se synchroniser
-                // Ainsi quand Unity recevra ResponseBody: 0, il sera que c'est un l'Enum n°0 d'AuthenticationProperties.AuthenticationErrorReasons.
-
-                return BadRequest(AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty);
+                return BadRequest(signUpResult);
             }
 
             if (string.IsNullOrEmpty(p_signUpDTO.Password))
             {
-                if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Password is null or empty. Returning '{AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty}'.");
+                signUpResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.PasswordIsEmpty;
 
-                return BadRequest(AuthenticationProperties.AuthenticationErrorReasons.PasswordIsEmpty);
+                if (IS_DEBUG_MODE_ON)
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Password is null or empty. Returning:\n{GetResultToString(signUpResult)}");
+
+                return BadRequest(signUpResult);
             }
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] The received values are valid, starting AuthenticationService.");
 
+            #endregion
 
-            SignUpResultDTO signUpResult = await _authenticationService.SignUpAsync(
+
+            signUpResult = await _authenticationService.SignUpAsync(
                 p_signUpDTO.Username,
                 p_signUpDTO.Password
             );
@@ -65,21 +85,15 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
             if (!signUpResult.HasSucceeded)
             {
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has failed. Returning '{signUpResult.AuthenticationError}'.");
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has failed. Returning:\n{GetResultToString(signUpResult)}");
 
-                return BadRequest(signUpResult.AuthenticationError);
+                return BadRequest(signUpResult);
             }
 
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has succeeded. Returning '{"--- TODO ---"}'.");
-                // TODO: Print a log
+                Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has succeeded. Returning:\n{GetResultToString(signUpResult)}");
 
-            return Ok(new
-            {
-                HasSucceeded = true // TODO: Is that necessary?
-
-                // TODO: Put the real data here
-            });
+            return Ok(signUpResult);
         }
 
         [HttpPost("log-in")]
