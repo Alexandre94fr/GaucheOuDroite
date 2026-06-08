@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/authentication/signup": {
+    "/api/authentication/sign-up": {
       "post": {
         "tags": [
           "Authentication"
@@ -36,7 +36,7 @@
         }
       }
     },
-    "/api/authentication/login": {
+    "/api/authentication/log-in": {
       "post": {
         "tags": [
           "Authentication"
@@ -110,10 +110,6 @@
   "components": {
     "schemas": {
       "LogInDTO": {
-        "required": [
-          "password",
-          "username"
-        ],
         "type": "object",
         "properties": {
           "username": {
@@ -128,10 +124,6 @@
         "additionalProperties": false
       },
       "SignUpDTO": {
-        "required": [
-          "password",
-          "username"
-        ],
         "type": "object",
         "properties": {
           "username": {

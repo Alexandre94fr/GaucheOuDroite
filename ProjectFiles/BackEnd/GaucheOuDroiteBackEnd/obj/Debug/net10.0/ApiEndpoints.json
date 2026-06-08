@@ -2,14 +2,14 @@
   {
     "ContainingType": "GaucheOuDroiteBackEnd.API.Controllers.AuthenticationController",
     "Method": "LogIn",
-    "RelativePath": "api/authentication/login",
+    "RelativePath": "api/authentication/log-in",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "p_logInDTO",
-        "Type": "GaucheOuDroiteBackEnd.DTOs.LogInDTO",
+        "Type": "Shared.DTOs.LogInDTO",
         "IsRequired": true
       }
     ],
@@ -18,14 +18,14 @@
   {
     "ContainingType": "GaucheOuDroiteBackEnd.API.Controllers.AuthenticationController",
     "Method": "SignUp",
-    "RelativePath": "api/authentication/signup",
+    "RelativePath": "api/authentication/sign-up",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "p_signUpDTO",
-        "Type": "GaucheOuDroiteBackEnd.DTOs.SignUpDTO",
+        "Type": "Shared.DTOs.SignUpDTO",
         "IsRequired": true
       }
     ],

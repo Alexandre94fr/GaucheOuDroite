@@ -5,7 +5,6 @@ using GaucheOuDroiteBackEnd.Services;
 using Shared.Constants;
 using Shared.DTOs;
 
-
 namespace GaucheOuDroiteBackEnd.API.Controllers
 {
     [ApiController]
@@ -16,17 +15,20 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
 
         readonly AuthenticationService _authenticationService = p_authenticationService;
 
-        [HttpPost("signup")]
+
+        [HttpPost("sign-up")]
         public async Task<IActionResult> SignUp(SignUpDTO p_signUpDTO)
         {
+            // TODO: Le p_signUpDTO arrive Empty (des strings vide : "")
+            // Va check le code de Unity pour qu'il serialise bien le package a envoyer
+
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Receiving request from FrontEnd, starting validating received values.");
 
             if (p_signUpDTO == null)
             {
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] TODO.");
-                    // TODO: Print a log
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package is null. Returning '{AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty}'.");
 
                 return BadRequest(AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty);
             }
@@ -35,8 +37,10 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
             if (string.IsNullOrEmpty(p_signUpDTO.Username))
             {
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] TODO.");
-                    // TODO: Print a log
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Username is null or empty. Returning '{AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty}'.");
+
+                // TODO: Faire que les BadRequest est renvoie toujours un SignUpResultDTO, ça permettra à Unity et au BackEnd de se synchroniser
+                // Ainsi quand Unity recevra ResponseBody: 0, il sera que c'est un l'Enum n°0 d'AuthenticationProperties.AuthenticationErrorReasons.
 
                 return BadRequest(AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty);
             }
@@ -44,8 +48,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
             if (string.IsNullOrEmpty(p_signUpDTO.Password))
             {
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] TODO.");
-                    // TODO: Print a log
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Password is null or empty. Returning '{AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty}'.");
 
                 return BadRequest(AuthenticationProperties.AuthenticationErrorReasons.PasswordIsEmpty);
             }
@@ -62,14 +65,13 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
             if (!signUpResult.HasSucceeded)
             {
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] TODO.");
-                    // TODO: Print a log
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has failed. Returning '{signUpResult.AuthenticationError}'.");
 
                 return BadRequest(signUpResult.AuthenticationError);
             }
 
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] TODO.");
+                Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has succeeded. Returning '{"--- TODO ---"}'.");
                 // TODO: Print a log
 
             return Ok(new
@@ -80,7 +82,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
             });
         }
 
-        [HttpPost("login")]
+        [HttpPost("log-in")]
         public async Task<IActionResult> LogIn(LogInDTO p_logInDTO)
         {
             if (p_logInDTO == null)

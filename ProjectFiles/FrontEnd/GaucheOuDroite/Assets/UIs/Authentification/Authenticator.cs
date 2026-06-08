@@ -1,9 +1,18 @@
 using System.Linq;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
 using VariableCheckerPackage;
+
+// For networking (TEMP TODO: Remove)
+using System.Text;
+using UnityEngine.Networking;
+
 using Shared.Constants;
+using Shared.DTOs;
+
+using Newtonsoft.Json;
 
 public class Authenticator : MonoBehaviour
 {
@@ -16,7 +25,6 @@ public class Authenticator : MonoBehaviour
 
     [Header("Properties:")]
     [SerializeField] AuthenticationProperties.AuthenticationMode _authenticationMode = AuthenticationProperties.AuthenticationMode.SignUp;
-
 
     string _username = "";
     string _password = "";
@@ -256,6 +264,102 @@ public class Authenticator : MonoBehaviour
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] The given username and password are correct, sending them to the Authentication API.");
 
-        // TODO: Send these values to the correct Authentication API (in BackEnd)
+        // Sending these values to the correct Authentication API (in BackEnd)
+        StartCoroutine(SendAuthenticationRequestToServer(_authenticationMode));
+    }
+
+
+    IEnumerator SendAuthenticationRequestToServer(AuthenticationProperties.AuthenticationMode p_authenticationMode)
+    {
+        // Getting and creating the good route and DTO depending of the given AuthenticationMode
+        // TODO: Prendre le code ci-dessous et en faire une méthode 
+        string route;
+        object authenticationDTO;
+
+        switch (p_authenticationMode)
+        {
+            case AuthenticationProperties.AuthenticationMode.SignUp:
+
+                route = "sign-up";
+
+                authenticationDTO = new SignUpDTO()
+                {
+                    Username = _username,
+                    Password = _password
+                };
+
+                break;
+
+            case AuthenticationProperties.AuthenticationMode.LogIn:
+
+                route = "log-in";
+
+                authenticationDTO = new LogInDTO()
+                {
+                    Username = _username,
+                    Password = _password
+                };
+
+                break;
+
+            default:
+                Debug.LogWarning($"WARNING: [{GetType().Name}] The given '{p_authenticationMode}' AuthenticationProperties.AuthenticationMode is not planned in the switch. Returning.");
+                yield break;
+        }
+
+        // http://localhost:5131 For http
+        // https://localhost:7280 For https
+
+        string url = $"https://localhost:7280/api/authentication/{route}";
+
+        // Converting the DTO in Json
+        string authenticationDTOInJson = JsonConvert.SerializeObject(authenticationDTO);
+
+        // Creating the request
+        // TODO : Prendre le code ci-dessous et en faire une méthode pour envoyer une requete au serveur
+        // Voir bloc-note + (création GameDataManager + PlayerDataManager)
+        UnityWebRequest request = new(
+            url,
+            UnityWebRequest.kHttpVerbPOST // kHttpVerbPOST == "POST", we prefer using this because it's a constant, so no typos risk.
+        );
+
+        // Adding the Json to the request
+        byte[] body = Encoding.UTF8.GetBytes(authenticationDTOInJson);
+
+        // Will store the data when we send the request to the server
+        request.uploadHandler = new UploadHandlerRaw(body);
+
+        // Will store the data when the server will respond
+        request.downloadHandler = new DownloadHandlerBuffer();
+
+        request.SetRequestHeader(
+            "Content-Type",
+            "application/json"
+        );
+
+        // Sending the request to the BackEnd + Waiting for the request response from the BackEnd to come
+        yield return request.SendWebRequest();
+
+        object responseBody = JsonConvert.DeserializeObject(request.downloadHandler.text);
+
+        // Handling not "Ok" case
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError(
+                $"ERROR: [{GetType().Name}] Request failed, reason: {request.error}"
+            );
+
+            Debug.LogError(
+                $"ERROR: [{GetType().Name}] Request failed, reason:\n" +
+                $"- HTTP Error: {request.error}\n" +
+                $"- Response Body:\n{responseBody}"
+            );
+
+            yield break;
+        }
+
+        Debug.Log(
+            $"DEBUG: [{GetType().Name}] Request succeeded, response body:\n{responseBody}"
+        );
     }
 }
