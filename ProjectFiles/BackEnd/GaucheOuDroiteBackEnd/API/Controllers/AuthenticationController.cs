@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using Newtonsoft.Json;
-
 using GaucheOuDroiteBackEnd.Services;
+using GaucheOuDroiteBackEnd.Tools;
 
 using Shared.Constants;
 using Shared.DTOs;
@@ -17,12 +16,6 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
         const bool IS_DEBUG_MODE_ON = true;
 
         readonly AuthenticationService _authenticationService = p_authenticationService;
-
-
-        static string GetResultToString(object p_result, Formatting p_formating = Formatting.Indented)
-        {
-            return $"{JsonConvert.SerializeObject(p_result, p_formating)}";
-        }
 
 
         // Note:
@@ -51,7 +44,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                 signUpResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty;
 
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package is null. Returning:\n{GetResultToString(signUpResult)}");
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package is null. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}");
 
                 return BadRequest(signUpResult);
             }
@@ -62,7 +55,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                 signUpResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty;
 
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Username is null or empty. Returning:\n{GetResultToString(signUpResult)}");
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Username is null or empty. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}");
 
                 return BadRequest(signUpResult);
             }
@@ -72,7 +65,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                 signUpResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.PasswordIsEmpty;
 
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Password is null or empty. Returning:\n{GetResultToString(signUpResult)}");
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Password is null or empty. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}");
 
                 return BadRequest(signUpResult);
             }
@@ -91,13 +84,13 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
             if (!signUpResult.HasSucceeded)
             {
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has failed. Returning:\n{GetResultToString(signUpResult)}");
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}");
 
                 return BadRequest(signUpResult);
             }
 
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has succeeded. Returning:\n{GetResultToString(signUpResult)}");
+                Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has succeeded. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}");
 
             return Ok(signUpResult);
         }
@@ -122,7 +115,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                 logInResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty;
 
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package is null. Returning:\n{GetResultToString(logInResult)}");
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package is null. Returning:\n{ObjectToStringFormatter.ObjectToString(logInResult)}");
 
                 return BadRequest(logInResult);
             }
@@ -133,7 +126,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                 logInResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty;
 
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Username is null or empty. Returning:\n{GetResultToString(logInResult)}");
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Username is null or empty. Returning:\n{ObjectToStringFormatter.ObjectToString(logInResult)}");
 
                 return BadRequest(logInResult);
             }
@@ -143,7 +136,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                 logInResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.PasswordIsEmpty;
 
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Password is null or empty. Returning:\n{GetResultToString(logInResult)}");
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The given package.Password is null or empty. Returning:\n{ObjectToStringFormatter.ObjectToString(logInResult)}");
 
                 return BadRequest(logInResult);
             }
@@ -162,13 +155,13 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
             if (!logInResult.HasSucceeded)
             {
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The LogIn request has failed. Returning:\n{GetResultToString(logInResult)}");
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The LogIn request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(logInResult)}");
 
                 return BadRequest(logInResult);
             }
 
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] The LogIn request has succeeded. Returning:\n{GetResultToString(logInResult)}");
+                Console.WriteLine($"DEBUG: [{GetType().Name}] The LogIn request has succeeded. Returning:\n{ObjectToStringFormatter.ObjectToString(logInResult)}");
 
             return Ok(logInResult);
         }
