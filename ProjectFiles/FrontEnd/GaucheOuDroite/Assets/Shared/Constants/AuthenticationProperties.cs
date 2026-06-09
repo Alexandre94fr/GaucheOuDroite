@@ -17,6 +17,8 @@ namespace Shared.Constants
             UsernameIsTooShort,
             UsernameIsTooLong,
 
+            UsernameAlreadyExists,
+
             UsernameContainAtLeastOneSpaceCharacter,
 
             // --- //
@@ -54,6 +56,8 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.UsernameIsEmpty] = $"Le pseudonyme est vide.",
             [AuthenticationErrorReasons.UsernameIsTooShort] = $"Le pseudonyme est trop court (<{USERNAME_MINIMUM_LENGHT}).",
             [AuthenticationErrorReasons.UsernameIsTooLong] = $"Le pseudonyme est trop long (>{USERNAME_MAXIMUM_LENGHT}).",
+
+            [AuthenticationErrorReasons.UsernameAlreadyExists] = $"Le pseudonyme est déjà pris par un autre utilisateur.",
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter] = $"Le pseudonyme contient au moins un caractère vide.",
 
