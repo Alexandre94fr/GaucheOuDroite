@@ -3,6 +3,7 @@
 using GaucheOuDroiteBackEnd.Data;
 using GaucheOuDroiteBackEnd.Models;
 using GaucheOuDroiteBackEnd.Security;
+using GaucheOuDroiteBackEnd.Tools;
 
 using Shared.Constants;
 using Shared.DTOs;
@@ -20,38 +21,66 @@ namespace GaucheOuDroiteBackEnd.Services
 
         public async Task<SignUpResultDTO> SignUpAsync(string p_username, string p_password)
         {
+            // Theses variable's values will be changed during the method flow.
+            SignUpResultDTO signUpResult = new()
+            {
+                HasSucceeded = false,
+                AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty
+            };
+
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Starting doing SignUp for user: '{p_username}'.");
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Verifying that the given username and password are valid.");
 
-            // TODO:
+            AuthenticationProperties.AuthenticationErrorReasons authenticationError = default;
+
+            if (!UserDataChecker.IsUsernameValid(p_username, out authenticationError, IS_DEBUG_MODE_ON))
+            {
+                signUpResult.AuthenticationError = authenticationError;
+
+                if (IS_DEBUG_MODE_ON)
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}");
+
+                return signUpResult;
+            }
+
+            if (!UserDataChecker.IsPasswordValid(p_password, out authenticationError, IS_DEBUG_MODE_ON))
+            {
+                signUpResult.AuthenticationError = authenticationError;
+
+                if (IS_DEBUG_MODE_ON)
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}");
+
+                return signUpResult;
+            }
+
+            // -- Verifying that the given username has not already an account -- //
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Verifying that the given username '{p_username}' has not already an account.");
 
-            // Verifying that the given username has not already an account
             User? existingUser = await _dataBaseContext.Users.FirstOrDefaultAsync(user => user.Username == p_username);
 
             if (existingUser != null)
             {
-                if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has failed. Returning:\n{"GetResultToString(signUpResult)"}"); // TODO:
+                signUpResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameAlreadyExists;
 
-                return new SignUpResultDTO
-                {
-                    HasSucceeded = false,
-                    AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameAlreadyExists
-                };
+                if (IS_DEBUG_MODE_ON)
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}");
+
+                return signUpResult;
             }
 
+            // -- Hashing the password -- //
 
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Hashing the user's password.");
 
-            // Hashing the password
-            string passwordHash = _passwordHasher.HashPassword(p_password); // TODO: Move the password hashing to the FrontEnd, the network should not be able to see in clear the password. 
+            string passwordHash = _passwordHasher.HashPassword(p_password);
 
-
+            // -- Creating new user's identity data and saving it inside the DataBase -- //
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Creating the new user's identity data and saving it inside the DataBase.");
