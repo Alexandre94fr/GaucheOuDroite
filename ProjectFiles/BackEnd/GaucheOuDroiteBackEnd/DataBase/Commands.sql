@@ -9,6 +9,10 @@
 */
 
 
+-- FOR DEVELOPMENT AND DEBUGGING:
+-- DELETE FROM Users WHERE Username = 'Alexandre';
+
+
 PRAGMA foreign_keys = ON;
 
 
