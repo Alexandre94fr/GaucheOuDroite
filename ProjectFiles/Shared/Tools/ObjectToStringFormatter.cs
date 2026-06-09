@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace GaucheOuDroiteBackEnd.Tools
+namespace Shared.Tools
 {
     public static class ObjectToStringFormatter
     {

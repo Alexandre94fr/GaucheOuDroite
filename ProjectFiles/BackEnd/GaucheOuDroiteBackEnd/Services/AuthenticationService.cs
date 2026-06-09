@@ -3,10 +3,10 @@
 using GaucheOuDroiteBackEnd.Data;
 using GaucheOuDroiteBackEnd.Models;
 using GaucheOuDroiteBackEnd.Security;
-using GaucheOuDroiteBackEnd.Tools;
 
 using Shared.Constants;
 using Shared.DTOs;
+using Shared.Tools;
 
 
 namespace GaucheOuDroiteBackEnd.Services
@@ -36,7 +36,7 @@ namespace GaucheOuDroiteBackEnd.Services
 
             AuthenticationProperties.AuthenticationErrorReasons authenticationError = default;
 
-            if (!UserDataChecker.IsUsernameValid(p_username, out authenticationError, IS_DEBUG_MODE_ON))
+            if (!Tools.UserDataChecker.IsUsernameValid(p_username, out authenticationError, IS_DEBUG_MODE_ON))
             {
                 signUpResult.AuthenticationError = authenticationError;
 
@@ -46,7 +46,7 @@ namespace GaucheOuDroiteBackEnd.Services
                 return signUpResult;
             }
 
-            if (!UserDataChecker.IsPasswordValid(p_password, out authenticationError, IS_DEBUG_MODE_ON))
+            if (!Tools.UserDataChecker.IsPasswordValid(p_password, out authenticationError, IS_DEBUG_MODE_ON))
             {
                 signUpResult.AuthenticationError = authenticationError;
 

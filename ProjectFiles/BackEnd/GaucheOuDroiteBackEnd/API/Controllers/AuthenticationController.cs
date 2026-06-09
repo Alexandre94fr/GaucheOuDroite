@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
 using GaucheOuDroiteBackEnd.Services;
-using GaucheOuDroiteBackEnd.Tools;
 
 using Shared.Constants;
 using Shared.DTOs;
+using Shared.Tools;
 
 
 namespace GaucheOuDroiteBackEnd.API.Controllers
