@@ -1,22 +1,80 @@
-﻿using Shared.Constants;
+﻿using Microsoft.EntityFrameworkCore;
+
+using GaucheOuDroiteBackEnd.Data;
+using GaucheOuDroiteBackEnd.Models;
+using GaucheOuDroiteBackEnd.Security;
+
+using Shared.Constants;
 using Shared.DTOs;
 
 
 namespace GaucheOuDroiteBackEnd.Services
 {
-    public class AuthenticationService
+    public class AuthenticationService(PasswordHasher p_passwordHasher, DataBaseContext p_dataBaseContext)
     {
         const bool IS_DEBUG_MODE_ON = true;
+
+        readonly PasswordHasher _passwordHasher = p_passwordHasher;
+        readonly DataBaseContext _dataBaseContext = p_dataBaseContext;
+
 
         public async Task<SignUpResultDTO> SignUpAsync(string p_username, string p_password)
         {
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] TODO. SignUp");
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting doing SignUp for user: '{p_username}'.");
+
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Verifying that the given username and password are valid.");
 
             // TODO:
-            // Vérifier si l'utilisateur existe
-            // Hasher le mot de passe
-            // Sauvegarder dans SQLite
+
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Verifying that the given username '{p_username}' has not already an account.");
+
+            // Verifying that the given username has not already an account
+            User? existingUser = await _dataBaseContext.Users.FirstOrDefaultAsync(user => user.Username == p_username);
+
+            if (existingUser != null)
+            {
+                if (IS_DEBUG_MODE_ON)
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The SignUp request has failed. Returning:\n{"GetResultToString(signUpResult)"}"); // TODO:
+
+                return new SignUpResultDTO
+                {
+                    HasSucceeded = false,
+                    AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameAlreadyExists
+                };
+            }
+
+
+
+            // Hashing the password
+            string passwordHash = _passwordHasher.HashPassword(p_password); // TODO: Move the password hashing to the FrontEnd, the network should not be able to see in clear the password. 
+
+
+
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Creating the new user's identity data and saving it inside the DataBase.");
+
+            // TODO: Make the User service do that.
+
+            // Saving the player's data inside the DataBase
+            User newUser = new()
+            {
+                // The Id is generated automatically by the DataBase
+                Username = p_username,
+                PasswordHash = passwordHash
+            };
+
+            // Adding a new User to the Users Table
+            _dataBaseContext.Add(newUser);
+
+            await _dataBaseContext.SaveChangesAsync();
+
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Creating the new user's progression data and saving it inside the DataBase.");
+
+            // TODO: Creating the PlayerProgression (call a Service)
 
             return new SignUpResultDTO {
                 HasSucceeded = true,
@@ -30,7 +88,6 @@ namespace GaucheOuDroiteBackEnd.Services
                 Console.WriteLine($"DEBUG: [{GetType().Name}] TODO. LogIn");
 
             // TODO:
-            // Vérifier l'utilisateur
             // Vérifier le mot de passe
 
             return new LogInResultDTO
