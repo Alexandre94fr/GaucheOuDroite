@@ -22,6 +22,8 @@ builder.Services.AddDbContext<DataBaseContext>(options => options.UseSqlite(conn
 // Project services
 builder.Services.AddScoped<AuthenticationService>();
 
+builder.Services.AddScoped<UserService>();
+
 // Project security
 builder.Services.AddScoped<PasswordHasher>();
 
