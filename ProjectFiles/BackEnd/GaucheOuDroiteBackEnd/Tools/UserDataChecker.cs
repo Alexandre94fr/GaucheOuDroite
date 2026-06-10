@@ -15,7 +15,7 @@ namespace GaucheOuDroiteBackEnd.Tools
 
         public static bool IsPasswordValid(string p_password, out AuthenticationProperties.AuthenticationErrorReasons p_authenticationErrorReason, bool p_isDebugModeOn = false)
         {
-            return Shared.Tools.UserDataChecker.IsUsernameValid(p_password, out p_authenticationErrorReason, p_isDebugModeOn);
+            return Shared.Tools.UserDataChecker.IsPasswordValid(p_password, out p_authenticationErrorReason, p_isDebugModeOn);
         }
 
         public static bool IsUserValid(User p_user, out AuthenticationProperties.AuthenticationErrorReasons p_authenticationErrorReason, bool p_isDebugModeOn = false)
