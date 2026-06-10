@@ -13,6 +13,7 @@ using Shared.Constants;
 using Shared.DTOs;
 
 using Newtonsoft.Json;
+using Shared.Tools;
 
 public class Authenticator : MonoBehaviour
 {
@@ -104,82 +105,12 @@ public class Authenticator : MonoBehaviour
 
     bool IsUsernameValid(string p_username, out AuthenticationProperties.AuthenticationErrorReasons p_authenticationErrorReason)
     {
-        // To silence the linter.
-        // Normaly a program will not use the 'p_authenticationErrorReason' if the password is valid.
-        p_authenticationErrorReason = default;
-
-        if (string.IsNullOrEmpty(p_username))
-        {
-            p_authenticationErrorReason = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty;
-            return false;
-        }
-
-        if (p_username.Length < AuthenticationProperties.USERNAME_MINIMUM_LENGHT)
-        {
-            p_authenticationErrorReason = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsTooShort;
-            return false;
-        }
-
-        if (p_username.Length > AuthenticationProperties.USERNAME_MAXIMUM_LENGHT)
-        {
-            p_authenticationErrorReason = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsTooLong;
-            return false;
-        }
-
-        return true;
+        return UserDataChecker.IsUsernameValid(p_username, out p_authenticationErrorReason, _isDebugModeOn);
     }
 
     bool IsPasswordValid(string p_password, out AuthenticationProperties.AuthenticationErrorReasons p_authenticationErrorReason)
     {
-        // To silence the linter.
-        // Normaly a program will not use the 'p_authenticationErrorReason' if the password is valid.
-        p_authenticationErrorReason = default;
-
-        if (string.IsNullOrEmpty(p_password))
-        {
-            p_authenticationErrorReason = AuthenticationProperties.AuthenticationErrorReasons.PasswordIsEmpty;
-            return false;
-        }
-
-        if (p_password.Length < AuthenticationProperties.PASSWORD_MINIMUM_LENGHT)
-        {
-            p_authenticationErrorReason = AuthenticationProperties.AuthenticationErrorReasons.PasswordIsTooShort;
-            return false;
-        }
-
-        if (p_password.Length > AuthenticationProperties.PASSWORD_MAXIMUM_LENGHT)
-        {
-            p_authenticationErrorReason = AuthenticationProperties.AuthenticationErrorReasons.PasswordIsTooLong;
-            return false;
-        }
-
-
-        if (p_password.Contains(" "))
-        {
-            p_authenticationErrorReason = AuthenticationProperties.AuthenticationErrorReasons.PasswordContainAtLeastOneSpaceCharacter;
-            return false;
-        }
-
-
-        if (AuthenticationProperties.DOES_PASSWORD_MUST_HAVE_AT_LEAST_ONE_LETTER && !p_password.Any(char.IsLetter))
-        {
-            p_authenticationErrorReason = AuthenticationProperties.AuthenticationErrorReasons.PasswordDoesNotContainAnyLetters;
-            return false;
-        }
-
-        if (AuthenticationProperties.DOES_PASSWORD_MUST_HAVE_AT_LEAST_ONE_NUMBER && !p_password.Any(char.IsDigit))
-        {
-            p_authenticationErrorReason = AuthenticationProperties.AuthenticationErrorReasons.PasswordDoesNotContainAnyNumbers;
-            return false;
-        }
-
-        if (AuthenticationProperties.DOES_PASSWORD_MUST_HAVE_AT_LEAST_ONE_SPECIAL_CHARACTER && !p_password.Any(c => !char.IsLetterOrDigit(c)))
-        {
-            p_authenticationErrorReason = AuthenticationProperties.AuthenticationErrorReasons.PasswordDoesNotContainAnySpecialCharacters;
-            return false;
-        }
-
-        return true;
+        return UserDataChecker.IsPasswordValid(p_password, out p_authenticationErrorReason, _isDebugModeOn);
     }
 
     #endregion
