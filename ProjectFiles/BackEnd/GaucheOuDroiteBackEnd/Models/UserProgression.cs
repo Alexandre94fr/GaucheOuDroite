@@ -2,7 +2,7 @@
 {
     public class UserProgression
     {
-        public required int Id { get; set; }
+        public int Id { get; set; } // The Id is not required because the DataBase will generate it, when creating a new UserProgression.
 
         public required int UserId { get; set; }
 

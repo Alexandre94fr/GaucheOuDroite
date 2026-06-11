@@ -2,7 +2,7 @@ namespace GaucheOuDroiteBackEnd.Models
 {
     public class Level
     {
-        public required int Id { get; set; }
+        public int Id { get; set; } // The Id is not required because the DataBase will generate it, when creating a new Level.
 
         public required string Name { get; set; }
 

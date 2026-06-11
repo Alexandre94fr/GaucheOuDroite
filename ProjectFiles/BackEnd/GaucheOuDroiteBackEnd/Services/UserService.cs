@@ -11,7 +11,7 @@ namespace GaucheOuDroiteBackEnd.Services
         const bool IS_DEBUG_MODE_ON = true;
 
         readonly DataBaseContext _dataBaseContext = p_dataBaseContext;
-
+        // TODO: Fix typos
 
         #region - Is existing -
 
