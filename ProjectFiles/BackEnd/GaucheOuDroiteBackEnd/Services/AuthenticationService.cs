@@ -8,12 +8,13 @@ using Shared.Tools;
 
 namespace GaucheOuDroiteBackEnd.Services
 {
-    public class AuthenticationService(PasswordHasher p_passwordHasher, UserService p_userService)
+    public class AuthenticationService(PasswordHasher p_passwordHasher, UserService p_userService, UserProgressionService p_userProgressionService)
     {
         const bool IS_DEBUG_MODE_ON = true;
 
         readonly PasswordHasher _passwordHasher = p_passwordHasher;
         readonly UserService _userService = p_userService;
+        readonly UserProgressionService _userProgressionService = p_userProgressionService;
 
 
         public async Task<SignUpResultDTO> SignUpAsync(string p_username, string p_password)
@@ -26,7 +27,7 @@ namespace GaucheOuDroiteBackEnd.Services
             };
 
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting doing SignUp for user: '{p_username}'.");
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to do SignUp for user: '{p_username}'.");
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Verifying that the given username and password are valid.");
@@ -65,7 +66,8 @@ namespace GaucheOuDroiteBackEnd.Services
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Creating the new user's identity data and saving it inside the DataBase.");
 
-            // The CreateUserAsync() method also verify that the given username has not already an account
+            // Creating the User
+            // The CreateUserAsync() method also verifies that the given username has not already an account
             User? user = await _userService.CreateUserAsync(p_username, passwordHash);
 
             if (user == null)
@@ -81,7 +83,19 @@ namespace GaucheOuDroiteBackEnd.Services
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Creating the new user's progression data and saving it inside the DataBase.");
 
-            // TODO: Creating the PlayerProgression (call a Service)
+            // Creating the UserProgressions
+            // The CreateAllUserProgressionAsync() method also verifies that the given User has not already one associated UserProgression
+            List<UserProgression>? userProgressions = await _userProgressionService.CreateAllUserProgressionAsync(user.Id);
+            
+            if (userProgressions == null)
+            {
+                signUpResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameAlreadyExists; // TODO: Maybe one day, create a AuthenticationErrorReasons for this case.
+
+                if (IS_DEBUG_MODE_ON)
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] Failed to create all UserProgressions. The SignUp request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}");
+            
+                return signUpResult;
+            }
 
             // -- Returning success -- //
 
