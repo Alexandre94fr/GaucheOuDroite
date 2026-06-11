@@ -67,6 +67,8 @@ CREATE TABLE IF NOT EXISTS LevelResponseTimeSteps(
 );
 
 
+-- No more manual User adding 
+/*
 INSERT INTO Users (
     Username,
     PasswordHash
@@ -79,7 +81,9 @@ VALUES (
         'Zaidras',
         'MotDePasseDeClément'
 );
+*/
 
+-- All the Levels data will be create here
 INSERT INTO Levels (
     Name,
     Difficulty,
@@ -99,15 +103,62 @@ VALUES (
         5000
     ),
     (
+        'Niveau 2',
+        'Facile',
+        FALSE,
+        'LLRLRRLRLL',
+        1250,
+        3000,
+        6000
+    ),
+    (
+        'Niveau 3',
+        'Normal',
+        FALSE,
+        'LRLLRRLLRLLR',
+        1500,
+        3500,
+        6500
+    ),
+    (
+        'Niveau 4',
+        'Normal',
+        FALSE,
+        'RLLRRLRLRLLRLL',
+        1750,
+        4000,
+        7000
+    ),
+    (
+        'Niveau 5',
+        'Difficile',
+        FALSE,
+        'RLRLLLRRLRLLRRLLRRL',
+        2500,
+        3500,
+        7000
+    ),
+    (
+        'Niveau 6',
+        'Difficile',
+        FALSE,
+        'LRRLRLLRRRRLRLLRLLRRRLLR',
+        3500,
+        5000,
+        10000
+    ),
+    (
         'Infini',
         'Progressif',
         TRUE,
         'L',
         5000,
-        12000,
-        15000
+        15000,
+        25000
 );
 
+-- No more manual UserProgressions adding 
+/*
 INSERT INTO UserProgressions (
     UserId,
     LevelId,
@@ -143,6 +194,7 @@ VALUES (
         FALSE,
         0
 );
+*/
 
 INSERT INTO LevelResponseTimeSteps (
     LevelId,
@@ -156,26 +208,62 @@ VALUES (
         0,
         1
     ),
+
     (
         2,
 
         0,
         1
     ),
+
     (
-        2,
+        3,
+
+        0,
+        0.85
+    ),
+    
+    (
+        4,
+
+        0,
+        0.85
+    ),
+    
+    (
+        5,
+
+        0,
+        0.5
+    ),
+    
+    (
+        6,
+
+        0,
+        0.5
+    ),
+
+    (
+        7,
+
+        0,
+        1
+    ),
+    (
+        7,
 
         5,
         0.85
     ),
     (
-        2,
+        7,
 
         9.25,
         0.75
     ),
     (
-        2,
+        7,
 
         16.75,
         0.5
