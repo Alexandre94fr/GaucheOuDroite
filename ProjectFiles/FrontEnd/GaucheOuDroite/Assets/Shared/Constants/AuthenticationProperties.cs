@@ -76,7 +76,8 @@ namespace Shared.Constants
 
         public const string UNKNOWN_ERROR_MESSAGE = "Erreur inconnue.\nSi le problème persiste, relancez l'application.";
 
-        public const string SUCCESSFUL_AUTHENTICATION_MESSAGE = "Authentification validée localement.\nEnvoie des informations au serveur.";
+        public const string SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE = "Authentification validée localement.\nEnvoie des informations au serveur.";
+        public const string SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE = "Authentification validée par le serveur.";
 
 
         public static readonly Dictionary<AuthenticationMode, string> AUTHENTICATION_MODE_IN_FRENCH = new()

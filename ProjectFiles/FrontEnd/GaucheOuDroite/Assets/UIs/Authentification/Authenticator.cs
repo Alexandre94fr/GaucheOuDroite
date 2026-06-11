@@ -184,7 +184,7 @@ public class Authenticator : MonoBehaviour
         string authenticationModeString = AuthenticationProperties.AUTHENTICATION_MODE_IN_FRENCH[_authenticationMode].ToUpper();
 
         DisplayFeedback(
-            $"[{authenticationModeString}]\n{AuthenticationProperties.SUCCESSFUL_AUTHENTICATION_MESSAGE}",
+            $"[{authenticationModeString}]\n{AuthenticationProperties.SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE}",
             new(
                 AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.X,
                 AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.Y,
