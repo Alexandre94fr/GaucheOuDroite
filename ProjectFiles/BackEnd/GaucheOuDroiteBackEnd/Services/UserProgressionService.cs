@@ -18,7 +18,7 @@ namespace GaucheOuDroiteBackEnd.Services
         public async Task<bool> IsUserProgressionExistingAsync(int p_userId, int p_levelId)
         {
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to check if the UserProgression (UserId: {p_userId}, LevelId: {p_levelId}) exist inside the DataBase.");
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to check if the UserProgression (UserId: {p_userId}, LevelId: {p_levelId}) exists inside the DataBase.");
 
             if (await GetUserProgressionAsync(p_userId, p_levelId) == null)
             {
@@ -37,7 +37,7 @@ namespace GaucheOuDroiteBackEnd.Services
         public async Task<bool> IsUserProgressionExistingAsync(int p_id)
         {
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to check if the UserProgression (Id: {p_id}) exist inside the DataBase.");
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to check if the UserProgression (Id: {p_id}) exists inside the DataBase.");
 
             if (await GetUserProgressionAsync(p_id) == null)
             {
