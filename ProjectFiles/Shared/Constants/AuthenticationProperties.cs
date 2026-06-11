@@ -18,6 +18,7 @@ namespace Shared.Constants
             UsernameIsTooLong,
 
             UsernameAlreadyExists,
+            UsernameDoesNotExist, // When there is no User with this username inside the DataBase when login in
 
             UsernameContainAtLeastOneSpaceCharacter,
 
@@ -32,9 +33,16 @@ namespace Shared.Constants
             PasswordDoesNotContainAnyLetters,
             PasswordDoesNotContainAnyNumbers,
             PasswordDoesNotContainAnySpecialCharacters,
-        }
 
-        // TODO: Move these properties where any script (FrontEnd and BackEnd) can access it (if possible).
+            IncorrectPassword, // When the given password is not the same as the one registered on the DataBase when login in
+
+            // --- // BackEnd (Server-side) only errors
+
+            UserAlreadyHasProgressions, // When there is a UserProgression associated with a newly created User (full BackEnd error)
+            NoUserProgressionsFound, // When there is no UserProgression associated with the User (full BackEnd error)
+
+            InternalServerError, // When any kind of server error happens and is not registered in this enum
+        }
 
         public const int USERNAME_MINIMUM_LENGHT = 1;
         public const int USERNAME_MAXIMUM_LENGHT = 16;
@@ -72,6 +80,16 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.PasswordDoesNotContainAnyLetters] = $"Le mot de passe ne contient pas au moins une lettre.",
             [AuthenticationErrorReasons.PasswordDoesNotContainAnyNumbers] = $"Le mot de passe ne contient pas au moins un chiffre.",
             [AuthenticationErrorReasons.PasswordDoesNotContainAnySpecialCharacters] = $"Le mot de passe ne contient pas au moins un caractère spécial.",
+
+            // --- //
+
+            [AuthenticationErrorReasons.UsernameDoesNotExist] = $"Le pseudonyme n'existe pas.\nSouhaitez-vous plutôt créer un compte ?",
+            [AuthenticationErrorReasons.IncorrectPassword] = $"Mot de passe incorrect.\nVeuillez réessayer.",
+
+            [AuthenticationErrorReasons.UserAlreadyHasProgressions] = $"Des données de progression ont été détectées sur un utilisateur qui ne devrait pas en avoir.\nVeuillez réessayer.",
+            [AuthenticationErrorReasons.NoUserProgressionsFound] = $"Aucune donnée de progression n'a été trouvée sur un utilisateur qui devrait en avoir.\nVeuillez réessayer.",
+
+            [AuthenticationErrorReasons.InternalServerError] = $"Un problème interne a été détecté côté serveur.\nSi le problème persiste, relancez l'application.",
         };
 
         public const string UNKNOWN_ERROR_MESSAGE = "Erreur inconnue.\nSi le problème persiste, relancez l'application.";
