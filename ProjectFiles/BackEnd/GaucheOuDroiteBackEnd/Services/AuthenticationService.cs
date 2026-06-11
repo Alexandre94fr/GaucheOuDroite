@@ -95,7 +95,7 @@ namespace GaucheOuDroiteBackEnd.Services
             
             if (userProgressions == null)
             {
-                signUpResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameAlreadyExists; // TODO: Maybe one day, create a AuthenticationErrorReasons for this case.
+                signUpResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UserAlreadyHasProgressions;
 
                 if (IS_DEBUG_MODE_ON)
                     Console.WriteLine($"DEBUG: [{GetType().Name}] Failed to create all UserProgressions. The SignUp request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}");
@@ -163,8 +163,7 @@ namespace GaucheOuDroiteBackEnd.Services
 
             if (user == null)
             {
-                // TODO: Add a case UsernameDoesntExists
-                logInResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameAlreadyExists;
+                logInResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameDoesNotExist;
 
                 if (IS_DEBUG_MODE_ON)
                     Console.WriteLine($"DEBUG: [{GetType().Name}] Failed to find the User (Username: {p_username}) inside the DataBase. The LogIn request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(logInResult)}");
@@ -182,8 +181,7 @@ namespace GaucheOuDroiteBackEnd.Services
 
             if (!_passwordHasher.VerifyHashedPassword(user.PasswordHash, p_password))
             {
-                // TODO: Add a case IncorrectPassword
-                logInResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameAlreadyExists;
+                logInResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.IncorrectPassword;
 
                 if (IS_DEBUG_MODE_ON)
                     Console.WriteLine($"DEBUG: [{GetType().Name}] The given password is not the same as the one saved. The LogIn request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(logInResult)}");
@@ -203,8 +201,7 @@ namespace GaucheOuDroiteBackEnd.Services
 
             if (userProgressions.Count == 0)
             {
-                // TODO: Add a case NoUserProgressionFound
-                logInResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameAlreadyExists;
+                logInResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.NoUserProgressionsFound;
 
                 if (IS_DEBUG_MODE_ON)
                     Console.WriteLine($"DEBUG: [{GetType().Name}] Failed to find any UserProgression with a UserId equal to {user.Id} inside the DataBase. The LogIn request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(logInResult)}");
