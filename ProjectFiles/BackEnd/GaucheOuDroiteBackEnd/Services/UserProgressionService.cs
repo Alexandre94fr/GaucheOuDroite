@@ -13,6 +13,7 @@ namespace GaucheOuDroiteBackEnd.Services
         readonly DataBaseContext _dataBaseContext = p_dataBaseContext;
         readonly UserService _userService = p_userService;
 
+
         #region - Is existing -
 
         public async Task<bool> IsUserProgressionExistingAsync(int p_userId, int p_levelId)
@@ -55,6 +56,7 @@ namespace GaucheOuDroiteBackEnd.Services
 
         #endregion
 
+
         #region - Create -
 
         /// <summary>
@@ -63,7 +65,7 @@ namespace GaucheOuDroiteBackEnd.Services
         /// Checks before creating any UserProgression, if the given UserId and LevelId are not valid <b>AND</b> if a UserProgression with the same UserId and LevelId already exists. <para></para>
         /// In that case, it returns null and prints out a warning. <para></para>
         /// 
-        /// <b>Note:</b> If you want to create all the UserProgressions for a newly created User, use the '<see cref="CreateAllUserProgressionAsync"/>' method instead.
+        /// <b>Note:</b> If you want to create all the UserProgressions for a newly created User, use the '<see cref="CreateAllUserProgressionsAsync"/>' method instead.
         /// </summary>
         /// <param name="p_userId"></param>
         /// <param name="p_levelId"></param>
@@ -128,7 +130,7 @@ namespace GaucheOuDroiteBackEnd.Services
         /// </summary>
         /// <param name="p_userId"></param>
         /// <returns> The created UserProgressions or null if any check fails. </returns>
-        public async Task<List<UserProgression>?> CreateAllUserProgressionAsync(int p_userId)
+        public async Task<List<UserProgression>?> CreateAllUserProgressionsAsync(int p_userId)
         {
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to create all UserProgressions for the User {p_userId} and saving them inside the DataBase. The number of UserProgression depends on the number of Levels.");
@@ -225,8 +227,31 @@ namespace GaucheOuDroiteBackEnd.Services
             return userProgression;
         }
 
+        public async Task<List<UserProgression>> GetAllUserProgressionsAsync(int p_userId)
+        {
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to try getting all the UserProgression (UserId: {p_userId}) from the DataBase.");
+
+            List<UserProgression> userProgressions = await _dataBaseContext.UserProgressions.Where(
+                userProg => userProg.UserId == p_userId
+            ).ToListAsync();
+
+            if (userProgressions.Count == 0)
+            {
+                if (IS_DEBUG_MODE_ON)
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] Failed to find any UserProgression with a UserId equal to {p_userId} inside the DataBase. Returning an empty list.");
+
+                return userProgressions;
+            }
+
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Successfully got all ({userProgressions.Count}) the UserProgressions (UserId: {p_userId}). Returning the UserProgressions.");
+
+            return userProgressions;
+        }
+
         #endregion
-        
+
         #region - Update -
 
         public async Task UpdateUserAsync(UserProgression p_userProgression)

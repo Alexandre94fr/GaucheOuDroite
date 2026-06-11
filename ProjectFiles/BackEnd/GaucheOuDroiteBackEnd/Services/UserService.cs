@@ -12,6 +12,7 @@ namespace GaucheOuDroiteBackEnd.Services
 
         readonly DataBaseContext _dataBaseContext = p_dataBaseContext;
 
+
         #region - Is existing -
 
         public async Task<bool> IsUserExistingAsync(string p_username)
