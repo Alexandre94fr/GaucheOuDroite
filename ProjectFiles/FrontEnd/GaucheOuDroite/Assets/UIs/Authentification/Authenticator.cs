@@ -1,7 +1,7 @@
-using System.Linq;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 using VariableCheckerPackage;
 
@@ -22,6 +22,10 @@ public class Authenticator : MonoBehaviour
 
 
     [Header("External references:")]
+    [SerializeField] Button _requestSenderButton;
+    [SerializeField] Button _autenticationModeChangerButton;
+
+    [Space]
     [SerializeField] TextMeshProUGUI _feedbackText;
 
     [Header("Properties:")]
@@ -34,6 +38,8 @@ public class Authenticator : MonoBehaviour
     void Start()
     {
         if (!VariablesChecker.AreVariablesValid(name, null,
+            (_requestSenderButton, nameof(_requestSenderButton)),
+            (_autenticationModeChangerButton, nameof(_autenticationModeChangerButton)),
             (_feedbackText, nameof(_feedbackText))
         )) return;
     }
@@ -196,12 +202,19 @@ public class Authenticator : MonoBehaviour
             Debug.Log($"DEBUG: [{GetType().Name}] The given username and password are correct, sending them to the Authentication API.");
 
         // Sending these values to the correct Authentication API (in BackEnd)
+        // Will also disable some UI buttons to avoid creating bugs.
+        // The UI buttons will be interactive again when the server will respond to the request.
         StartCoroutine(SendAuthenticationRequestToServer(_authenticationMode));
     }
 
 
     IEnumerator SendAuthenticationRequestToServer(AuthenticationProperties.AuthenticationMode p_authenticationMode)
     {
+        // Disabling some UI buttons to avoid creating bugs.
+        // The UI buttons will be interactive again when the server will respond to the request.
+        _requestSenderButton.interactable = false;
+        _autenticationModeChangerButton.interactable = false;
+
         // Getting and creating the good route and DTO depending of the given AuthenticationMode
         // TODO: Prendre le code ci-dessous et en faire une méthode 
         string route;
@@ -270,6 +283,10 @@ public class Authenticator : MonoBehaviour
 
         // Sending the request to the BackEnd + Waiting for the request response from the BackEnd to come
         yield return request.SendWebRequest();
+
+        // We received a response from the server; we can make the buttons intractable again
+        _requestSenderButton.interactable = true;
+        _autenticationModeChangerButton.interactable = true;
 
         object responseBody = JsonConvert.DeserializeObject(request.downloadHandler.text);
 

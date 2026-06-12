@@ -2331,8 +2331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Authenticator
   _isDebugModeOn: 0
-  _usernameInputField: {fileID: 6979500081265565558}
-  _passwordInputField: {fileID: 7464189620993928726}
-  _sendButton: {fileID: 8184872757169653539}
+  _requestSenderButton: {fileID: 8184872757169653539}
+  _autenticationModeChangerButton: {fileID: 8978628511075817941}
   _feedbackText: {fileID: 1496472994042399824}
   _authenticationMode: 0
