@@ -1,19 +1,22 @@
 using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 using VariableCheckerPackage;
 
-// For networking (TEMP TODO: Remove)
+using Shared.Constants;
+using Shared.Tools;
+
+// For networking (TEMP TODO: Remove after create a class that handle sending request to the server)
+
 using System.Text;
 using UnityEngine.Networking;
 
-using Shared.Constants;
+using Newtonsoft.Json;
+
 using Shared.DTOs;
 
-using Newtonsoft.Json;
-using Shared.Tools;
 
 public class Authenticator : MonoBehaviour
 {
@@ -190,7 +193,7 @@ public class Authenticator : MonoBehaviour
         string authenticationModeString = AuthenticationProperties.AUTHENTICATION_MODE_IN_FRENCH[_authenticationMode].ToUpper();
 
         DisplayFeedback(
-            $"[{authenticationModeString}]\n{AuthenticationProperties.SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE}",
+            AuthenticationProperties.SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE,
             new(
                 AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.X,
                 AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.Y,
@@ -207,6 +210,10 @@ public class Authenticator : MonoBehaviour
         StartCoroutine(SendAuthenticationRequestToServer(_authenticationMode));
     }
 
+    AuthenticationResultDTO ConvertRequestResponseData(UnityWebRequest p_requestResponse)
+    {
+        return JsonConvert.DeserializeObject<AuthenticationResultDTO>(p_requestResponse.downloadHandler.text);
+    }
 
     IEnumerator SendAuthenticationRequestToServer(AuthenticationProperties.AuthenticationMode p_authenticationMode)
     {
@@ -290,27 +297,110 @@ public class Authenticator : MonoBehaviour
 
         object responseBody = JsonConvert.DeserializeObject(request.downloadHandler.text);
 
-        // Handling not "Ok" case
-        if (request.result != UnityWebRequest.Result.Success)
+        AuthenticationResultDTO authenticationResultDTO = ConvertRequestResponseData(request);
+
+        // Handling all cases
+        switch (request.result)
         {
-            // TODO: The 'ProtocolError' is the not an ERROR, can be like: 'Mot de passe trop petit'.
-            // Add a special case for him.
+            case UnityWebRequest.Result.Success:
 
-            Debug.LogError(
-                $"ERROR: [{GetType().Name}] Request failed, reason: {request.error}"
-            );
+                DisplayFeedback(
+                    AuthenticationProperties.SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE,
+                    new(
+                        AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.X,
+                        AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.Y,
+                        AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.Z
+                    )
+                );
 
-            Debug.LogError(
-                $"ERROR: [{GetType().Name}] Request failed, reason:\n" +
-                $"- HTTP Error: {request.error}\n" +
-                $"- Response Body:\n{responseBody}"
-            );
+                if (_isDebugModeOn)
+                    Debug.Log($"DEBUG: [{GetType().Name}] Request succeeded, response body:\n'{responseBody}'. Returning.");
 
-            yield break;
+                yield break;
+        
+            case UnityWebRequest.Result.ConnectionError:
+                {
+                    DisplayFeedback(
+                        AuthenticationProperties.SERVER_CONNECTION_ERROR_MESSAGE,
+                        new(
+                            AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.X,
+                            AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Y,
+                            AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Z
+                        )
+                    );
+
+                    Debug.LogError(
+                        $"ERROR: [{GetType().Name}] Request failed, result type: {request.result}, reason:\n" +
+                        $"- HTTP Error: {request.error}\n" +
+                        $"- Response Body:\n'{responseBody}'. Returning."
+                    );
+
+                    yield break;
+                }
+            
+            case UnityWebRequest.Result.ProtocolError:
+               
+                // Using the .AuthenticationError value to get a string from the AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGES dictionary
+                if (!AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGES.TryGetValue(authenticationResultDTO.AuthenticationError, out string authenticationMessage))
+                {
+                    authenticationMessage = AuthenticationProperties.UNKNOWN_ERROR_MESSAGE;
+                }
+
+                DisplayFeedback(
+                    authenticationMessage,
+                    new(
+                        AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.X,
+                        AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Y,
+                        AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Z
+                    )
+                );
+
+                Debug.LogWarning(
+                    $"WARNING: [{GetType().Name}] Request failed, result type: {request.result}, reason:\n" +
+                    $"- HTTP Error: {request.error}\n" +
+                    $"- Response Body:\n'{responseBody}'. Returning."
+                );
+
+                yield break;
+
+            case UnityWebRequest.Result.DataProcessingError:
+        
+                DisplayFeedback(
+                    AuthenticationProperties.DATA_PROCESSING_ERROR_MESSAGE,
+                    new(
+                        AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.X,
+                        AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Y,
+                        AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Z
+                    )
+                );
+
+                Debug.LogError(
+                    $"ERROR: [{GetType().Name}] Request failed, result type: {request.result}, reason:\n" +
+                    $"- HTTP Error: {request.error}\n" +
+                    $"- Response Body:\n'{responseBody}'. Returning."
+                );
+
+                yield break;
+
+            default:
+                Debug.LogWarning($"WARNING: [{GetType().Name}] The received '{request.result}' UnityWebRequest.Result. is not planned in the switch. Showing unknown error and returning.");
+
+                DisplayFeedback(
+                    AuthenticationProperties.UNKNOWN_ERROR_MESSAGE,
+                    new(
+                        AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.X,
+                        AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Y,
+                        AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Z
+                    )
+                );
+
+                Debug.LogError(
+                    $"ERROR: [{GetType().Name}] Request failed, result type: {request.result}, reason:\n" +
+                    $"- HTTP Error: {request.error}\n" +
+                    $"- Response Body:\n'{responseBody}'. Returning."
+                );
+
+                yield break;
         }
-
-        Debug.Log(
-            $"DEBUG: [{GetType().Name}] Request succeeded, response body:\n{responseBody}"
-        );
     }
 }

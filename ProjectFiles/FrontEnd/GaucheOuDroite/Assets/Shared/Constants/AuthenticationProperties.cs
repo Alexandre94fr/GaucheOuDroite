@@ -65,7 +65,7 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.UsernameIsTooShort] = $"Le pseudonyme est trop court (<{USERNAME_MINIMUM_LENGHT}).",
             [AuthenticationErrorReasons.UsernameIsTooLong] = $"Le pseudonyme est trop long (>{USERNAME_MAXIMUM_LENGHT}).",
 
-            [AuthenticationErrorReasons.UsernameAlreadyExists] = $"Le pseudonyme est déjà pris par un autre utilisateur.",
+            [AuthenticationErrorReasons.UsernameAlreadyExists] = $"Le pseudonyme est déjà pris par un autre utilisateur.\nSouhaitez-vous plutôt vous connecter ?",
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter] = $"Le pseudonyme contient au moins un caractère vide.",
 
@@ -92,7 +92,14 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.InternalServerError] = $"Un problème interne a été détecté côté serveur.\nSi le problème persiste, relancez l'application.",
         };
 
+
+        public const string SERVER_CONNECTION_ERROR_MESSAGE = "Échec de la connection avec le serveur.\nLe serveur n'est peut-être pas lancé.\nSi le problème persiste, relancez l'application.";
+        
+        public const string DATA_PROCESSING_ERROR_MESSAGE = "Erreur lors du traitement des données reçues.\nDonnées corrompues ou au mauvais format.\nSi le problème persiste, relancez l'application.";
+        
         public const string UNKNOWN_ERROR_MESSAGE = "Erreur inconnue.\nSi le problème persiste, relancez l'application.";
+
+         
 
         public const string SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE = "Authentification validée localement.\nEnvoie des informations au serveur.";
         public const string SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE = "Authentification validée par le serveur.";
