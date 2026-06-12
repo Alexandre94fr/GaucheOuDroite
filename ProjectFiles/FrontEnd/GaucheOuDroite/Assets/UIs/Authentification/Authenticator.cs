@@ -298,7 +298,7 @@ public class Authenticator : MonoBehaviour
         object responseBody = JsonConvert.DeserializeObject(request.downloadHandler.text);
 
         AuthenticationResultDTO authenticationResultDTO = ConvertRequestResponseData(request);
-
+        
         // Handling all cases
         switch (request.result)
         {

@@ -23,7 +23,11 @@ namespace GaucheOuDroiteBackEnd.Services
             SignUpResultDTO signUpResult = new()
             {
                 HasSucceeded = false,
-                AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty
+                AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty,
+
+                Token = "",
+                UserId = -1,
+                Username = p_username,
             };
 
             if (IS_DEBUG_MODE_ON)
@@ -83,6 +87,9 @@ namespace GaucheOuDroiteBackEnd.Services
                 return signUpResult;
             }
 
+            // Updating the returned values
+            signUpResult.UserId = user.Id;
+
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Successfully created the User (Id: {user.Id}, Username: {user.Username}).");
 
@@ -119,7 +126,11 @@ namespace GaucheOuDroiteBackEnd.Services
             LogInResultDTO logInResult = new()
             {
                 HasSucceeded = false,
-                AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty
+                AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty,
+
+                Token = "",
+                UserId = -1,
+                Username = p_username,
             };
 
             if (IS_DEBUG_MODE_ON)
@@ -170,6 +181,9 @@ namespace GaucheOuDroiteBackEnd.Services
 
                 return logInResult;
             }
+
+            // Updating the returned values
+            logInResult.UserId = user.Id;
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] The User (Username: {p_username}) exists inside the DataBase.");
