@@ -8,13 +8,19 @@ using Shared.Tools;
 
 namespace GaucheOuDroiteBackEnd.Services
 {
-    public class AuthenticationService(PasswordHasher p_passwordHasher, UserService p_userService, UserProgressionService p_userProgressionService)
+    public class AuthenticationService(
+        PasswordHasher p_passwordHasher,
+        UserService p_userService,
+        UserProgressionService p_userProgressionService,
+        JwtTokenService p_jwtTokenService
+    )
     {
         const bool IS_DEBUG_MODE_ON = true;
 
         readonly PasswordHasher _passwordHasher = p_passwordHasher;
         readonly UserService _userService = p_userService;
         readonly UserProgressionService _userProgressionService = p_userProgressionService;
+        readonly JwtTokenService _jwtTokenService = p_jwtTokenService;
 
 
         public async Task<SignUpResultDTO> SignUpAsync(string p_username, string p_password)
@@ -112,6 +118,9 @@ namespace GaucheOuDroiteBackEnd.Services
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Successfully created all ({userProgressions.Count}) the UserProgressions (UserId: {user.Id}).");
+
+            // Creating the user's Token and updating the returned values
+            signUpResult.Token = _jwtTokenService.CreateToken(user.Id, p_username).Token;
 
             // -- Returning success -- //
 
@@ -225,6 +234,9 @@ namespace GaucheOuDroiteBackEnd.Services
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Successfully got all ({userProgressions.Count}) the UserProgressions (UserId: {user.Id}).");
+
+            // Creating the user's Token and updating the returned values
+            logInResult.Token = _jwtTokenService.CreateToken(user.Id, p_username).Token;
 
             // -- Returning success -- //
 

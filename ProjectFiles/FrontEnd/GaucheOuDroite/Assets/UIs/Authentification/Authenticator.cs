@@ -316,6 +316,14 @@ public class Authenticator : MonoBehaviour
                 if (_isDebugModeOn)
                     Debug.Log($"DEBUG: [{GetType().Name}] Request succeeded, response body:\n'{responseBody}'. Returning.");
 
+
+                // TEMPORARY TODO: DELETE
+                Debug.Log("SENDING TEST");
+
+                StartCoroutine(Aaaa(authenticationResultDTO.Token, "test-token"));
+
+                
+
                 yield break;
         
             case UnityWebRequest.Result.ConnectionError:
@@ -402,5 +410,64 @@ public class Authenticator : MonoBehaviour
 
                 yield break;
         }
+    }
+
+    /// <summary>
+    /// TODO: Move that method inside a Class that only handles sending request to the server
+    /// </summary>
+    /// <param name="p_connexionToken"></param>
+    /// <param name="p_route"></param>
+    /// <returns></returns>
+    IEnumerator Aaaa(string p_connexionToken, string p_route)
+    {
+
+        // http://localhost:5131 For http
+        // https://localhost:7280 For https
+
+        string url = $"https://localhost:7280/api/authentication/{p_route}";
+
+        // Converting the DTO in Json
+        string authenticationDTOInJson = JsonConvert.SerializeObject(null);
+
+        // Creating the request
+        // TODO : Prendre le code ci-dessous et en faire une méthode pour envoyer une requete au serveur
+        // Voir bloc-note + (création GameDataManager + PlayerDataManager)
+        UnityWebRequest request = new(
+            url,
+            UnityWebRequest.kHttpVerbGET // kHttpVerbPOST == "POST", we prefer using this because it's a constant, so no typos risk.
+        );
+
+        // Adding the Json to the request
+        byte[] body = Encoding.UTF8.GetBytes(authenticationDTOInJson);
+
+        // Will store the data when we send the request to the server
+        request.uploadHandler = new UploadHandlerRaw(body);
+
+        // Will store the data when the server will respond
+        request.downloadHandler = new DownloadHandlerBuffer();
+
+        // TODO: Obtenir des informations sur le contenu de cette méthode
+        request.SetRequestHeader(
+            "Content-Type",
+            "application/json"
+        );
+
+        // TODO: Obtenir des informations sur le contenu de cette méthode
+        request.SetRequestHeader(
+            "Authorization",
+            $"Bearer {p_connexionToken}"
+        );
+
+        // Sending the request to the BackEnd + Waiting for the request response from the BackEnd to come
+        yield return request.SendWebRequest();
+
+        object responseBody = JsonConvert.DeserializeObject(request.downloadHandler.text);
+
+        // TEMP - TODO DELETE
+        Debug.LogWarning(
+            $"WARNING: [{GetType().Name}] Request response received, result type: {request.result}, reason:\n" +
+            $"- HTTP Error: {request.error}\n" +
+            $"- Response Body:\n'{responseBody}'. Returning."
+        );
     }
 }
