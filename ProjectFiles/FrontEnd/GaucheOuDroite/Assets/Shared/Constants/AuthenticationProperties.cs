@@ -61,48 +61,68 @@ namespace Shared.Constants
         /// </summary>
         public static readonly Dictionary<AuthenticationErrorReasons, string> AUTHENTICATION_ERROR_MESSAGES = new()
         {
-            [AuthenticationErrorReasons.UsernameIsEmpty] = $"Le pseudonyme est vide.",
-            [AuthenticationErrorReasons.UsernameIsTooShort] = $"Le pseudonyme est trop court (<{USERNAME_MINIMUM_LENGHT}).",
-            [AuthenticationErrorReasons.UsernameIsTooLong] = $"Le pseudonyme est trop long (>{USERNAME_MAXIMUM_LENGHT}).",
+            [AuthenticationErrorReasons.UsernameIsEmpty]                            = $"Le pseudonyme est vide.",
+            [AuthenticationErrorReasons.UsernameIsTooShort]                         = $"Le pseudonyme est trop court (<{USERNAME_MINIMUM_LENGHT}).",
+            [AuthenticationErrorReasons.UsernameIsTooLong]                          = $"Le pseudonyme est trop long (>{USERNAME_MAXIMUM_LENGHT}).",
 
-            [AuthenticationErrorReasons.UsernameAlreadyExists] = $"Le pseudonyme est déjà pris par un autre utilisateur.\nSouhaitez-vous plutôt vous connecter ?",
+            [AuthenticationErrorReasons.UsernameAlreadyExists]                      = $"Le pseudonyme est déjà pris par un autre utilisateur.\nSouhaitez-vous plutôt vous connecter ?",
 
-            [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter] = $"Le pseudonyme contient au moins un caractère vide.",
+            [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"Le pseudonyme contient au moins un caractère vide.",
 
             // --- //
 
-            [AuthenticationErrorReasons.PasswordIsEmpty] = $"Le mot de passe est vide.",
-            [AuthenticationErrorReasons.PasswordIsTooShort] = $"Le mot de passe est trop court (<{PASSWORD_MINIMUM_LENGHT}).",
-            [AuthenticationErrorReasons.PasswordIsTooLong] = $"Le mot de passe est trop long (>{PASSWORD_MAXIMUM_LENGHT}).",
+            [AuthenticationErrorReasons.PasswordIsEmpty]                            = $"Le mot de passe est vide.",
+            [AuthenticationErrorReasons.PasswordIsTooShort]                         = $"Le mot de passe est trop court (<{PASSWORD_MINIMUM_LENGHT}).",
+            [AuthenticationErrorReasons.PasswordIsTooLong]                          = $"Le mot de passe est trop long (>{PASSWORD_MAXIMUM_LENGHT}).",
 
-            [AuthenticationErrorReasons.PasswordContainAtLeastOneSpaceCharacter] = $"Le mot de passe contient au moins un caractère vide.",
+            [AuthenticationErrorReasons.PasswordContainAtLeastOneSpaceCharacter]    = $"Le mot de passe contient au moins un caractère vide.",
 
-            [AuthenticationErrorReasons.PasswordDoesNotContainAnyLetters] = $"Le mot de passe ne contient pas au moins une lettre.",
-            [AuthenticationErrorReasons.PasswordDoesNotContainAnyNumbers] = $"Le mot de passe ne contient pas au moins un chiffre.",
+            [AuthenticationErrorReasons.PasswordDoesNotContainAnyLetters]           = $"Le mot de passe ne contient pas au moins une lettre.",
+            [AuthenticationErrorReasons.PasswordDoesNotContainAnyNumbers]           = $"Le mot de passe ne contient pas au moins un chiffre.",
             [AuthenticationErrorReasons.PasswordDoesNotContainAnySpecialCharacters] = $"Le mot de passe ne contient pas au moins un caractère spécial.",
 
             // --- //
 
-            [AuthenticationErrorReasons.UsernameDoesNotExist] = $"Le pseudonyme n'existe pas.\nSouhaitez-vous plutôt créer un compte ?",
-            [AuthenticationErrorReasons.IncorrectPassword] = $"Mot de passe incorrect.\nVeuillez réessayer.",
+            [AuthenticationErrorReasons.UsernameDoesNotExist]                       = $"Le pseudonyme n'existe pas.\nSouhaitez-vous plutôt créer un compte ?",
+            [AuthenticationErrorReasons.IncorrectPassword]                          = $"Mot de passe incorrect.\nVeuillez réessayer.",
 
-            [AuthenticationErrorReasons.UserAlreadyHasProgressions] = $"Des données de progression ont été détectées sur un utilisateur qui ne devrait pas en avoir.\nVeuillez réessayer.",
-            [AuthenticationErrorReasons.NoUserProgressionsFound] = $"Aucune donnée de progression n'a été trouvée sur un utilisateur qui devrait en avoir.\nVeuillez réessayer.",
+            [AuthenticationErrorReasons.UserAlreadyHasProgressions]                 = $"Des données de progression ont été détectées sur un utilisateur qui ne devrait pas en avoir.\nVeuillez réessayer.",
+            [AuthenticationErrorReasons.NoUserProgressionsFound]                    = $"Aucune donnée de progression n'a été trouvée sur un utilisateur qui devrait en avoir.\nVeuillez réessayer.",
 
-            [AuthenticationErrorReasons.InternalServerError] = $"Un problème interne a été détecté côté serveur.\nSi le problème persiste, relancez l'application.",
+            [AuthenticationErrorReasons.InternalServerError]                        = $"Un problème interne a été détecté côté serveur.\nSi le problème persiste, relancez l'application.",
+        };
+
+        public static readonly Dictionary<AuthenticationErrorReasons, string> USERNAME_REQUIREMENTS_HELPING_MESSAGES = new()
+        {
+            [AuthenticationErrorReasons.UsernameIsTooShort]                         = $"Doit faire au moins {USERNAME_MINIMUM_LENGHT} caractère(s).",
+            [AuthenticationErrorReasons.UsernameIsTooLong]                          = $"Ne doit pas dépasser {USERNAME_MAXIMUM_LENGHT} caractère(s).",
+
+            [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"Ne doit pas contenir d'espace.",
+        };
+
+        public static readonly Dictionary<AuthenticationErrorReasons, string> PASSWORD_REQUIREMENTS_HELPING_MESSAGES = new()
+        {
+            [AuthenticationErrorReasons.PasswordIsTooShort]                         = $"Doit faire au moins {PASSWORD_MINIMUM_LENGHT} caractère(s).",
+            [AuthenticationErrorReasons.PasswordIsTooLong]                          = $"Ne doit pas dépasser {PASSWORD_MAXIMUM_LENGHT} caractère(s).",
+
+            [AuthenticationErrorReasons.PasswordContainAtLeastOneSpaceCharacter]    = $"Ne doit pas contenir d'espace.",
+
+            [AuthenticationErrorReasons.PasswordDoesNotContainAnyLetters]           = $"Doit contenir au moins une lettre.",
+            [AuthenticationErrorReasons.PasswordDoesNotContainAnyNumbers]           = $"Doit contenir au moins un chiffre.",
+            [AuthenticationErrorReasons.PasswordDoesNotContainAnySpecialCharacters] = $"Doit contenir au moins un caractère spécial.",
         };
 
 
-        public const string SERVER_CONNECTION_ERROR_MESSAGE = "Échec de la connection avec le serveur.\nLe serveur n'est peut-être pas lancé.\nSi le problème persiste, relancez l'application.";
+        public const string SERVER_CONNECTION_ERROR_MESSAGE                         = "Échec de la connection avec le serveur.\nLe serveur n'est peut-être pas lancé.\nSi le problème persiste, relancez l'application.";
         
-        public const string DATA_PROCESSING_ERROR_MESSAGE = "Erreur lors du traitement des données reçues.\nDonnées corrompues ou au mauvais format.\nSi le problème persiste, relancez l'application.";
+        public const string DATA_PROCESSING_ERROR_MESSAGE                           = "Erreur lors du traitement des données reçues.\nDonnées corrompues ou au mauvais format.\nSi le problème persiste, relancez l'application.";
         
-        public const string UNKNOWN_ERROR_MESSAGE = "Erreur inconnue.\nSi le problème persiste, relancez l'application.";
+        public const string UNKNOWN_ERROR_MESSAGE                                   = "Erreur inconnue.\nSi le problème persiste, relancez l'application.";
 
          
 
-        public const string SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE = "Authentification validée localement.\nEnvoie des informations au serveur.";
-        public const string SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE = "Authentification validée par le serveur.";
+        public const string SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE                 = "Authentification validée localement.\nEnvoie des informations au serveur.";
+        public const string SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE                = "Authentification validée par le serveur.";
 
 
         public static readonly Dictionary<AuthenticationMode, string> AUTHENTICATION_MODE_IN_FRENCH = new()

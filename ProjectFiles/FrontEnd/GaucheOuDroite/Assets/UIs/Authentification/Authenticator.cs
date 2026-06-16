@@ -24,12 +24,15 @@ public class Authenticator : MonoBehaviour
     [SerializeField] bool _isDebugModeOn;
 
 
-    [Header("External references:")]
+    [Header("Internal references:")]
     [SerializeField] Button _requestSenderButton;
     [SerializeField] Button _autenticationModeChangerButton;
 
     [Space]
     [SerializeField] TextMeshProUGUI _feedbackText;
+
+    [Space]
+    [SerializeField] GameObject _autenticationInformationGameObject;
 
     [Header("Properties:")]
     [SerializeField] AuthenticationProperties.AuthenticationMode _authenticationMode = AuthenticationProperties.AuthenticationMode.SignUp;
@@ -43,7 +46,8 @@ public class Authenticator : MonoBehaviour
         if (!VariablesChecker.AreVariablesValid(name, null,
             (_requestSenderButton, nameof(_requestSenderButton)),
             (_autenticationModeChangerButton, nameof(_autenticationModeChangerButton)),
-            (_feedbackText, nameof(_feedbackText))
+            (_feedbackText, nameof(_feedbackText)),
+            (_autenticationInformationGameObject, nameof(_autenticationInformationGameObject))
         )) return;
     }
 
@@ -161,6 +165,8 @@ public class Authenticator : MonoBehaviour
                 )
             );
 
+            _autenticationInformationGameObject.SetActive(true);
+
             if (_isDebugModeOn)
                 Debug.Log($"DEBUG: [{GetType().Name}] The given username '{_username}' is not valid, reason: {errorMessage} Returning");
 
@@ -180,6 +186,8 @@ public class Authenticator : MonoBehaviour
                     AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Z
                 )
             );
+
+            _autenticationInformationGameObject.SetActive(true);
 
             if (_isDebugModeOn)
                 Debug.Log($"DEBUG: [{GetType().Name}] The given password '{new string('*', _password.Length)}' is not valid, reason: {errorMessage} Returning");
