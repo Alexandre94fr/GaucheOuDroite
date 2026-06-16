@@ -54,16 +54,73 @@ public static class ServerRequestManager
     }
 
     /// <summary>
-    /// BEWARE: The function is a coroutine. Make sure to call it by doing: StartCoroutine(SendRequest(...));
+    /// Sends an HTTP request to the BackEnd API and automatically handles:
+    /// <list type="bullet">
+    /// <item><description>Request creation (GET, POST, PUT, DELETE).</description></item>
+    /// <item><description>JSON serialization of the request body.</description></item>
+    /// <item><description>Authentication token injection when required.</description></item>
+    /// <item><description>Sending the request and waiting for the server response.</description></item>
+    /// <item><description>JSON deserialization of the response body.</description></item>
+    /// <item><description>Invoking success or error callbacks depending on the request result.</description></item>
+    /// </list>
+    /// 
+    /// This method should be used as the main entry point for all communications
+    /// between the FrontEnd and the BackEnd.
+    ///
+    /// <para>
+    /// The server response body is automatically deserialized into the
+    /// specified <typeparamref name="TResponse"/> type.
+    /// </para>
+    ///
+    /// <para>
+    /// <b>BEWARE:</b> This method is a coroutine and must be started using
+    /// <see cref="MonoBehaviour.StartCoroutine(IEnumerator)"/>.
+    /// </para>
+    ///
+    /// <example>
+    /// Code example: Sending a login request:
+    /// <code>
+    /// StartCoroutine(ServerRequestManager.SendRequest&lt;LogInResultDTO&gt;(
+    ///     "authentication/log-in",
+    ///     ServerRequestManager.RequestType.Post,
+    ///     new LogInDTO
+    ///     {
+    ///         Username = username,
+    ///         Password = password
+    ///     },
+    ///     p_isAuthenticationTokenNeeded: false,
+    ///
+    ///     result =>
+    ///     {
+    ///         Debug.Log($"Successfully log in as {result.Username}");
+    ///
+    ///         ServerRequestManager.AuthenticationToken = result.Token;
+    ///     },
+    ///
+    ///     request =>
+    ///     {
+    ///         Debug.LogError(
+    ///             $"Failed to log in. Request failed.\n" +
+    ///             ServerRequestManager.RequestResponseToString(request)
+    ///         );
+    ///     })
+    /// );
+    /// </code>
+    /// </example>
     /// </summary>
-    /// <typeparam name="TResponse"></typeparam>
-    /// <param name="p_route"></param>
-    /// <param name="p_requestType"></param>
-    /// <param name="p_requestBody">Can be null.</param>
-    /// <param name="p_isAuthenticationTokenNeeded"></param>
-    /// <param name="p_onSuccess"></param>
-    /// <param name="p_onError"></param>
-    /// <returns></returns>
+    /// 
+    /// <typeparam name="TResponse"> Type expected from the server response body. </typeparam>
+    /// <param name="p_route"> API route relative to "/api/". Example: "authentication/log-in". </param>
+    /// <param name="p_requestType"> HTTP request type to send. </param>
+    /// <param name="p_requestBody"> Object to serialize as JSON and send to the server. Can be null for requests that do not require a body. </param>
+    /// <param name="p_isAuthenticationTokenNeeded"> Indicates whether the request requires an AuthenticationToken. 
+    /// If true, the value stored in <see cref="AuthenticationToken"/> will be added to the request headers. 
+    /// Be sure that <see cref="AuthenticationToken"/> as been set before passing true.
+    /// A warning will be print out if <see cref="AuthenticationToken"/> is equal to null or "". </param>
+    /// <param name="p_onSuccess"> Callback invoked when the request succeeds. Receives the deserialized server response. </param>
+    /// <param name="p_onError"> Callback invoked when the request fails. Receives the original UnityWebRequest for error inspection. </param>
+    /// 
+    /// <returns> IEnumerator used by Unity's coroutine system. </returns>
     public static IEnumerator SendRequest<TResponse>(
         string p_route,
         RequestType p_requestType,
