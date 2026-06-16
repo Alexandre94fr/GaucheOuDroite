@@ -23,7 +23,19 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
         [HttpGet("test-token")]
         public async Task<IActionResult> TestToken()
         {
-            return Ok();
+            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+            SignUpResultDTO signUpResult = new()
+            {
+                HasSucceeded = true,
+                AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty,
+                
+                Token = "",
+                UserId = 42,
+                Username = "Jean",
+            };
+
+            return Ok(signUpResult);
         }
 
 
