@@ -8,9 +8,8 @@ using VariableCheckerPackage;
 using Shared.Constants;
 using Shared.Tools;
 
-// For networking (TEMP TODO: Remove after create a class that handle sending request to the server)
+// For networking
 
-using System.Text;
 using UnityEngine.Networking;
 
 using Newtonsoft.Json;
@@ -230,8 +229,7 @@ public class Authenticator : MonoBehaviour
         _requestSenderButton.interactable = false;
         _autenticationModeChangerButton.interactable = false;
 
-        // Getting and creating the good route and DTO depending of the given AuthenticationMode
-        // TODO: Prendre le code ci-dessous et en faire une méthode 
+        // Getting and creating the good route and DTO depending of the given AuthenticationMode 
         string route;
         object authenticationDTO;
 
@@ -239,7 +237,7 @@ public class Authenticator : MonoBehaviour
         {
             case AuthenticationProperties.AuthenticationMode.SignUp:
 
-                route = "sign-up";
+                route = "authentication/sign-up";
 
                 authenticationDTO = new SignUpDTO()
                 {
@@ -251,7 +249,7 @@ public class Authenticator : MonoBehaviour
 
             case AuthenticationProperties.AuthenticationMode.LogIn:
 
-                route = "log-in";
+                route = "authentication/log-in";
 
                 authenticationDTO = new LogInDTO()
                 {
@@ -266,93 +264,54 @@ public class Authenticator : MonoBehaviour
                 yield break;
         }
 
-        // http://localhost:5131 For http
-        // https://localhost:7280 For https
+        StartCoroutine(ServerRequestManager.SendRequest<AuthenticationResultDTO>(
+            route,
+            ServerRequestManager.RequestType.Post,
 
-        string url = $"https://localhost:7280/api/authentication/{route}";
+            authenticationDTO,
+            false,
 
-        // Converting the DTO in Json
-        string authenticationDTOInJson = JsonConvert.SerializeObject(authenticationDTO);
+            OnRequestSuccess,
+            OnRequestFailure
+        ));
 
-        // Creating the request
-        // TODO : Prendre le code ci-dessous et en faire une méthode pour envoyer une requete au serveur
-        // Voir bloc-note + (création GameDataManager + PlayerDataManager)
-        UnityWebRequest request = new(
-            url,
-            UnityWebRequest.kHttpVerbPOST // kHttpVerbPOST == "POST", we prefer using this because it's a constant, so no typos risk.
-        );
-
-        // Adding the Json to the request
-        byte[] body = Encoding.UTF8.GetBytes(authenticationDTOInJson);
-
-        // Will store the data when we send the request to the server
-        request.uploadHandler = new UploadHandlerRaw(body);
-
-        // Will store the data when the server will respond
-        request.downloadHandler = new DownloadHandlerBuffer();
-
-        request.SetRequestHeader(
-            "Content-Type",
-            "application/json"
-        );
-
-        // Sending the request to the BackEnd + Waiting for the request response from the BackEnd to come
-        yield return request.SendWebRequest();
-
-        // We received a response from the server; we can make the buttons intractable again
+        // We received a response from the server, we can make the buttons intractable again
         _requestSenderButton.interactable = true;
         _autenticationModeChangerButton.interactable = true;
+    }
 
-        object responseBody = JsonConvert.DeserializeObject(request.downloadHandler.text);
+    void OnRequestSuccess(AuthenticationResultDTO p_authenticationResultDTO)
+    {
+        DisplayFeedback(
+            AuthenticationProperties.SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE,
+            new(
+                AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.X,
+                AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.Y,
+                AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.Z
+            )
+        );
 
-        AuthenticationResultDTO authenticationResultDTO = ConvertRequestResponseData(request);
-        
+        if (_isDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Request succeeded, authentication succeeded.");
+
+        if (_isDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Saving the AuthenticationToken inside the ServerRequestManager Class.");
+
+        ServerRequestManager.AuthenticationToken = p_authenticationResultDTO.Token;
+    }
+
+    void OnRequestFailure(UnityWebRequest p_request)
+    {
+        AuthenticationResultDTO authenticationResultDTO = ConvertRequestResponseData(p_request);
+
         // Handling all cases
-        switch (request.result)
+        switch (p_request.result)
         {
             case UnityWebRequest.Result.Success:
 
-                DisplayFeedback(
-                    AuthenticationProperties.SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE,
-                    new(
-                        AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.X,
-                        AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.Y,
-                        AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.Z
-                    )
-                );
+                // The case is already handled by the OnRequestSuccess method
+                break;
 
-                if (_isDebugModeOn)
-                    Debug.Log($"DEBUG: [{GetType().Name}] Request succeeded, response body:\n'{responseBody}'. Returning.");
-
-
-                ServerRequestManager.AuthenticationToken = authenticationResultDTO.Token;
-
-                // TEMPORARY TODO: DELETE
-                Debug.Log("SENDING TEST");
-
-                StartCoroutine(ServerRequestManager.SendRequest<AuthenticationResultDTO>(
-                    "authentication/test-token",
-                    ServerRequestManager.RequestType.Get,
-
-                    null,
-                    true,
-
-                    result =>
-                    {
-                        Debug.Log($"UserId : {result.UserId}");
-
-                        Debug.Log($"Token : {result.Token}");
-                    },
-
-                    request =>
-                    {
-                        Debug.LogError(request.error);
-                    }
-                ));
-                 
-
-                yield break;
-        
             case UnityWebRequest.Result.ConnectionError:
                 {
                     DisplayFeedback(
@@ -364,18 +323,14 @@ public class Authenticator : MonoBehaviour
                         )
                     );
 
-                    Debug.LogError(
-                        $"ERROR: [{GetType().Name}] Request failed, result type: {request.result}, reason:\n" +
-                        $"- HTTP Error: {request.error}\n" +
-                        $"- Response Body:\n'{responseBody}'. Returning."
-                    );
-
-                    yield break;
+                    Debug.LogError($"ERROR: [{GetType().Name}] Request failed ({p_request.result}). {ServerRequestManager.RequestResponseToString(p_request)}\nReturning.");
+                    break;
                 }
-            
+
             case UnityWebRequest.Result.ProtocolError:
-               
+
                 // Using the .AuthenticationError value to get a string from the AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGES dictionary
+                // If we fail, the shown error will be an Unknown error message
                 if (!AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGES.TryGetValue(authenticationResultDTO.AuthenticationError, out string authenticationMessage))
                 {
                     authenticationMessage = AuthenticationProperties.UNKNOWN_ERROR_MESSAGE;
@@ -390,16 +345,11 @@ public class Authenticator : MonoBehaviour
                     )
                 );
 
-                Debug.LogWarning(
-                    $"WARNING: [{GetType().Name}] Request failed, result type: {request.result}, reason:\n" +
-                    $"- HTTP Error: {request.error}\n" +
-                    $"- Response Body:\n'{responseBody}'. Returning."
-                );
-
-                yield break;
+                Debug.LogWarning($"WARNING: [{GetType().Name}] Request failed ({p_request.result}). {ServerRequestManager.RequestResponseToString(p_request)}\nReturning.");
+                break;
 
             case UnityWebRequest.Result.DataProcessingError:
-        
+
                 DisplayFeedback(
                     AuthenticationProperties.DATA_PROCESSING_ERROR_MESSAGE,
                     new(
@@ -409,16 +359,12 @@ public class Authenticator : MonoBehaviour
                     )
                 );
 
-                Debug.LogError(
-                    $"ERROR: [{GetType().Name}] Request failed, result type: {request.result}, reason:\n" +
-                    $"- HTTP Error: {request.error}\n" +
-                    $"- Response Body:\n'{responseBody}'. Returning."
-                );
-
-                yield break;
+                Debug.LogError($"ERROR: [{GetType().Name}] Request failed ({p_request.result}). {ServerRequestManager.RequestResponseToString(p_request)}\nReturning.");
+                break;
 
             default:
-                Debug.LogWarning($"WARNING: [{GetType().Name}] The received '{request.result}' UnityWebRequest.Result is not planned in the switch. Showing unknown error and returning.");
+
+                Debug.LogWarning($"WARNING: [{GetType().Name}] The received '{p_request.result}' UnityWebRequest.Result is not planned in the switch. Showing unknown error and returning.");
 
                 DisplayFeedback(
                     AuthenticationProperties.UNKNOWN_ERROR_MESSAGE,
@@ -429,13 +375,8 @@ public class Authenticator : MonoBehaviour
                     )
                 );
 
-                Debug.LogError(
-                    $"ERROR: [{GetType().Name}] Request failed, result type: {request.result}, reason:\n" +
-                    $"- HTTP Error: {request.error}\n" +
-                    $"- Response Body:\n'{responseBody}'. Returning."
-                );
-
-                yield break;
+                Debug.LogError($"ERROR: [{GetType().Name}] Request failed ({p_request.result}). {ServerRequestManager.RequestResponseToString(p_request)}\nReturning.");
+                break;
         }
     }
 }
