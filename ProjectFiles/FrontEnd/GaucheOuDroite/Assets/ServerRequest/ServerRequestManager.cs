@@ -222,8 +222,6 @@ public static class ServerRequestManager
         // Invoking the right Action depending of the success of the request
         if (request.result == UnityWebRequest.Result.Success)
         {
-            if (p_onSuccess.Target == null)
-
             p_onSuccess?.Invoke(responseBody);
         }
         else
