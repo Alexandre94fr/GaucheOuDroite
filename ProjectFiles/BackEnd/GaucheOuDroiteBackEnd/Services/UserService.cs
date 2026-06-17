@@ -18,18 +18,18 @@ namespace GaucheOuDroiteBackEnd.Services
         public async Task<bool> IsUserExistingAsync(string p_username)
         {
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to check if the User (Id: {p_username}) exists inside the DataBase.");
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to check if the User (Username: {p_username}) exists inside the DataBase.");
 
             if (await GetUserAsync(p_username) == null)
             {
                 if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The User (Id: {p_username}) doesn't exist inside the DataBase. Returning false.");
+                    Console.WriteLine($"DEBUG: [{GetType().Name}] The User (Username: {p_username}) doesn't exist inside the DataBase. Returning false.");
 
                 return false;
             }
 
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] The User (Id: {p_username}) does exist inside the DataBase. Returning true.");
+                Console.WriteLine($"DEBUG: [{GetType().Name}] The User (Username: {p_username}) does exist inside the DataBase. Returning true.");
 
             return true;
         }
