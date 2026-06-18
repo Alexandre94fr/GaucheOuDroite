@@ -5,6 +5,8 @@ using TMPro;
 
 using VariableCheckerPackage;
 
+using FrontEnd.Data.User;
+
 using Shared.Constants;
 using Shared.Tools;
 
@@ -298,6 +300,11 @@ public class Authenticator : MonoBehaviour
             Debug.Log($"DEBUG: [{GetType().Name}] Saving the AuthenticationToken inside the ServerRequestManager Class.");
 
         ServerRequestManager.AuthenticationToken = p_authenticationResultDTO.Token;
+
+        if (_isDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Loading the Game's and User's data.");
+
+        StartCoroutine(UserDataManager.Instance.LoadDataFromServer(p_authenticationResultDTO.UserId));
     }
 
     void OnRequestFailure(UnityWebRequest p_request)
