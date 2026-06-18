@@ -18,26 +18,6 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
 
         readonly AuthenticationService _authenticationService = p_authenticationService;
 
-        /// <summary> TODO: Delete after clean </summary>
-        [Authorize]
-        [HttpGet("test-token")]
-        public async Task<IActionResult> TestToken()
-        {
-            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
-            SignUpResultDTO signUpResult = new()
-            {
-                HasSucceeded = true,
-                AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty,
-                
-                Token = "",
-                UserId = 42,
-                Username = "Jean",
-            };
-
-            return Ok(signUpResult);
-        }
-
 
         // Note:
         // It seems like the code of the SignUp and LogIn methods are almost perfectly the same.
