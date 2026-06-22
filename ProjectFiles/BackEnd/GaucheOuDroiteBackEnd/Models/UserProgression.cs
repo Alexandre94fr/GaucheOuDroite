@@ -1,5 +1,7 @@
 ﻿namespace GaucheOuDroiteBackEnd.Models
 {
+    // TODO: Rename LevelProgression
+    // TODO: Create a real UserProgression (like UserProgressionDTO)
     public class UserProgression
     {
         public int Id { get; set; } // The Id is not required because the DataBase will generate it, when creating a new UserProgression.

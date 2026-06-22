@@ -211,7 +211,9 @@ namespace GaucheOuDroiteBackEnd.Services
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to try getting the UserProgression (Id: {p_id}) from the DataBase.");
 
-            UserProgression? userProgression = await _dataBaseContext.UserProgressions.FindAsync(p_id);
+            UserProgression? userProgression = await _dataBaseContext.UserProgressions
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == p_id);
 
             if (userProgression == null)
             {
@@ -227,14 +229,24 @@ namespace GaucheOuDroiteBackEnd.Services
             return userProgression;
         }
 
+        /// <summary>
+        /// 
+        /// 
+        /// <para> <b> Note: </b>
+        /// The returned UserProgressions are no tracked by the DataBaseContext, 
+        /// meaning modify one of them and doing DataBaseContext.SaveChangesAsync() will not save anything.
+        /// </para> </summary>
+        /// <param name="p_userId"></param>
+        /// <returns></returns>
         public async Task<List<UserProgression>> GetAllUserProgressionsAsync(int p_userId)
         {
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to try getting all the UserProgression (UserId: {p_userId}) from the DataBase.");
 
-            List<UserProgression> userProgressions = await _dataBaseContext.UserProgressions.Where(
-                userProg => userProg.UserId == p_userId
-            ).ToListAsync();
+            List<UserProgression> userProgressions = await _dataBaseContext.UserProgressions
+                .AsNoTracking()
+                .Where(userProg => userProg.UserId == p_userId)
+                .ToListAsync();
 
             if (userProgressions.Count == 0)
             {
@@ -254,10 +266,37 @@ namespace GaucheOuDroiteBackEnd.Services
 
         #region - Update -
 
-        public async Task UpdateUserAsync(UserProgression p_userProgression)
+        public async Task<bool> UpdateUserProgressionAsync(UserProgression p_userProgression)
         {
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to update the UserProgression (Id: {p_userProgression.Id}, UserId: {p_userProgression.UserId}, LevelId: {p_userProgression.LevelId}).");
+
+            #region Security checks
+
+            // Checking if the given UserProgression exist inside the DataBase.
+            // AND
+            // Checking if the founded UserProgression is owned by the right User.
+            // We don't want to let the Client modify a UserProgression if he doesn't own it.
+            // 
+            // We don't use the IsUserProgressionExistingAsync method because we want to limit the number of querries we do.
+            
+            UserProgression? userProgression = await GetUserProgressionAsync(p_userProgression.Id);
+
+            if (userProgression == null)
+            {
+                Console.WriteLine($"WARNING: [{GetType().Name}] Failed to find the UserProgression (Id: {p_userProgression.Id}, UserId: {p_userProgression.UserId}, LevelId: {p_userProgression.LevelId}) inside the DataBase. Returning false.");
+
+                return false;
+            }
+
+            if (userProgression.UserId != p_userProgression.UserId)
+            {
+                Console.WriteLine($"WARNING: [{GetType().Name}] Unauthorized modification rights. The UserProgression (Id: {userProgression.Id}, UserId: {userProgression.UserId}, LevelId: {userProgression.LevelId}) inside the DataBase is owned by a different User. Owner UserId: {userProgression.UserId}, other UserId: {p_userProgression.UserId}. Returning false.");
+
+                return false;
+            }
+
+            #endregion
 
             _dataBaseContext.UserProgressions.Update(p_userProgression);
 
@@ -265,6 +304,8 @@ namespace GaucheOuDroiteBackEnd.Services
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Successfully updated the UserProgression (Id: {p_userProgression.Id}, UserId: {p_userProgression.UserId}, LevelId: {p_userProgression.LevelId}).");
+
+            return true;
         }
 
         #endregion

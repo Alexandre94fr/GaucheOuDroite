@@ -146,17 +146,27 @@ namespace GaucheOuDroiteBackEnd.Services
 
         #region - Update -
 
-        public async Task UpdateUserAsync(User p_user)
+        public async Task<bool> UpdateUserAsync(User p_user)
         {
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to update the User (Id: {p_user.Id}, Username: {p_user.Username}).");
+
+            // Checking if the given User exist
+            if (!await IsUserExistingAsync(p_user.Id))
+            {
+                Console.WriteLine($"WARNING: [{GetType().Name}] Failed to find the User {p_user.Id} inside the DataBase. Returning false.");
+
+                return false;
+            }
 
             _dataBaseContext.Users.Update(p_user);
 
             await _dataBaseContext.SaveChangesAsync();
 
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] Successfully updated the User (Id: {p_user.Id}, Username: {p_user.Username}).");
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Successfully updated the User (Id: {p_user.Id}, Username: {p_user.Username}). Returning true.");
+
+            return true;
         }
 
         #endregion

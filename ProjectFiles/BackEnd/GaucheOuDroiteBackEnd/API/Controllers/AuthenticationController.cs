@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 using GaucheOuDroiteBackEnd.Services;
 
@@ -17,26 +16,6 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
         const bool IS_DEBUG_MODE_ON = true;
 
         readonly AuthenticationService _authenticationService = p_authenticationService;
-
-        /// <summary> TODO: Delete after clean </summary>
-        [Authorize]
-        [HttpGet("test-token")]
-        public async Task<IActionResult> TestToken()
-        {
-            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
-            SignUpResultDTO signUpResult = new()
-            {
-                HasSucceeded = true,
-                AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.UsernameIsEmpty,
-                
-                Token = "",
-                UserId = 42,
-                Username = "Jean",
-            };
-
-            return Ok(signUpResult);
-        }
 
 
         // Note:

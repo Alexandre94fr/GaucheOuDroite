@@ -35,7 +35,7 @@ namespace GaucheOuDroiteBackEnd.Services
 
                 _dataBaseContext.Remove(p_user);
             }
-
+            
             if (p_userProgressions != null)
             {
                 if (IS_DEBUG_MODE_ON)
