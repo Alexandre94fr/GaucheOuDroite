@@ -35,18 +35,18 @@ namespace FrontEnd.Data.User
             return userProgression;
         }
 
-        public UserProgressionDTO ToUserProgressionDTO(int p_userId)
+        public static explicit operator UserProgressionDTO(UserProgression p_userProgression)
         {
             UserProgressionDTO userProgressionDTO = new()
             {
-                LevelProgressions = new(this.LevelProgressions.Count)
+                LevelProgressions = new(p_userProgression.LevelProgressions.Count)
             };
-            
+
             // Converting LevelProgression into LevelProgressionDTO
-            foreach ((int levelId, LevelProgression levelProgression) in this.LevelProgressions)
+            foreach ((int levelId, LevelProgression levelProgression) in p_userProgression.LevelProgressions)
             {
                 userProgressionDTO.LevelProgressions.Add(
-                    levelProgression.ToLevelProgressionDTO(p_userId, levelId)
+                    levelProgression.ToLevelProgressionDTO(levelId)
                 );
             }
 
@@ -56,6 +56,11 @@ namespace FrontEnd.Data.User
 
     public class LevelProgression
     {
+        public int Id { get; internal set; } = -1;
+
+        // We don't store the LevelId associated with this LevelProgression,
+        // because the UserProgression.LevelProgressions dictionary already store the LevelId as Keys.
+
         public bool IsUnlocked { get; internal set; } = false;
 
         public int BestScore { get; internal set; } = -1;
@@ -65,16 +70,18 @@ namespace FrontEnd.Data.User
         {
             return new()
             {
+                Id = p_levelProgressionDTO.Id,
+
                 IsUnlocked = p_levelProgressionDTO.IsUnlocked,
                 BestScore = p_levelProgressionDTO.BestScore
             };
         }
 
-        public LevelProgressionDTO ToLevelProgressionDTO(int p_userId, int p_levelId)
+        public LevelProgressionDTO ToLevelProgressionDTO(int p_levelId)
         {
             return new()
             {
-                UserId = p_userId,
+                Id = this.Id,
                 LevelId = p_levelId,
 
                 IsUnlocked = this.IsUnlocked,
@@ -93,13 +100,21 @@ namespace FrontEnd.Data.User
     /// </summary>
     public class UserDataManager : MonoBehaviour
     {
+        // TODO: Implement a Dirty system, so when we need to send data to the server,
+        // we can send only the dirty data.
+        //
+        // Note: For now it's not necessary because there are not a lot of data to send to the server,
+        // but if it was a bigger, and real project, the system will be necessary.
+
+
         public static UserDataManager Instance;
 
-        [HideInInspector] public const string GET_USER_API_ROUTE = "user/get";
-        [HideInInspector] public const string GET_USER_PROGRESSION_API_ROUTE = "user-progression/get";
-
-        [HideInInspector] public const string SET_USER_API_ROUTE = "user/set";
-        [HideInInspector] public const string SET_USER_PROGRESSION_API_ROUTE = "user-progression/set";
+        // Note:
+        // Because we are using the REST design,
+        // the Get, Put, and more, actions are directly linked to the Class' API route.
+        // This is why each action doesn't have its own route.
+        [HideInInspector] public const string USER_API_ROUTE = "users";
+        [HideInInspector] public const string USER_PROGRESSION_API_ROUTE = "user-progressions";
 
 
         [Header("----- DEBUG -----")]
@@ -122,18 +137,11 @@ namespace FrontEnd.Data.User
 
         void Start()
         {
-            if (string.IsNullOrEmpty(GET_USER_API_ROUTE))
-                Debug.LogWarning($"WARNING: [{GetType().Name}] The '{nameof(GET_USER_API_ROUTE)}' constant is null or empty. Please set it.");
+            if (string.IsNullOrEmpty(USER_API_ROUTE))
+                Debug.LogWarning($"WARNING: [{GetType().Name}] The '{nameof(USER_API_ROUTE)}' constant is null or empty. Please set it.");
 
-            if (string.IsNullOrEmpty(GET_USER_PROGRESSION_API_ROUTE))
-                Debug.LogWarning($"WARNING: [{GetType().Name}] The '{nameof(GET_USER_PROGRESSION_API_ROUTE)}' constant is null or empty. Please set it.");
-
-
-            if (string.IsNullOrEmpty(SET_USER_API_ROUTE))
-                Debug.LogWarning($"WARNING: [{GetType().Name}] The '{nameof(SET_USER_API_ROUTE)}' constant is null or empty. Please set it.");
-
-            if (string.IsNullOrEmpty(SET_USER_PROGRESSION_API_ROUTE))
-                Debug.LogWarning($"WARNING: [{GetType().Name}] The '{nameof(SET_USER_PROGRESSION_API_ROUTE)}' constant is null or empty. Please set it.");
+            if (string.IsNullOrEmpty(USER_PROGRESSION_API_ROUTE))
+                Debug.LogWarning($"WARNING: [{GetType().Name}] The '{nameof(USER_PROGRESSION_API_ROUTE)}' constant is null or empty. Please set it.");
         }
 
 
@@ -143,16 +151,11 @@ namespace FrontEnd.Data.User
 
         IEnumerator LoadUserDataFromServer(int p_userId, Action<GetUserResponseDTO> p_onServerRequestResponse)
         {
-            GetUserRequestDTO getUserDataDTO = new()
-            {
-                Id = p_userId,
-            };
-
             yield return ServerRequestManager.SendRequest<GetUserResponseDTO>(
-                GET_USER_API_ROUTE,
+                USER_API_ROUTE,
                 ServerRequestManager.RequestType.Get,
 
-                getUserDataDTO,
+                null,
                 true,
 
                 result =>
@@ -169,18 +172,13 @@ namespace FrontEnd.Data.User
             );
         }
 
-        IEnumerator LoadUserProgressionsDataFromServer(int p_userId, Action<UserProgressionDTO> p_onServerRequestResponse)
+        IEnumerator LoadUserProgressionDataFromServer(int p_userId, Action<GetUserProgressionResponseDTO> p_onServerRequestResponse)
         {
-            GetUserRequestDTO getUserDataDTO = new()
-            {
-                Id = p_userId,
-            };
-
-            yield return ServerRequestManager.SendRequest<UserProgressionDTO>(
-                GET_USER_PROGRESSION_API_ROUTE,
+            yield return ServerRequestManager.SendRequest<GetUserProgressionResponseDTO>(
+                USER_PROGRESSION_API_ROUTE,
                 ServerRequestManager.RequestType.Get,
 
-                getUserDataDTO,
+                null,
                 true,
 
                 result =>
@@ -206,20 +204,22 @@ namespace FrontEnd.Data.User
             if (_isDebugModeOn)
                 Debug.Log($"DEBUG: [{GetType().Name}] Sending requests to the server.");
 
-            GetUserResponseDTO userData = null;
-            UserProgressionDTO userProgression = null;
+            GetUserResponseDTO userResponseDTO = null;
+            GetUserProgressionResponseDTO userProgressionResponseDTO = null;
+
+            UserProgressionDTO userProgressionDTO = new();
 
             // Note:
             // In a real project, we will send the requests in parallel to avoid waiting for to each request to finish.
 
             yield return LoadUserDataFromServer(
                 p_userId,
-                result => userData = result
+                result => userResponseDTO = result
             );
 
-            yield return LoadUserProgressionsDataFromServer(
+            yield return LoadUserProgressionDataFromServer(
                 p_userId,
-                result => userProgression = result
+                result => userProgressionResponseDTO = result
             );
 
             // -- Checking if the request succeeded -- //
@@ -227,20 +227,20 @@ namespace FrontEnd.Data.User
             if (_isDebugModeOn)
                 Debug.Log($"DEBUG: [{GetType().Name}] Checking if the requests sent to the server succeeded.");
 
-            if (userData == null)
+            if (userResponseDTO == null || !userResponseDTO.HasSucceeded)
             {
-                Debug.LogWarning($"WARNING: [{GetType().Name}] The GetUser request sent to the server failed. Returning.");
+                Debug.LogWarning($"WARNING: [{GetType().Name}] The GetUser request sent to the server failed. Returning.\nError: {userResponseDTO.ErrorMessage}");
                 yield break;
             }
 
-            if (userProgression == null)
+            if (userProgressionResponseDTO == null || !userProgressionResponseDTO.HasSucceeded)
             {
-                Debug.LogWarning($"WARNING: [{GetType().Name}] The GetUserProgressions request sent to the server failed. Returning.");
+                Debug.LogWarning($"WARNING: [{GetType().Name}] The GetUserProgression request sent to the server failed. Returning.\nError: {userProgressionResponseDTO.ErrorMessage}");
                 yield break;
             }
 
             if (_isDebugModeOn)
-                Debug.Log($"DEBUG: [{GetType().Name}] The GetUser and GetUserProgressions requests sent to the server succeeded.");
+                Debug.Log($"DEBUG: [{GetType().Name}] The GetUser and GetUserProgression requests sent to the server succeeded.");
 
             // -- Setting local variables (User + UserProgressions) -- //
 
@@ -250,13 +250,15 @@ namespace FrontEnd.Data.User
             // - User data - //
 
             // Converting the GetUserResponseDTO into usable variables
-            _userId = userData.Id;
-            _username = userData.Username;
+            _userId = userResponseDTO.Id;
+            _username = userResponseDTO.Username;
 
             // - User progressions data - //
 
             // Converting the UserProgressionDTO into UserProgression
-            _userProgression = (UserProgression)userProgression;
+            userProgressionDTO.LevelProgressions = userProgressionResponseDTO.LevelProgressions;
+
+            _userProgression = (UserProgression)userProgressionDTO;
         }
 
         #endregion
@@ -280,6 +282,11 @@ namespace FrontEnd.Data.User
 
         #region - User progression data -
 
+        /// <summary>
+        /// Returns a reference to a specific LevelProgression for a Level.
+        /// </summary>
+        /// <param name="p_levelId"> The Id of the Level associated with the LevelProgression you want. </param>
+        /// <returns></returns>
         public LevelProgression GetLevelProgression(int p_levelId)
         {
             if (!_userProgression.LevelProgressions.TryGetValue(p_levelId, out LevelProgression levelProgressionData))
@@ -355,12 +362,12 @@ namespace FrontEnd.Data.User
         {
             // -- Converting UserProgression into UserProgressionDTO -- //
 
-            UserProgressionDTO userProgressionDTO = _userProgression.ToUserProgressionDTO(_userId);
+            UserProgressionDTO userProgressionDTO = (UserProgressionDTO)_userProgression;
 
             // -- Sending request -- //
 
             yield return ServerRequestManager.SendRequest<ApiResponseDTO>(
-                SET_USER_PROGRESSION_API_ROUTE,
+                USER_PROGRESSION_API_ROUTE,
                 ServerRequestManager.RequestType.Put,
 
                 userProgressionDTO,

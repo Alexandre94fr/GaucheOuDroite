@@ -4,6 +4,6 @@ namespace Shared.DTOs
     {
         public bool HasSucceeded { get; set; } = false;
     
-        public string Message { get; set; } = "";
+        public string ErrorMessage { get; set; } = "";
     }
 }

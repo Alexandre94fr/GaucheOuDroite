@@ -304,7 +304,46 @@ public class Authenticator : MonoBehaviour
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Loading the Game's and User's data.");
 
-        StartCoroutine(UserDataManager.Instance.LoadDataFromServer(p_authenticationResultDTO.UserId));
+
+
+        StartCoroutine(Test(p_authenticationResultDTO));
+
+
+    }
+
+    IEnumerator Test(AuthenticationResultDTO p_authenticationResultDTO)
+    {
+        // TODO: Move that outside this test coroutine.
+        yield return StartCoroutine(UserDataManager.Instance.LoadDataFromServer(p_authenticationResultDTO.UserId));
+
+        Debug.Log($"Level progressions:\n{JsonConvert.SerializeObject(UserDataManager.Instance.GetAllLevelProgressions(), Formatting.Indented)}");
+
+        UserDataManager.Instance.UpdateLevelProgression(1, new()
+        {
+            Id = 1,
+            IsUnlocked = true,
+            BestScore = 5000
+        });
+
+        UserDataManager.Instance.UpdateLevelProgression(2, new()
+        {
+            Id = 2,
+            IsUnlocked = true,
+            BestScore = 6450
+        });
+
+        UserDataManager.Instance.UpdateLevelProgression(3, new()
+        {
+            Id = 3,
+            IsUnlocked = true,
+            BestScore = 0
+        });
+
+        Debug.Log($"Data changed locally. Level progressions:\n{JsonConvert.SerializeObject(UserDataManager.Instance.GetAllLevelProgressions(), Formatting.Indented)}");
+
+        yield return StartCoroutine(UserDataManager.Instance.SaveAllUserData());
+
+        Debug.Log($"Data saved inside the DataBase.");
     }
 
     void OnRequestFailure(UnityWebRequest p_request)

@@ -4,7 +4,7 @@ namespace Shared.DTOs.Data.User
 {
 	public class UserProgressionDTO
 	{
-        public List<LevelProgressionDTO> LevelProgressions = new();
+        public List<LevelProgressionDTO> LevelProgressions { get; set; } = new();
 
         // Add other properties if necessary
 

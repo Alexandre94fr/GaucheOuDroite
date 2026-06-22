@@ -1,6 +1,6 @@
 namespace Shared.DTOs.Data.User
 {
-	public class GetUserResponseDTO
+	public class GetUserResponseDTO : ApiResponseDTO
     {
         public int Id { get; set; } = -1;
 
