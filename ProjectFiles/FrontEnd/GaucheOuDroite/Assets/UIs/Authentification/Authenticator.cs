@@ -5,6 +5,7 @@ using TMPro;
 
 using VariableCheckerPackage;
 
+using FrontEnd.Data.Game;
 using FrontEnd.Data.User;
 
 using Shared.Constants;
@@ -304,9 +305,8 @@ public class Authenticator : MonoBehaviour
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Loading the Game's and User's data.");
 
-        // TODO: Load Game's data
-
-        StartCoroutine(UserDataManager.Instance.LoadDataFromServer(p_authenticationResultDTO.UserId));
+        StartCoroutine(GameDataManager.Instance.LoadDataFromServerAsync());
+        StartCoroutine(UserDataManager.Instance.LoadDataFromServerAsync(p_authenticationResultDTO.UserId));
     }
 
     void OnRequestFailure(UnityWebRequest p_request)
