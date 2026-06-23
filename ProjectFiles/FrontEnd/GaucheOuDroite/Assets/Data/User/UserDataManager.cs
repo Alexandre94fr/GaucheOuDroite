@@ -227,17 +227,32 @@ namespace FrontEnd.Data.User
             if (_isDebugModeOn)
                 Debug.Log($"DEBUG: [{GetType().Name}] Checking if the requests sent to the server succeeded.");
 
-            if (userResponseDTO == null || !userResponseDTO.HasSucceeded)
+
+            if (userResponseDTO == null)
+            {
+                Debug.LogWarning($"WARNING: [{GetType().Name}] The GetUser request sent to the server failed. Received null.");
+                yield break;
+            }
+
+            if (!userResponseDTO.HasSucceeded)
             {
                 Debug.LogWarning($"WARNING: [{GetType().Name}] The GetUser request sent to the server failed. Returning.\nError: {userResponseDTO.ErrorMessage}");
                 yield break;
             }
 
-            if (userProgressionResponseDTO == null || !userProgressionResponseDTO.HasSucceeded)
+
+            if (userResponseDTO == null)
+            {
+                Debug.LogWarning($"WARNING: [{GetType().Name}] The GetUserProgression request sent to the server failed. Received null.");
+                yield break;
+            }
+
+            if (!userProgressionResponseDTO.HasSucceeded)
             {
                 Debug.LogWarning($"WARNING: [{GetType().Name}] The GetUserProgression request sent to the server failed. Returning.\nError: {userProgressionResponseDTO.ErrorMessage}");
                 yield break;
             }
+
 
             if (_isDebugModeOn)
                 Debug.Log($"DEBUG: [{GetType().Name}] The GetUser and GetUserProgression requests sent to the server succeeded.");
