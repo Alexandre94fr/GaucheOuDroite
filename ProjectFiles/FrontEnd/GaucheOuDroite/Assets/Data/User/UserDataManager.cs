@@ -149,7 +149,7 @@ namespace FrontEnd.Data.User
 
         #region - LoadDataFromServer sub-methods -
 
-        IEnumerator LoadUserDataFromServer(int p_userId, Action<GetUserResponseDTO> p_onServerRequestResponse)
+        IEnumerator LoadUserDataFromServerAsync(int p_userId, Action<GetUserResponseDTO> p_onServerRequestResponse)
         {
             yield return ServerRequestManager.SendRequest<GetUserResponseDTO>(
                 USER_API_ROUTE,
@@ -172,7 +172,7 @@ namespace FrontEnd.Data.User
             );
         }
 
-        IEnumerator LoadUserProgressionDataFromServer(int p_userId, Action<GetUserProgressionResponseDTO> p_onServerRequestResponse)
+        IEnumerator LoadUserProgressionDataFromServerAsync(int p_userId, Action<GetUserProgressionResponseDTO> p_onServerRequestResponse)
         {
             yield return ServerRequestManager.SendRequest<GetUserProgressionResponseDTO>(
                 USER_PROGRESSION_API_ROUTE,
@@ -197,7 +197,7 @@ namespace FrontEnd.Data.User
 
         #endregion
 
-        public IEnumerator LoadDataFromServer(int p_userId)
+        public IEnumerator LoadDataFromServerAsync(int p_userId)
         {
             // -- Sending request to server -- //
 
@@ -212,12 +212,12 @@ namespace FrontEnd.Data.User
             // Note:
             // In a real project, we will send the requests in parallel to avoid waiting for to each request to finish.
 
-            yield return LoadUserDataFromServer(
+            yield return LoadUserDataFromServerAsync(
                 p_userId,
                 result => userResponseDTO = result
             );
 
-            yield return LoadUserProgressionDataFromServer(
+            yield return LoadUserProgressionDataFromServerAsync(
                 p_userId,
                 result => userProgressionResponseDTO = result
             );
@@ -358,7 +358,7 @@ namespace FrontEnd.Data.User
 
         #region - User progression data -
 
-        public IEnumerator SaveAllUserProgressions()
+        public IEnumerator SaveAllUserProgressionsAsync()
         {
             // -- Converting UserProgression into UserProgressionDTO -- //
 
@@ -397,14 +397,14 @@ namespace FrontEnd.Data.User
         /// <see cref="MonoBehaviour.StartCoroutine(IEnumerator)"/>.
         /// </para>
         /// </summary>
-        public IEnumerator SaveAllUserData()
+        public IEnumerator SaveAllUserDataAsync()
         {
             // -- Sending request to server -- //
 
             if (_isDebugModeOn)
                 Debug.Log($"DEBUG: [{GetType().Name}] Sending a request to the server to save all local User's data inside the DataBase.");
 
-            yield return SaveAllUserProgressions();
+            yield return SaveAllUserProgressionsAsync();
         }
 
         #endregion
