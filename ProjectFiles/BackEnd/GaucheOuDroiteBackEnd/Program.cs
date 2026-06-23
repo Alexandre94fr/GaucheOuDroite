@@ -32,6 +32,9 @@ builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<UserProgressionService>();
 
+builder.Services.AddScoped<LevelService>();
+builder.Services.AddScoped<LevelResponseTimeStepService>();
+
 // Project security
 builder.Services.AddScoped<PasswordHasher>();
 builder.Services.AddScoped<JwtTokenService>();
