@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 
+using Shared.Enums;
+
 namespace Shared.DTOs.Data.Game
 {
 	public class LevelDTO
     {
         public string Name { get; set; } = "";
 
-        public int Difficulty { get; set; } = -1;
+        public LevelDifficulty Difficulty { get; set; } = default;
 
         public bool IsInfinite { get; set; } = false;
 
