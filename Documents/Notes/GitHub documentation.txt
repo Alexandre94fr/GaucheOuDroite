@@ -22,6 +22,8 @@ GitHub documentation :
 🎮 = Ajout / implémentation de nouveau script (input joueur)
 🏃 = Ajout / implémentation de nouveau script (logique de mouvement de joueur)
 
+🧩 = Ajout / modification d'un ou plusieurs Prefabs
+
 🎴 = Ajout / modification d'un ou plusieurs Assets graphiques
 🎼 = Ajout / modification d'un ou plusieurs Assets sonores
 
