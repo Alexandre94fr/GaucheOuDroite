@@ -118,6 +118,14 @@ namespace FrontEnd.Data.Game
         [HideInInspector] public const string GAME_DATA_API_ROUTE = "game-data";
 
 
+        /// <summary>
+        /// Has the manager loaded the data inside the DataBase on the server-side (BackEnd). <para></para>
+        /// 
+        /// If you want to load the data, call the: <see cref="LoadDataFromServerAsync"/> method.
+        /// </summary>
+        [HideInInspector] public bool HasLoadedServerData = false;
+
+
         [Header("----- DEBUG -----")]
         [SerializeField] bool _isDebugModeOn;
 
@@ -168,7 +176,7 @@ namespace FrontEnd.Data.Game
 
         #endregion
 
-        public IEnumerator LoadDataFromServerAsync()
+        public IEnumerator LoadDataFromServerAsync(Action p_onLoadSuccess = null)
         {
             // -- Sending request to server -- //
 
@@ -215,6 +223,14 @@ namespace FrontEnd.Data.Game
 
             // Converting the GetGameDataResponseDTO into GameData
             _gameData = (GameData)gameDataResponseDTO;
+
+            // -- Updating manager's state -- //
+
+            HasLoadedServerData = true;
+
+            // -- Calling the callback -- //
+
+            p_onLoadSuccess?.Invoke();
         }
 
         #endregion
@@ -258,6 +274,8 @@ namespace FrontEnd.Data.Game
         /// </summary>
         public void ClearAllLocalData()
         {
+            HasLoadedServerData = false;
+
             _gameData = new();
         }
 

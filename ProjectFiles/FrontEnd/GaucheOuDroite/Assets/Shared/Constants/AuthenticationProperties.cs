@@ -56,6 +56,9 @@ namespace Shared.Constants
         public static readonly Vector3 AUTHENTICATION_ERROR_MESSAGE_COLOR = new(1, 0, 0);
         public static readonly Vector3 AUTHENTICATION_SUCCESS_MESSAGE_COLOR = new(0, 0.6f, 0);
 
+
+        public static readonly System.TimeSpan MAXIMAL_INITIAL_DATA_LOADING_TIME = new(0, 0, 10);
+
         /// <summary>
         /// The values of this dictionary are in french because the project is only in french.
         /// </summary>
@@ -119,7 +122,10 @@ namespace Shared.Constants
         
         public const string UNKNOWN_ERROR_MESSAGE                                   = "Erreur inconnue.\nSi le problème persiste, relancez l'application.";
 
-         
+
+        public static readonly string TOO_LONG_LOADING_DATA_ERROR_MESSAGE           = $"Temps maximal de chargement des données dépassé ({MAXIMAL_INITIAL_DATA_LOADING_TIME}s).\nSi le problème persiste, relancez l'application.";
+
+
 
         public const string SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE                 = "Authentification validée localement.\nEnvoie des informations au serveur.";
         public const string SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE                = "Authentification validée par le serveur.";

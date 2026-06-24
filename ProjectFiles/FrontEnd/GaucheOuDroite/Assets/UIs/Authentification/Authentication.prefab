@@ -4026,6 +4026,7 @@ MonoBehaviour:
   _autenticationModeChangerButton: {fileID: 8978628511075817941}
   _feedbackText: {fileID: 1496472994042399824}
   _autenticationInformationGameObject: {fileID: 3451145694062478303}
+  _sceneChanger: {fileID: 3729083975763355449}
   _authenticationMode: 0
 --- !u!1 &8489494493119385495
 GameObject:

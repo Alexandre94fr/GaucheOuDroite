@@ -117,6 +117,14 @@ namespace FrontEnd.Data.User
         [HideInInspector] public const string USER_PROGRESSION_API_ROUTE = "user-progressions";
 
 
+        /// <summary>
+        /// Has the manager loaded the data inside the DataBase on the server-side (BackEnd). <para></para>
+        /// 
+        /// If you want to load the data, call the: <see cref="LoadDataFromServerAsync"/> method.
+        /// </summary>
+        [HideInInspector] public bool HasLoadedServerData = false;
+
+
         [Header("----- DEBUG -----")]
         [SerializeField] bool _isDebugModeOn;
 
@@ -197,7 +205,7 @@ namespace FrontEnd.Data.User
 
         #endregion
 
-        public IEnumerator LoadDataFromServerAsync(int p_userId)
+        public IEnumerator LoadDataFromServerAsync(int p_userId, Action p_onLoadSuccess = null) // TODO: Remove the p_userId, not necessary
         {
             // -- Sending request to server -- //
 
@@ -274,6 +282,14 @@ namespace FrontEnd.Data.User
             userProgressionDTO.LevelProgressions = userProgressionResponseDTO.LevelProgressions;
 
             _userProgression = (UserProgression)userProgressionDTO;
+
+            // -- Updating manager's state -- //
+
+            HasLoadedServerData = true;
+
+            // -- Calling the callback -- //
+
+            p_onLoadSuccess?.Invoke();
         }
 
         #endregion
@@ -432,6 +448,8 @@ namespace FrontEnd.Data.User
         /// </summary>
         public void ClearAllLocalData()
         {
+            HasLoadedServerData = false;
+
             _userId = -1;
             _username = "";
 
