@@ -44,6 +44,9 @@ public class LevelButtonStar
 public class LevelButton : MonoBehaviour
 {
     [Header("Internal references:")]
+    [SerializeField] SceneChanger _sceneChanger;
+
+    [Space]
     [SerializeField] Button _levelButton;
 
     [Space]
@@ -65,6 +68,9 @@ public class LevelButton : MonoBehaviour
     [Header("Properties:")]
     [SerializeField] int _associatedLevelId = -1;
 
+    [Space]
+    [SerializeField] string _levelSceneName = "Level";
+
     // These properties can technically be inside the GameData
     [Space]
     [SerializeField] Color _emptyStarColor = Color.white;
@@ -76,6 +82,8 @@ public class LevelButton : MonoBehaviour
         // -- Class properties verifications -- //
 
         if (!VariablesChecker.AreVariablesValid(name, null,
+            (_sceneChanger, nameof(_sceneChanger)),
+
             (_levelButton, nameof(_levelButton)),
 
             (_levelNameText, nameof(_levelNameText)),
@@ -104,6 +112,12 @@ public class LevelButton : MonoBehaviour
             return;
         }
 
+        if (string.IsNullOrEmpty(_levelSceneName))
+        {
+            Debug.LogWarning($"DEBUG: [{GetType().Name}] The '{nameof(_levelSceneName)}' property is null or empty. Returning.");
+            return;
+        }
+
         // -- Getting the Game's and User's data -- //
 
         Level levelData = GameDataManager.Instance.GetLevel(_associatedLevelId);
@@ -129,6 +143,8 @@ public class LevelButton : MonoBehaviour
         UpdateLevelAccecibility(userLevelProgressionData.IsUnlocked);
     }
 
+
+    #region -- Updating visuals --
 
     void UpdateName(string p_levelName)
     {
@@ -185,6 +201,9 @@ public class LevelButton : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region -- Updating functionalities --
 
     void UpdateLevelAccecibility(bool p_isLevelUnlocked)
     {
@@ -196,5 +215,19 @@ public class LevelButton : MonoBehaviour
         {
             _levelButton.interactable = false;
         }
+    }
+
+    #endregion
+
+
+    public void OnButtonPressed()
+    {
+        // -- Telling the LevelManager which Level we will load -- //
+
+        // TODO:
+
+        // -- Switching Scene -- //
+
+        _sceneChanger.SwitchToAsync(_levelSceneName);
     }
 }

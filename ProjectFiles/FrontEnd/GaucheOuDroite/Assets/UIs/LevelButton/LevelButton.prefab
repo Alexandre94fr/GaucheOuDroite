@@ -482,6 +482,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7337563423162240683}
   - component: {fileID: 4018822634622522022}
+  - component: {fileID: 9088130469076211030}
   - component: {fileID: 4718136633520418053}
   m_Layer: 5
   m_Name: LevelButton
@@ -523,6 +524,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1770115341888618787}
   m_CullTransparentMesh: 1
+--- !u!114 &9088130469076211030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1770115341888618787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 499643f4557bd14419c8e3a3ff34f29b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneChanger
+  IsDebugModeOn: 0
 --- !u!114 &4718136633520418053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,6 +549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b84fbf72b361304d829c5c541dc5e6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelButton
+  _sceneChanger: {fileID: 9088130469076211030}
   _levelButton: {fileID: 4082881961678793914}
   _levelNameText: {fileID: 2349616961570783422}
   _difficultyText: {fileID: 585670551637525486}
@@ -553,6 +568,7 @@ MonoBehaviour:
     FillShadowImage: {fileID: 8684540391623146362}
     IsFilled: 0
   _associatedLevelId: -1
+  _levelSceneName: Level
   _emptyStarColor: {r: 1, g: 1, b: 1, a: 1}
   _fullStarColor: {r: 0.85, g: 0.7725, b: 0.18, a: 1}
 --- !u!1 &2358528962904738424
@@ -1873,7 +1889,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3777953250856930359}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4718136633520418053}
+        m_TargetAssemblyTypeName: LevelButton, Assembly-CSharp
+        m_MethodName: OnButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8646813079495949276
 GameObject:
   m_ObjectHideFlags: 0
