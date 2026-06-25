@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS Levels(
    Id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 
    Name VARCHAR(50) NOT NULL,
-   Difficulty VARCHAR(50) NOT NULL,
+   Difficulty INTEGER NOT NULL CHECK (Difficulty >= 0),
    IsInfinite NUMERIC NOT NULL,
    ResponseSequence TEXT NOT NULL,
    Star1MinimumScore INTEGER NOT NULL,
@@ -95,7 +95,7 @@ INSERT INTO Levels (
 )
 VALUES (
         'Niveau 1',
-        'Facile',
+        0,
         FALSE,
         'LRLRRLLL',
         1000,
@@ -104,7 +104,7 @@ VALUES (
     ),
     (
         'Niveau 2',
-        'Facile',
+        0,
         FALSE,
         'LLRLRRLRLL',
         1250,
@@ -113,7 +113,7 @@ VALUES (
     ),
     (
         'Niveau 3',
-        'Normal',
+        1,
         FALSE,
         'LRLLRRLLRLLR',
         1500,
@@ -122,7 +122,7 @@ VALUES (
     ),
     (
         'Niveau 4',
-        'Normal',
+        1,
         FALSE,
         'RLLRRLRLRLLRLL',
         1750,
@@ -131,7 +131,7 @@ VALUES (
     ),
     (
         'Niveau 5',
-        'Difficile',
+        2,
         FALSE,
         'RLRLLLRRLRLLRRLLRRL',
         2500,
@@ -140,7 +140,7 @@ VALUES (
     ),
     (
         'Niveau 6',
-        'Difficile',
+        2,
         FALSE,
         'LRRLRLLRRRRLRLLRLLRRRLLR',
         3500,
@@ -149,7 +149,7 @@ VALUES (
     ),
     (
         'Infini',
-        'Progressif',
+        3,
         TRUE,
         'L',
         5000,
