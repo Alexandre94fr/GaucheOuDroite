@@ -11,10 +11,10 @@ namespace Shared.Constants
         public static readonly Dictionary<LevelDifficulty, Vector3> DIFFICULTY_COLORS = new()
         {
             [LevelDifficulty.Easy]              = new(0.0f , 0.5f , 0.05f),
-            [LevelDifficulty.Medium]            = new(0.0f , 0.45f, 0.50f),
+            [LevelDifficulty.Medium]            = new(0.45f, 0.5f , 0.0f ),
             [LevelDifficulty.Hard]              = new(0.5f , 0.0f , 0.0f ),
 
-            [LevelDifficulty.Progressive]       = new(0.45f, 0.0f , 0.05f),
+            [LevelDifficulty.Progressive]       = new(0.45f, 0.0f , 0.5f ),
         };
 
         // -- Localization -- //
