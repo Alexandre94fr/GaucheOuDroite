@@ -2537,7 +2537,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 109.6, y: -17.5}
-  m_SizeDelta: {x: 88.61, y: 11.18}
+  m_SizeDelta: {x: 0, y: 11.18}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3318656750904248050
 CanvasRenderer:
@@ -4028,6 +4028,7 @@ MonoBehaviour:
   _autenticationInformationGameObject: {fileID: 3451145694062478303}
   _sceneChanger: {fileID: 3729083975763355449}
   _authenticationMode: 0
+  _levelSelectionSceneName: LevelSelection
 --- !u!1 &8489494493119385495
 GameObject:
   m_ObjectHideFlags: 0
