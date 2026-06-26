@@ -106,15 +106,18 @@ public class LevelButton : MonoBehaviour
         if (_associatedLevelId <= 0)
         {
             Debug.LogError(
-                $"{VariablesChecker.GetCheckErrorMessagePrefix(this.name, nameof(_associatedLevelId))} is inferior or equal to 0, " +
-                $"please set it through the Unity inspector."
+                $"{VariablesChecker.GetCheckErrorMessagePrefix(name, nameof(_associatedLevelId))} is inferior or equal to 0, " +
+                $"please set it through the Unity inspector. Returning."
             );
             return;
         }
 
         if (string.IsNullOrEmpty(_levelSceneName))
         {
-            Debug.LogWarning($"DEBUG: [{GetType().Name}] The '{nameof(_levelSceneName)}' property is null or empty. Returning.");
+            Debug.LogError(
+                $"{VariablesChecker.GetCheckErrorMessagePrefix(name, nameof(_levelSceneName))} is null or empty, " +
+                $"please set it through the Unity inspector. Returning."
+            );
             return;
         }
 
