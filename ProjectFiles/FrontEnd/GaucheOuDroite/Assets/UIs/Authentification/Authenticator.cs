@@ -283,7 +283,7 @@ public class Authenticator : MonoBehaviour
                 yield break;
         }
 
-        StartCoroutine(ServerRequestManager.SendRequest<AuthenticationResultDTO>(
+        yield return ServerRequestManager.SendRequest<AuthenticationResultDTO>(
             route,
             ServerRequestManager.RequestType.Post,
 
@@ -292,7 +292,7 @@ public class Authenticator : MonoBehaviour
 
             OnRequestSuccess,
             OnRequestFailure
-        ));
+        );
 
         // We received a response from the server, we can make the buttons intractable again
         _requestSenderButton.interactable = true;
