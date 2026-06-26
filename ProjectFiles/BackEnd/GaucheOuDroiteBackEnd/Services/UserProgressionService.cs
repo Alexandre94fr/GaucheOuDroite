@@ -312,7 +312,7 @@ namespace GaucheOuDroiteBackEnd.Services
         
         #region - Delete -
 
-        public async Task<bool> DeleteUserAsync(int p_userId, int p_levelId)
+        public async Task<bool> DeleteUserProgressionAsync(int p_userId, int p_levelId)
         {
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to delete the UserProgression (UserId: {p_userId}, LevelId: {p_levelId}) and updating the DataBase.");
@@ -337,7 +337,7 @@ namespace GaucheOuDroiteBackEnd.Services
             return true;
         }
 
-        public async Task<bool> DeleteUserAsync(int p_id)
+        public async Task<bool> DeleteUserProgressionAsync(int p_id)
         {
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to delete the UserProgression (Id: {p_id}) and updating the DataBase.");
@@ -358,6 +358,26 @@ namespace GaucheOuDroiteBackEnd.Services
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Successfully deleted the UserProgression (Id: {p_id}) from the the DataBase. Returning true.");
+
+            return true;
+        }
+
+        public async Task<bool> DeleteAllUserProgressionsForUser(int p_userId)
+        {
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to try deleting all the UserProgressions of the User (UserId: {p_userId}) from the DataBase.");
+
+            // Doing ExecuteDeleteAsync is faster and A LOT MORE ram free than getting all the UserProgressions and deleting them using the _dataBaseContext.RemoveRange()
+            IQueryable<UserProgression> userProgressions = _dataBaseContext.UserProgressions
+                .AsNoTracking()
+                .Where(userProg => userProg.UserId == p_userId);
+
+            int count = userProgressions.ToArray().Length;
+            
+            await userProgressions.ExecuteDeleteAsync();
+
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Successfully got and deleted all ({count}) the UserProgressions of the User (UserId: {p_userId}). Returning true.");
 
             return true;
         }

@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Storage;
 
+using GaucheOuDroiteBackEnd.Data;
 using GaucheOuDroiteBackEnd.Models;
 using GaucheOuDroiteBackEnd.Services;
 using GaucheOuDroiteBackEnd.Tools;
 
-using Shared.DTOs; // Needed if you un-comment the Put method
+using Shared.DTOs;
 using Shared.DTOs.Data.User;
 using Shared.Tools;
 
@@ -14,11 +16,13 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
 {
     [ApiController]
     [Route("api/users")]
-    public class UserController(UserService p_userService) : ControllerBase
+    public class UserController(DataBaseContext p_dataBaseContext, UserService p_userService, UserProgressionService p_userProgressionService) : ControllerBase
     {
         const bool IS_DEBUG_MODE_ON = true;
 
+        readonly DataBaseContext _dataBaseContext = p_dataBaseContext;
         readonly UserService _userService = p_userService;
+        readonly UserProgressionService _userProgressionService = p_userProgressionService;
 
 
         [Authorize]
@@ -46,7 +50,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                 if (IS_DEBUG_MODE_ON)
                     Console.WriteLine($"DEBUG: [{GetType().Name}] {getUserResponseDTO.ErrorMessage}");
 
-                return BadRequest(getUserResponseDTO);
+                return NotFound(getUserResponseDTO);
             }
 
 
@@ -95,5 +99,68 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
             return Ok(apiResponseDTO);
         }
         */
+
+        [Authorize]
+        [HttpDelete()]
+        public async Task<IActionResult> Delete()
+        {
+            // Theses variable's values will be changed during the method flow.
+            ApiResponseDTO apiResponseDTO = new()
+            {
+                HasSucceeded = false,
+                ErrorMessage = "",
+            };
+
+            int userId = UserIdGetter.GetUserId(User);
+
+            // Deleting the UserProgressions and the User data
+
+            // In order to be able to revert changes done to the DataBase, we will use a IDbContextTransaction
+            IDbContextTransaction transaction = await _dataBaseContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                if (!await _userProgressionService.DeleteAllUserProgressionsForUser(userId))
+                {
+                    apiResponseDTO.ErrorMessage = $"Failed to get or to delete the all the UserProgressions of the User (Id: {userId}) from the DataBase. The DeleteUser request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(apiResponseDTO)}";
+
+                    if (IS_DEBUG_MODE_ON)
+                        Console.WriteLine($"DEBUG: [{GetType().Name}] {apiResponseDTO.ErrorMessage}");
+
+                    // We trigger manually the 'catch' by throwing an exception
+                    throw new Exception($"The '{nameof(_userProgressionService.DeleteAllUserProgressionsForUser)}' method, failed to delete all UserProgressions of the User (Id: {userId}) from the DataBase.");
+                }
+
+                if (!await _userService.DeleteUserAsync(userId))
+                {
+                    apiResponseDTO.ErrorMessage = $"Failed to get the User (Id: {userId}) from the DataBase. The DeleteUser request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(apiResponseDTO)}";
+
+                    if (IS_DEBUG_MODE_ON)
+                        Console.WriteLine($"DEBUG: [{GetType().Name}] {apiResponseDTO.ErrorMessage}");
+
+                    // We trigger manually the 'catch' by throwing an exception
+                    throw new Exception($"The '{nameof(_userService.DeleteUserAsync)}' method, failed to delete the User (Id: {userId}) from the DataBase.");
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"ERROR: [{GetType().Name}] An error occurred while deleting all User's data of the User (Id: {userId}). Rollbacking the changes and returning.\nError: {exception.Message}");
+
+                await transaction.RollbackAsync();
+
+                return NotFound(apiResponseDTO);
+            }
+
+
+            await transaction.CommitAsync();
+
+            apiResponseDTO.HasSucceeded = true;
+
+
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] The DeleteUser request has succeeded. Returning:\n{ObjectToStringFormatter.ObjectToString(apiResponseDTO)}");
+
+            return Ok(apiResponseDTO);
+        }
     }
 }
