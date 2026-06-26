@@ -8,6 +8,7 @@ using VariableCheckerPackage;
 using FrontEnd.Data.User;
 
 
+[RequireComponent(typeof(RectTransform))]
 public class Dropdown : MonoBehaviour
 {
     [Header("Internal references:")]
@@ -20,10 +21,18 @@ public class Dropdown : MonoBehaviour
     [SerializeField] int _dropdownArrowOrientationWhenDropdownOn = -90;
 
     [Space]
-    [SerializeField] List<GameObject> _gameObjectShownWhenDropdownOn = new();
+    [SerializeField] Vector2 _firstGameObjectShownPositionOffset = new(0, -90);
+    [SerializeField] Vector2 _otherGameObjectsShownPositionOffset = new(0, -65);
+
+
+    [Space]
+    [SerializeField] List<GameObject> _gameObjectsShownWhenDropdownOn = new();
 
 
     bool _isDropdownOn = false;
+
+    RectTransform _rectTransform;
+    List<RectTransform> _gameObjectsShownWhenDropdownOnRectTransforms = new();
 
 
     void Start()
@@ -36,16 +45,34 @@ public class Dropdown : MonoBehaviour
             (_dropdownArrow, nameof(_dropdownArrow))
         )) return;
 
-        for (int i = 0; i < _gameObjectShownWhenDropdownOn.Count; i++)
+        // Dropdown RectTransform caching
+        _rectTransform = GetComponent<RectTransform>();
+
+        _gameObjectsShownWhenDropdownOnRectTransforms = new(_gameObjectsShownWhenDropdownOn.Count);
+
+        for (int i = 0; i < _gameObjectsShownWhenDropdownOn.Count; i++)
         {
-            if (_gameObjectShownWhenDropdownOn[i] == null)
+            // Checking if there are any null values inside the _gameObjectsShownWhenDropdownOn properties
+            if (_gameObjectsShownWhenDropdownOn[i] == null)
             {
                 Debug.LogError(
-                    $"{VariablesChecker.GetCheckErrorMessagePrefix(name, nameof(_gameObjectShownWhenDropdownOn))} contains a null value. The element {i} of the list is null.\n" +
+                    $"{VariablesChecker.GetCheckErrorMessagePrefix(name, nameof(_gameObjectsShownWhenDropdownOn))} contains a null value. The element {i} of the list is null.\n" +
                     $"Please set it through the Unity inspector. Continuing."
                 );
                 continue;
             }
+
+            // Other GameObjects RectTransform caching + checking
+            if (!_gameObjectsShownWhenDropdownOn[i].TryGetComponent(out RectTransform rectTransform))
+            {
+                Debug.LogError(
+                    $"{VariablesChecker.GetCheckErrorMessagePrefix(name, nameof(_gameObjectsShownWhenDropdownOn))} contains a GameObject that doesn't have RectTransform component. " + 
+                    "The element {i} of the list is not correct. Continuing."
+                );
+                continue;
+            }
+
+            _gameObjectsShownWhenDropdownOnRectTransforms.Add(rectTransform);
         }
 
         // -- Updating the Dropdown visuals based on the User's data -- //
@@ -82,9 +109,20 @@ public class Dropdown : MonoBehaviour
 
         // -- Functionalities -- // 
 
-        foreach (GameObject gameObject in _gameObjectShownWhenDropdownOn)
+        for (int i = 0; i < _gameObjectsShownWhenDropdownOn.Count; i++)
         {
-            gameObject.SetActive(_isDropdownOn);
+            // Visibility
+            _gameObjectsShownWhenDropdownOn[i].SetActive(_isDropdownOn);
+
+            // Position
+            if (i == 0)
+            {
+                _gameObjectsShownWhenDropdownOnRectTransforms[i].anchoredPosition = _rectTransform.anchoredPosition + _firstGameObjectShownPositionOffset;
+                
+                continue;
+            }
+
+            _gameObjectsShownWhenDropdownOnRectTransforms[i].anchoredPosition = _gameObjectsShownWhenDropdownOnRectTransforms[i - 1].anchoredPosition + _otherGameObjectsShownPositionOffset;
         }
     }
 }
