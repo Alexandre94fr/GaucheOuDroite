@@ -36,8 +36,15 @@ public class Authenticator : MonoBehaviour
     [Space]
     [SerializeField] GameObject _autenticationInformationGameObject;
 
+    [Space]
+    [SerializeField] SceneChanger _sceneChanger;
+
     [Header("Properties:")]
     [SerializeField] AuthenticationProperties.AuthenticationMode _authenticationMode = AuthenticationProperties.AuthenticationMode.SignUp;
+
+    [Space]
+    [SerializeField] string _levelSelectionSceneName = "LevelSelection";
+
 
     string _username = "";
     string _password = "";
@@ -45,12 +52,21 @@ public class Authenticator : MonoBehaviour
 
     void Start()
     {
+        // -- Class properties verifications -- //
+
         if (!VariablesChecker.AreVariablesValid(name, null,
             (_requestSenderButton, nameof(_requestSenderButton)),
             (_autenticationModeChangerButton, nameof(_autenticationModeChangerButton)),
             (_feedbackText, nameof(_feedbackText)),
-            (_autenticationInformationGameObject, nameof(_autenticationInformationGameObject))
+            (_autenticationInformationGameObject, nameof(_autenticationInformationGameObject)),
+            (_sceneChanger, nameof(_sceneChanger))
         )) return;
+
+        if (string.IsNullOrEmpty(_levelSelectionSceneName))
+        {
+            Debug.LogWarning($"DEBUG: [{GetType().Name}] The '{nameof(_levelSelectionSceneName)}' property is null or empty. Returning.");
+            return;
+        }
     }
 
 
@@ -267,7 +283,7 @@ public class Authenticator : MonoBehaviour
                 yield break;
         }
 
-        StartCoroutine(ServerRequestManager.SendRequest<AuthenticationResultDTO>(
+        yield return ServerRequestManager.SendRequest<AuthenticationResultDTO>(
             route,
             ServerRequestManager.RequestType.Post,
 
@@ -276,7 +292,7 @@ public class Authenticator : MonoBehaviour
 
             OnRequestSuccess,
             OnRequestFailure
-        ));
+        );
 
         // We received a response from the server, we can make the buttons intractable again
         _requestSenderButton.interactable = true;
@@ -303,10 +319,50 @@ public class Authenticator : MonoBehaviour
         ServerRequestManager.AuthenticationToken = p_authenticationResultDTO.Token;
 
         if (_isDebugModeOn)
-            Debug.Log($"DEBUG: [{GetType().Name}] Loading the Game's and User's data.");
+            Debug.Log($"DEBUG: [{GetType().Name}] Loading the Game's and User's data, and switching Scene to '{_levelSelectionSceneName}' when the loading ends");
+
+        StartCoroutine(LoadAllDataAndChangeScene(p_authenticationResultDTO.UserId));
+    }
+
+    IEnumerator LoadAllDataAndChangeScene(int p_userId)
+    {
+        bool hasLoadingTookTooLong = false;
+
+        // In this case we will not use the callbacks,
+        // only the HasLoadedServerData properties.
+        // It's more compact to do so.
 
         StartCoroutine(GameDataManager.Instance.LoadDataFromServerAsync());
-        StartCoroutine(UserDataManager.Instance.LoadDataFromServerAsync(p_authenticationResultDTO.UserId));
+        StartCoroutine(UserDataManager.Instance.LoadDataFromServerAsync(p_userId));
+
+        yield return new WaitUntil(
+            () =>
+                GameDataManager.Instance.HasLoadedServerData &&
+                UserDataManager.Instance.HasLoadedServerData,
+
+            AuthenticationProperties.MAXIMAL_INITIAL_DATA_LOADING_TIME,
+
+            () =>
+            {
+                hasLoadingTookTooLong = true;
+
+                DisplayFeedback(
+                    AuthenticationProperties.TOO_LONG_LOADING_DATA_ERROR_MESSAGE,
+                    new(
+                        AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.X,
+                        AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Y,
+                        AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Z
+                    )
+                );
+
+                Debug.LogError($"ERROR: [{GetType().Name}] The loading of all the data took too long ({AuthenticationProperties.MAXIMAL_INITIAL_DATA_LOADING_TIME.TotalSeconds}s). Stopping the coroutine. Returning.");
+            }
+        );
+
+        if (hasLoadingTookTooLong)
+            yield break;
+
+        _sceneChanger.SwitchToAsync(_levelSelectionSceneName);
     }
 
     void OnRequestFailure(UnityWebRequest p_request)
