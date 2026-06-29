@@ -64,7 +64,7 @@ public class SceneChanger : MonoBehaviour
     /// </summary>
     /// <param name="p_newScene"></param>
     /// <param name="p_loadSceneMode"></param>
-    public void SwitchTo(string p_newScene, LoadSceneMode p_loadSceneMode = LoadSceneMode.Single)
+    public void Load(string p_newScene, LoadSceneMode p_loadSceneMode = LoadSceneMode.Single)
     {
         if (IsDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Trying to load synchronously the '{p_newScene}' Scene. Load mode: {p_loadSceneMode}.");
@@ -85,7 +85,7 @@ public class SceneChanger : MonoBehaviour
     /// </summary>
     /// <param name="p_newScene"></param>
     /// <param name="p_loadSceneMode"></param>
-    public void SwitchToAsync(string p_newScene, LoadSceneMode p_loadSceneMode = LoadSceneMode.Single)
+    public void LoadAsync(string p_newScene, LoadSceneMode p_loadSceneMode = LoadSceneMode.Single)
     {
         if (IsDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Trying to load asynchronously the '{p_newScene}' Scene. Load mode: {p_loadSceneMode}.");

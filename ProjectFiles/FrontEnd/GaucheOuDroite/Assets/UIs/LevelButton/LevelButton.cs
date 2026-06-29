@@ -273,6 +273,6 @@ public class LevelButton : MonoBehaviour
 
         // -- Switching Scene -- //
 
-        _sceneChanger.SwitchToAsync(_levelSceneName);
+        _sceneChanger.LoadAsync(_levelSceneName);
     }
 }

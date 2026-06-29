@@ -47,6 +47,6 @@ public class LogOutButton : MonoBehaviour
 
         // -- Switching Scene -- //
 
-        _sceneChanger.SwitchToAsync(_logInSceneName);
+        _sceneChanger.LoadAsync(_logInSceneName);
     }
 }

@@ -362,7 +362,7 @@ public class Authenticator : MonoBehaviour
         if (hasLoadingTookTooLong)
             yield break;
 
-        _sceneChanger.SwitchToAsync(_levelSelectionSceneName);
+        _sceneChanger.LoadAsync(_levelSelectionSceneName);
     }
 
     void OnRequestFailure(UnityWebRequest p_request)
