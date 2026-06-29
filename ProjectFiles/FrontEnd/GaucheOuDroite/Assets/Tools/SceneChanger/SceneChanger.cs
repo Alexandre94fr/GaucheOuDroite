@@ -51,6 +51,9 @@ public class SceneChanger : MonoBehaviour
     }
 
 
+    // Note:
+    // We need to have a Load and a LoadAsync method with only one parameter, otherwise, the UnityEvent in UIs can't call the methods.
+
     /// <summary>
     /// Loads synchronously the given Scene. <para></para>
     /// 
@@ -64,7 +67,7 @@ public class SceneChanger : MonoBehaviour
     /// </summary>
     /// <param name="p_newScene"></param>
     /// <param name="p_loadSceneMode"></param>
-    public void Load(string p_newScene, LoadSceneMode p_loadSceneMode = LoadSceneMode.Single)
+    public void Load(string p_newScene, LoadSceneMode p_loadSceneMode)
     {
         if (IsDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Trying to load synchronously the '{p_newScene}' Scene. Load mode: {p_loadSceneMode}.");
@@ -84,12 +87,45 @@ public class SceneChanger : MonoBehaviour
     /// 
     /// </summary>
     /// <param name="p_newScene"></param>
-    /// <param name="p_loadSceneMode"></param>
-    public void LoadAsync(string p_newScene, LoadSceneMode p_loadSceneMode = LoadSceneMode.Single)
+    public void Load(string p_newScene)
+    {
+        Load(p_newScene, LoadSceneMode.Single);
+    }
+
+    /// <summary>
+    /// Loads asynchronously the given Scene. <para></para>
+    /// 
+    /// If you want to know when the Scene is loaded, you can use the:
+    /// 
+    /// <list type="bullet">
+    /// <item><description> <see cref="OnSceneLoadedEvent"/> Action</description></item>
+    /// <item><description> <see cref="OnSceneLoadedAfterStartCallEvent"/> Action </description></item>
+    /// </list>
+    /// 
+    /// </summary>
+    /// <param name="p_newScene"></param>
+    public void LoadAsync(string p_newScene, LoadSceneMode p_loadSceneMode)
     {
         if (IsDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Trying to load asynchronously the '{p_newScene}' Scene. Load mode: {p_loadSceneMode}.");
 
         SceneManager.LoadSceneAsync(p_newScene, p_loadSceneMode);
+    }
+
+    /// <summary>
+    /// Loads asynchronously the given Scene. <para></para>
+    /// 
+    /// If you want to know when the Scene is loaded, you can use the:
+    /// 
+    /// <list type="bullet">
+    /// <item><description> <see cref="OnSceneLoadedEvent"/> Action</description></item>
+    /// <item><description> <see cref="OnSceneLoadedAfterStartCallEvent"/> Action </description></item>
+    /// </list>
+    /// 
+    /// </summary>
+    /// <param name="p_newScene"></param>
+    public void LoadAsync(string p_newScene)
+    {
+        LoadAsync(p_newScene, LoadSceneMode.Single);
     }
 }
