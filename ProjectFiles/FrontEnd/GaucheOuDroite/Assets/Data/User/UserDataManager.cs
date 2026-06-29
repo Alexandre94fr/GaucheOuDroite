@@ -157,7 +157,7 @@ namespace FrontEnd.Data.User
 
         #region - LoadDataFromServer sub-methods -
 
-        IEnumerator LoadUserDataFromServerAsync(int p_userId, Action<GetUserResponseDTO> p_onServerRequestResponse)
+        IEnumerator LoadUserDataFromServerAsync(Action<GetUserResponseDTO> p_onServerRequestResponse)
         {
             yield return ServerRequestManager.SendRequest<GetUserResponseDTO>(
                 USER_API_ROUTE,
@@ -180,7 +180,7 @@ namespace FrontEnd.Data.User
             );
         }
 
-        IEnumerator LoadUserProgressionDataFromServerAsync(int p_userId, Action<GetUserProgressionResponseDTO> p_onServerRequestResponse)
+        IEnumerator LoadUserProgressionDataFromServerAsync(Action<GetUserProgressionResponseDTO> p_onServerRequestResponse)
         {
             yield return ServerRequestManager.SendRequest<GetUserProgressionResponseDTO>(
                 USER_PROGRESSION_API_ROUTE,
@@ -205,7 +205,7 @@ namespace FrontEnd.Data.User
 
         #endregion
 
-        public IEnumerator LoadDataFromServerAsync(int p_userId, Action p_onLoadSuccess = null) // TODO: Remove the p_userId, not necessary
+        public IEnumerator LoadDataFromServerAsync(Action p_onLoadSuccess = null)
         {
             // -- Sending request to server -- //
 
@@ -221,12 +221,10 @@ namespace FrontEnd.Data.User
             // In a real project, we will send the requests in parallel to avoid waiting for to each request to finish.
 
             yield return LoadUserDataFromServerAsync(
-                p_userId,
                 result => userResponseDTO = result
             );
 
             yield return LoadUserProgressionDataFromServerAsync(
-                p_userId,
                 result => userProgressionResponseDTO = result
             );
 
