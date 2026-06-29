@@ -321,10 +321,10 @@ public class Authenticator : MonoBehaviour
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Loading the Game's and User's data, and switching Scene to '{_levelSelectionSceneName}' when the loading ends");
 
-        StartCoroutine(LoadAllDataAndChangeScene(p_authenticationResultDTO.UserId));
+        StartCoroutine(LoadAllDataAndChangeScene());
     }
 
-    IEnumerator LoadAllDataAndChangeScene(int p_userId)
+    IEnumerator LoadAllDataAndChangeScene()
     {
         bool hasLoadingTookTooLong = false;
 
@@ -333,7 +333,7 @@ public class Authenticator : MonoBehaviour
         // It's more compact to do so.
 
         StartCoroutine(GameDataManager.Instance.LoadDataFromServerAsync());
-        StartCoroutine(UserDataManager.Instance.LoadDataFromServerAsync(p_userId));
+        StartCoroutine(UserDataManager.Instance.LoadDataFromServerAsync());
 
         yield return new WaitUntil(
             () =>
