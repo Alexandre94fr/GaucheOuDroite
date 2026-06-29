@@ -267,12 +267,8 @@ public class LevelButton : MonoBehaviour
 
     public void OnButtonPressed()
     {
-        // -- Telling the LevelManager which Level we will load -- //
+        // -- Starting a new Level -- //
 
-        // TODO:
-
-        // -- Switching Scene -- //
-
-        _sceneChanger.LoadAsync(_levelSceneName);
+        LevelManager.Instance.StartNewLevel(_associatedLevelId);
     }
 }
