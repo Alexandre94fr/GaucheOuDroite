@@ -76,6 +76,19 @@ public class LevelButton : MonoBehaviour
     [SerializeField] Color _emptyStarColor = Color.white;
     [SerializeField] Color _fullStarColor = new(0.85f, 0.7725f, 0.18f); // Gold
 
+    [Space]
+    [Space]
+    [SerializeField] float _minRandomScaleMultiplier = 0.85f;
+    [SerializeField] float _maxRandomScaleMultiplier = 1.15f;
+
+    [Space]
+    [SerializeField] float _minRandomRotation = 0.0f;
+    [SerializeField] float _maxRandomRotation = 360.0f;
+
+    [Space]
+    [SerializeField] float _minRandomTransparencyMultiplier = 0.975f;
+    [SerializeField] float _maxRandomTransparencyMultiplier = 1.05f;
+
 
     void Start()
     {
@@ -194,6 +207,8 @@ public class LevelButton : MonoBehaviour
 
     void UpdateFogLock(bool p_isLevelUnlocked)
     {
+        // -- Making the fog visible depending on Level's lock state -- //
+
         if (p_isLevelUnlocked)
         {
             _fogLockImage.enabled = false;
@@ -202,6 +217,33 @@ public class LevelButton : MonoBehaviour
         {
             _fogLockImage.enabled = true;
         }
+
+        // -- Randomizing a little bit some fog's properties -- //
+
+        RectTransform fogRectTransform = _fogLockImage.GetComponent<RectTransform>();
+
+        float randomScaleMultiplier = UnityEngine.Random.Range(_minRandomScaleMultiplier, _maxRandomScaleMultiplier);
+        float randomRotation = UnityEngine.Random.Range(_minRandomRotation, _maxRandomRotation);
+        float randomTransparencyMultiplier = UnityEngine.Random.Range(_minRandomTransparencyMultiplier, _maxRandomTransparencyMultiplier);
+
+        fogRectTransform.localScale = new Vector3(
+            fogRectTransform.localScale.x * randomScaleMultiplier,
+            fogRectTransform.localScale.y * randomScaleMultiplier,
+            fogRectTransform.localScale.z * randomScaleMultiplier
+        );
+
+        fogRectTransform.rotation = Quaternion.Euler(
+            fogRectTransform.rotation.x,
+            fogRectTransform.rotation.y,
+            randomRotation
+        );
+
+        _fogLockImage.color = new Color(
+            _fogLockImage.color.r,
+            _fogLockImage.color.g,
+            _fogLockImage.color.b,
+            _fogLockImage.color.a * randomTransparencyMultiplier
+        );
     }
 
     #endregion
