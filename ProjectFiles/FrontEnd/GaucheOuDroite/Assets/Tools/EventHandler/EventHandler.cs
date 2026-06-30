@@ -12,8 +12,7 @@ public class EventHandler
 
     // INPUT EVENTS:
 
-    /// <summary> Passing 'true' means Right, 'false' Left. </summary>
-    public static Action<bool> OnDirectionChoiceInputEvent;
+    public static Action<DirectionProperties.Direction> OnDirectionChoiceInputEvent;
 
     public static Action OnPauseInputEvent;
 }
