@@ -15,4 +15,10 @@ public class EventHandler
     public static Action<DirectionProperties.Direction> OnDirectionChoiceInputEvent;
 
     public static Action OnPauseInputEvent;
+
+    // LEVEL EVENTS:
+
+    public static Action<float> OnRemainingResponseTimeChangedEvent;
+
+    public static Action<DirectionProperties.Direction> OnNextLevelDirectionComputedEvent;
 }
