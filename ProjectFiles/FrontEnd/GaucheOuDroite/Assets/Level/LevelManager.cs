@@ -115,8 +115,8 @@ public class LevelManager : MonoBehaviour
         Level levelProperties = GameDataManager.Instance.GetLevel(_currentLevelId);
         LevelProgression levelProgression = UserDataManager.Instance.GetLevelProgression(_currentLevelId);
         
-        ScoreManager.Initialize(_currentLevelId, levelProperties, levelProgression);
-        ResponseSequenceManager.Initialize(_currentLevelId, levelProperties);
+        ScoreManager.Initialize(levelProperties, levelProgression);
+        ResponseSequenceManager.Initialize(levelProperties);
 
 
         if (_isDebugModeOn)
