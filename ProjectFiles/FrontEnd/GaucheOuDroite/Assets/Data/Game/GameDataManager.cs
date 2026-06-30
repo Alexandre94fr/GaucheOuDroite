@@ -84,7 +84,7 @@ namespace FrontEnd.Data.Game
 
     public class LevelResponseTimeStep
     {
-        public float TriggerTimeInSeconds { get; set; }
+        public float MinimumCorrectResponses { get; set; }
 
         public float MaxResponseTimeInSeconds { get; set; }
 
@@ -93,7 +93,7 @@ namespace FrontEnd.Data.Game
         {
             return new()
             {
-                TriggerTimeInSeconds = p_levelResponseTimeStepDTO.TriggerTimeInSeconds,
+                MinimumCorrectResponses = p_levelResponseTimeStepDTO.MinimumCorrectResponses,
                 MaxResponseTimeInSeconds = p_levelResponseTimeStepDTO.MaxResponseTimeInSeconds,
             };
         }

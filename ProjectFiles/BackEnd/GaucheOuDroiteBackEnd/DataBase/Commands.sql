@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS LevelResponseTimeSteps(
     Id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     LevelId INTEGER NOT NULL,
 
-    TriggerTimeInSeconds NUMERIC(15,5) NOT NULL,
+    MinimumCorrectResponses INTEGER NOT NULL,
     MaxResponseTimeInSeconds NUMERIC(15,5) NOT NULL,
 
     FOREIGN KEY(LevelId) REFERENCES Levels(Id)
@@ -199,7 +199,7 @@ VALUES (
 INSERT INTO LevelResponseTimeSteps (
     LevelId,
 
-    TriggerTimeInSeconds,
+    MinimumCorrectResponses,
     MaxResponseTimeInSeconds
 )
 VALUES (
@@ -259,12 +259,12 @@ VALUES (
     (
         7,
 
-        9.25,
+        15,
         0.75
     ),
     (
         7,
 
-        16.75,
+        30,
         0.5
 );
