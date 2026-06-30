@@ -86,7 +86,7 @@ namespace FrontEnd.Data.Game
     {
         public float MinimumCorrectResponses { get; set; }
 
-        public float MaxResponseTimeInSeconds { get; set; }
+        public float MaximumResponseTimeInSeconds { get; set; }
 
 
         public static explicit operator LevelResponseTimeStep(LevelResponseTimeStepDTO p_levelResponseTimeStepDTO)
@@ -94,7 +94,7 @@ namespace FrontEnd.Data.Game
             return new()
             {
                 MinimumCorrectResponses = p_levelResponseTimeStepDTO.MinimumCorrectResponses,
-                MaxResponseTimeInSeconds = p_levelResponseTimeStepDTO.MaxResponseTimeInSeconds,
+                MaximumResponseTimeInSeconds = p_levelResponseTimeStepDTO.MaximumResponseTimeInSeconds,
             };
         }
     }

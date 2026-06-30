@@ -4,7 +4,7 @@ namespace Shared.DTOs.Data.Game
     {
         public float MinimumCorrectResponses { get; set; }
 
-        public float MaxResponseTimeInSeconds { get; set; }
+        public float MaximumResponseTimeInSeconds { get; set; }
 
         // Add other properties if necessary
 

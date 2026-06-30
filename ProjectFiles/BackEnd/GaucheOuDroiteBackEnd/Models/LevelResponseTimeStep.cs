@@ -8,6 +8,6 @@ namespace GaucheOuDroiteBackEnd.Models
 
         public required int MinimumCorrectResponses { get; set; }
 
-        public required float MaxResponseTimeInSeconds { get; set; }
+        public required float MaximumResponseTimeInSeconds { get; set; }
     }
 }

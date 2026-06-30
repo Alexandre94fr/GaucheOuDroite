@@ -83,7 +83,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                     levelResponseTimeStepsDTOByLevel.Add(new()
                     {
                         MinimumCorrectResponses = levelResponseTimeStep.MinimumCorrectResponses,
-                        MaxResponseTimeInSeconds = levelResponseTimeStep.MaxResponseTimeInSeconds,
+                        MaximumResponseTimeInSeconds = levelResponseTimeStep.MaximumResponseTimeInSeconds,
                     });
                 }
 
