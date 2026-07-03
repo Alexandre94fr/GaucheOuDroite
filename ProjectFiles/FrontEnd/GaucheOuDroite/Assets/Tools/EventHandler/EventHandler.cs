@@ -1,5 +1,8 @@
 using System;
 
+using FrontEnd.Data.Game;
+
+
 public class EventHandler
 {
     // DOCUMENTATION:
@@ -10,15 +13,22 @@ public class EventHandler
     // is because we have little time to make this project and because
     // we don't have that many Event in our project.
 
-    // INPUT EVENTS:
+    // -- Input events -- //
 
     public static Action<DirectionProperties.Direction> OnDirectionChoiceInputEvent;
 
     public static Action OnPauseInputEvent;
 
-    // LEVEL EVENTS:
+    // -- Levels events -- //
 
+    public static Action<float> OnMaximumRemainingResponseTimeChangedEvent;
     public static Action<float> OnRemainingResponseTimeChangedEvent;
 
     public static Action<DirectionProperties.Direction> OnNextLevelDirectionComputedEvent;
+
+    public static Action<int> OnScoreChangedEvent;
+
+
+    public static Action<Level, int> OnLevelWonEvent;
+    public static Action<Level, int> OnLevelLostEvent;
 }
