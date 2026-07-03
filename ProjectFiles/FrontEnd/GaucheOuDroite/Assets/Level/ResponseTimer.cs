@@ -57,7 +57,7 @@ public class ResponseTimer : MonoBehaviour
         _remainingTime = p_timeOutInSeconds;
         _isPaused = false;
 
-        StartCoroutine(TimerCoroutine(p_onTimeOut));
+        _timerCoroutine = StartCoroutine(TimerCoroutine(p_onTimeOut));
 
 
         if (_isDebugModeOn)
