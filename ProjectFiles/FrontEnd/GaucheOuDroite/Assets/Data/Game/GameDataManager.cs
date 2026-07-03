@@ -240,15 +240,30 @@ namespace FrontEnd.Data.Game
 
         #region - Game's data -
 
-        public Level GetLevel(int p_levelId)
+        /// <summary>
+        /// Returns if the method managed to get the <see cref="Level"/> reference. <para></para>
+        /// 
+        /// If true, the <paramref name="p_level"/> will contain the <see cref="Level"/> reference, otherwise null.
+        /// </summary>
+        /// <param name="p_levelId"> The Id of the <see cref="Level"/> you want. </param>
+        public bool TryGetLevel(int p_levelId, out Level p_level)
         {
+            p_level = null;
+
             if (!_gameData.Levels.TryGetValue(p_levelId, out Level level))
             {
-                Debug.LogWarning($"WARNING: [{GetType().Name}] There is no Level {p_levelId}. Returning null.");
-                return null;
+                if (_isDebugModeOn)
+                    Debug.Log($"DEBUG: [{GetType().Name}] Failed to get the {nameof(Level)} {p_levelId}. There is no {nameof(Level)} associated with {nameof(Level)} Id: {p_levelId}. Returning false.");
+
+                return false;
             }
 
-            return level;
+            p_level = level;
+
+            if (_isDebugModeOn)
+                Debug.Log($"DEBUG: [{GetType().Name}] Successfully got the {nameof(Level)} {p_levelId}. Returning true.");
+            
+            return true;
         }
 
         /// <summary>
