@@ -32,7 +32,14 @@ public class LevelManager : MonoBehaviour
     [SerializeField] string _levelSceneName = "Level";
 
 
-    public int _currentLevelId = -1;
+    GameDataManager _gameDataManager;
+    UserDataManager _userDataManager;
+
+    Level _levelProperties;
+    LevelProgression _levelProgression;
+
+
+    int _currentLevelId = -1;
 
 
     void Awake()
@@ -135,13 +142,16 @@ public class LevelManager : MonoBehaviour
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Starting to initialize the different Level's managers.");
 
+        _gameDataManager = GameDataManager.Instance;
+        _userDataManager = UserDataManager.Instance;
 
-        Level levelProperties = GameDataManager.Instance.GetLevel(_currentLevelId);
-        LevelProgression levelProgression = UserDataManager.Instance.GetLevelProgression(_currentLevelId);
 
-        ScoreManager.Initialize(levelProperties, levelProgression);
-        ResponseSequenceManager.Initialize(levelProperties);
-        GameplayLoopManager.Initialize(levelProperties, ResponseSequenceManager, ResponseTimer, ScoreManager);
+        _levelProperties = _gameDataManager.GetLevel(_currentLevelId);
+        _levelProgression = _userDataManager.GetLevelProgression(_currentLevelId);
+
+        ScoreManager.Initialize(_levelProperties, _levelProgression);
+        ResponseSequenceManager.Initialize(_levelProperties);
+        GameplayLoopManager.Initialize(_levelProperties, ResponseSequenceManager, ResponseTimer, ScoreManager);
 
 
         if (_isDebugModeOn)
@@ -178,7 +188,13 @@ public class LevelManager : MonoBehaviour
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Received the '{nameof(GameplayLoopManager.OnGameplayLoopWonEvent)}' Event call. Invoking the {nameof(EventHandler.OnLevelWonEvent)} Event.");
 
-        EventHandler.OnLevelWonEvent?.Invoke(GameDataManager.Instance.GetLevel(_currentLevelId), ScoreManager.GetScore());
+        int score = ScoreManager.GetScore();
+
+        TrySavingNewBestScore(score);
+
+        // TODO: Make the game unlock the next Level if it exist
+
+        EventHandler.OnLevelWonEvent?.Invoke(_levelProperties, score);
     }
 
     void OnGameplayLoopLost()
@@ -186,6 +202,32 @@ public class LevelManager : MonoBehaviour
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Received the '{nameof(GameplayLoopManager.OnGameplayLoopLostEvent)}' Event call. Invoking the {nameof(EventHandler.OnLevelLostEvent)} Event.");
 
-        EventHandler.OnLevelLostEvent?.Invoke(GameDataManager.Instance.GetLevel(_currentLevelId), ScoreManager.GetScore());
+        int score = ScoreManager.GetScore();
+
+        TrySavingNewBestScore(score);
+
+        EventHandler.OnLevelLostEvent?.Invoke(_levelProperties, score);
+    }
+
+
+    bool TrySavingNewBestScore(int p_score)
+    {
+        if (!ScoreManager.HasNewBestScore())
+        {
+            if (_isDebugModeOn)
+                Debug.Log($"DEBUG: [{GetType().Name}] Tried to save a new best score, but the score of the player is inferior or equal to the current best score. Returning false.");
+
+            return false;
+        }
+
+        _levelProgression.BestScore = p_score;
+        _userDataManager.UpdateLevelProgression(_currentLevelId, _levelProgression);
+
+        StartCoroutine(_userDataManager.SaveAllUserDataAsync());
+
+        if (_isDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Successfully sent a request to the server to save a new best score. Returning true.");
+
+        return true;
     }
 }

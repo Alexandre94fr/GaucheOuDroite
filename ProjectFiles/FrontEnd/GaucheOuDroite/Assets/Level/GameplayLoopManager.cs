@@ -230,8 +230,8 @@ public class GameplayLoopManager : MonoBehaviour
             float remainingTime = _responseTimer.GetRemainingTime();
 
             // TODO: The score we will add will depend of the remaining time of maximalResponseTimeInSeconds
-            // For now we will just add 100
-            _scoreManager.AddScore(100);
+            // For now we will just add 400
+            _scoreManager.AddScore(400);
 
             // -- Stopping the timer -- //
 
