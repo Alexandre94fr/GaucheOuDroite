@@ -14,4 +14,10 @@ public class DirectionProperties
         ['L'] = Direction.Left,
         ['R'] = Direction.Right,
     };
+
+    public static readonly Dictionary<Direction, string> DIRECTIONS_IN_FRENCH = new()
+    {
+        [Direction.Left] = "Gauche",
+        [Direction.Right] = "Droite",
+    };
 }
