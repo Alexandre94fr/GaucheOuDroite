@@ -27,7 +27,7 @@ public class ResponseSequenceManager : MonoBehaviour
         _isLevelInfinite = p_levelProperties.IsInfinite;
 
         _levelDirections = ConvertResponseSequenceToList(p_levelProperties.ResponseSequence);
-        _currentLevelDirectionIndex = 0;
+        _currentLevelDirectionIndex = -1; // Will be set to 0 when doing the first TryAdvanceToNextDirection
 
 
         if (_isDebugModeOn)
@@ -62,7 +62,7 @@ public class ResponseSequenceManager : MonoBehaviour
 
         if (_currentLevelDirectionIndex < 0)
         {
-            Debug.LogWarning($"WARNING: [{GetType().Name}] The '{nameof(_currentLevelDirectionIndex)}' property is inferior to 0. Have you initialized the class? Returning false and {Direction.Left}.");
+            Debug.LogWarning($"WARNING: [{GetType().Name}] The '{nameof(_currentLevelDirectionIndex)}' property is inferior to 0. Have you initialized the class and call the {nameof(TryAdvanceToNextDirection)} method? Returning false and {Direction.Left}.");
             p_direction = Direction.Left;
 
             return false;
@@ -146,5 +146,11 @@ public class ResponseSequenceManager : MonoBehaviour
         p_direction = _levelDirections[_currentLevelDirectionIndex];
 
         return true;
+    }
+
+
+    public int GetLevelResponseNumber()
+    {
+        return _levelDirections.Count;
     }
 }
