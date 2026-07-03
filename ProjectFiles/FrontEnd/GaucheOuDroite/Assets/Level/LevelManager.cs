@@ -199,16 +199,14 @@ public class LevelManager : MonoBehaviour
 
         int score = ScoreManager.GetScore();
 
-        // TODO: Make the Event transfer the info of which the BestScore has been beaten or/and the next level has been unlocked.
+        bool isNextLevelUnlocked = TrySaveNewBestScore(score);
 
-        TrySaveNewBestScore(score);
-
-        TryUnlockNextLevel();
+        bool isPreviousBestScoreBeaten = TryUnlockNextLevel();
 
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Invoking the {nameof(EventHandler.OnLevelWonEvent)} Event.");
 
-        EventHandler.OnLevelWonEvent?.Invoke(_levelProperties, score);
+        EventHandler.OnLevelWonEvent?.Invoke(_levelProperties, isNextLevelUnlocked, score, isPreviousBestScoreBeaten);
     }
 
     void OnGameplayLoopLost()
@@ -218,14 +216,13 @@ public class LevelManager : MonoBehaviour
 
         int score = ScoreManager.GetScore();
 
-        // TODO: Make the Event transfer the info of which the BestScore has been beaten or/and the next level has been unlocked (ALWAYS FALSE HERE).
-
-        TrySaveNewBestScore(score);
+        bool isPreviousBestScoreBeaten = TrySaveNewBestScore(score);
 
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Invoking the {nameof(EventHandler.OnLevelLostEvent)} Event.");
 
-        EventHandler.OnLevelLostEvent?.Invoke(_levelProperties, score);
+        // When you lost a Level, you never unlock the next Level.
+        EventHandler.OnLevelLostEvent?.Invoke(_levelProperties, false, score, isPreviousBestScoreBeaten);
     }
 
 

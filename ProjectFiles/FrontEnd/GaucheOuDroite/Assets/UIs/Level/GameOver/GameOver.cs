@@ -39,7 +39,7 @@ public class GameOver : MonoBehaviour
     }
 
 
-    void OnLevelWon(Level p_levelProperties, int p_score)
+    void OnLevelWon(Level p_levelProperties, bool p_isNextLevelUnlocked, int p_score, bool p_isPreviousBestScoreBeaten)
     {
         _gameOverUIGameObject.SetActive(true);
 
@@ -47,7 +47,7 @@ public class GameOver : MonoBehaviour
         _titleText.text = "Terminé !";
     }
 
-    void OnLevelLost(Level p_levelProperties, int p_score)
+    void OnLevelLost(Level p_levelProperties, bool p_isNextLevelUnlocked, int p_score, bool p_isPreviousBestScoreBeaten)
     {
         _gameOverUIGameObject.SetActive(true);
 

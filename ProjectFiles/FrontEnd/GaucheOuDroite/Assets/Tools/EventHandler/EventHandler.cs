@@ -29,6 +29,27 @@ public class EventHandler
     public static Action<int> OnScoreChangedEvent;
 
 
-    public static Action<Level, int> OnLevelWonEvent;
-    public static Action<Level, int> OnLevelLostEvent;
+    /// <summary>
+    /// Parameters' description:
+    /// 
+    /// <list type="number">
+    /// <item><description> Level: The Level's properties.                      </description></item>
+    /// <item><description> bool: If the next Level has been unlocked.          </description></item>
+    /// <item><description> int: Player's score.                                </description></item>
+    /// <item><description> bool: If the previous best score has been beaten.   </description></item>
+    /// </list>
+    /// </summary>
+    public static Action<Level, bool, int, bool> OnLevelWonEvent;
+
+    /// <summary>
+    /// Parameters' description:
+    /// 
+    /// <list type="number">
+    /// <item><description> Level: The Level's properties.                      </description></item>
+    /// <item><description> bool: If the next Level has been unlocked.          </description></item>
+    /// <item><description> int: Player's score.                                </description></item>
+    /// <item><description> bool: If the previous best score has been beaten.   </description></item>
+    /// </list>
+    /// </summary>
+    public static Action<Level, bool, int, bool> OnLevelLostEvent;
 }
