@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,6 +21,8 @@ public class LevelManager : MonoBehaviour
     [Header("Internal references:")]
     public ScoreManager ScoreManager;
     public ResponseSequenceManager ResponseSequenceManager;
+    public ResponseTimer ResponseTimer;
+    public GameplayLoopManager GameplayLoopManager;
 
     [Space]
     [SerializeField] SceneChanger _sceneChanger;
@@ -44,6 +47,11 @@ public class LevelManager : MonoBehaviour
         // -- Class properties verifications -- //
 
         if (!VariablesChecker.AreVariablesValid(name, null,
+            (ScoreManager, nameof(ScoreManager)),
+            (ResponseSequenceManager, nameof(ResponseSequenceManager)),
+            (ResponseTimer, nameof(ResponseTimer)),
+            (GameplayLoopManager, nameof(GameplayLoopManager)),
+
             (_sceneChanger, nameof(_sceneChanger))
         )) return;
 
@@ -55,6 +63,17 @@ public class LevelManager : MonoBehaviour
             );
             return;
         }
+
+        // -- Handling events -- //
+
+        GameplayLoopManager.OnGameplayLoopWonEvent += OnGameplayLoopWon;
+        GameplayLoopManager.OnGameplayLoopLostEvent += OnGameplayLoopLost;
+    }
+
+    void OnDestroy()
+    {
+        GameplayLoopManager.OnGameplayLoopWonEvent -= OnGameplayLoopWon;
+        GameplayLoopManager.OnGameplayLoopLostEvent -= OnGameplayLoopLost;
     }
 
 
@@ -83,11 +102,16 @@ public class LevelManager : MonoBehaviour
 
         // To know when the Scene has finished loading.
         // We will unsubscribe from the event when the OnSceneLoaded method is called.
-        _sceneChanger.OnSceneLoadedEvent += OnSceneLoaded;
+        _sceneChanger.OnSceneLoadedAfterStartCallEvent += OnSceneLoaded;
 
         _sceneChanger.LoadAsync(_levelSceneName);
 
         // Check out the OnSceneLoaded method to know what happens when the Level Scene has loaded.
+    }
+
+    public void RestartLevel()
+    {
+        StartNewLevel(_currentLevelId);
     }
 
     void OnSceneLoaded(Scene p_scene, LoadSceneMode p_loadSceneMode)
@@ -101,7 +125,7 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
-        _sceneChanger.OnSceneLoadedEvent -= OnSceneLoaded;
+        _sceneChanger.OnSceneLoadedAfterStartCallEvent -= OnSceneLoaded;
 
         InitializeLevelManagers();
     }
@@ -114,43 +138,54 @@ public class LevelManager : MonoBehaviour
 
         Level levelProperties = GameDataManager.Instance.GetLevel(_currentLevelId);
         LevelProgression levelProgression = UserDataManager.Instance.GetLevelProgression(_currentLevelId);
-        
+
         ScoreManager.Initialize(levelProperties, levelProgression);
         ResponseSequenceManager.Initialize(levelProperties);
+        GameplayLoopManager.Initialize(levelProperties, ResponseSequenceManager, ResponseTimer, ScoreManager);
 
 
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Successfully initialized the different Level's managers.");
 
-        StartCurrentLevel();
+        StartCoroutine(StartLevel());
     }
 
 
-    public void StartCurrentLevel()
+    IEnumerator StartLevel()
     {
         if (_isDebugModeOn)
-            Debug.Log($"DEBUG: [{GetType().Name}] Starting to start the current Level (Id: {_currentLevelId}).");
+            Debug.Log($"DEBUG: [{GetType().Name}] Starting to start the Level (Id: {_currentLevelId}).");
 
+
+        // -- Starting a count-down -- //
 
         // TODO: Make a count-down, afterward tell the ResponseSequenceManager to start
 
+        // -- Starting the gameplay loop -- //
+
+        GameplayLoopManager.StartGameplayLoop();
+
 
         if (_isDebugModeOn)
-            Debug.Log($"DEBUG: [{GetType().Name}] Successfully started the current Level (Id: {_currentLevelId}).");
+            Debug.Log($"DEBUG: [{GetType().Name}] Successfully started the Level (Id: {_currentLevelId}).");
+
+        yield return null; // TODO: Delete after calling the count-down creation
     }
 
-    public void EndCurrentLevel()
+
+    void OnGameplayLoopWon()
     {
         if (_isDebugModeOn)
-            Debug.Log($"DEBUG: [{GetType().Name}] Starting to end the current Level (Id: {_currentLevelId}).");
+            Debug.Log($"DEBUG: [{GetType().Name}] Received the '{nameof(GameplayLoopManager.OnGameplayLoopWonEvent)}' Event call. Invoking the {nameof(EventHandler.OnLevelWonEvent)} Event.");
 
+        EventHandler.OnLevelWonEvent?.Invoke(GameDataManager.Instance.GetLevel(_currentLevelId), ScoreManager.GetScore());
+    }
 
-        // TODO: Tells the ScoreManager and ResponseSequenceManager to stop if they are not already stopped
-        
-        // TODO: Show the Game over UI (with updated data ofc)
-
-
+    void OnGameplayLoopLost()
+    {
         if (_isDebugModeOn)
-            Debug.Log($"DEBUG: [{GetType().Name}] Successfully ended the current Level (Id: {_currentLevelId}).");
+            Debug.Log($"DEBUG: [{GetType().Name}] Received the '{nameof(GameplayLoopManager.OnGameplayLoopLostEvent)}' Event call. Invoking the {nameof(EventHandler.OnLevelLostEvent)} Event.");
+
+        EventHandler.OnLevelLostEvent?.Invoke(GameDataManager.Instance.GetLevel(_currentLevelId), ScoreManager.GetScore());
     }
 }
