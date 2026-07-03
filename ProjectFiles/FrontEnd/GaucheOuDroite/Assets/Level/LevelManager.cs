@@ -146,8 +146,17 @@ public class LevelManager : MonoBehaviour
         _userDataManager = UserDataManager.Instance;
 
 
-        _levelProperties = _gameDataManager.GetLevel(_currentLevelId);
-        _levelProgression = _userDataManager.GetLevelProgression(_currentLevelId);
+        if (!_gameDataManager.TryGetLevel(_currentLevelId, out _levelProperties))
+        {
+            Debug.LogWarning($"WARNING: [{GetType().Name}] Failed to get the {nameof(Level)} {_currentLevelId}. There is no {nameof(Level)} associated with {nameof(Level)} Id: {_currentLevelId}. Initialization failed. Returning.");
+            return;
+        }
+
+        if (!_userDataManager.TryGetLevelProgression(_currentLevelId, out _levelProgression))
+        {
+            Debug.LogWarning($"WARNING: [{GetType().Name}] Failed to get the {nameof(LevelProgression)} {_currentLevelId}. There is no {nameof(LevelProgression)} associated with the {nameof(Level)} Id: {_currentLevelId}. Initialization failed. Returning.");
+            return;
+        }
 
         ScoreManager.Initialize(_levelProperties, _levelProgression);
         ResponseSequenceManager.Initialize(_levelProperties);
