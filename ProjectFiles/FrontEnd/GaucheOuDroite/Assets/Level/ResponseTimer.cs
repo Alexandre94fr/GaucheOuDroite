@@ -57,6 +57,8 @@ public class ResponseTimer : MonoBehaviour
         _remainingTime = p_timeOutInSeconds;
         _isPaused = false;
 
+        EventHandler.OnMaximumRemainingResponseTimeChangedEvent?.Invoke(_remainingTime);
+
         _timerCoroutine = StartCoroutine(TimerCoroutine(p_onTimeOut));
 
 
