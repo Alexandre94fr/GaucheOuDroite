@@ -474,6 +474,18 @@ PrefabInstance:
       propertyPath: _buttonDirection
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3125896471417687159, guid: 78e9ea8cab352624cb58414c69eb7f8e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6c843e5d8adfde94f9109189e9cd7551, type: 3}
+    - target: {fileID: 3794546859032015284, guid: 78e9ea8cab352624cb58414c69eb7f8e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3794546859032015284, guid: 78e9ea8cab352624cb58414c69eb7f8e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -10
+      objectReference: {fileID: 0}
     - target: {fileID: 4576298732076967448, guid: 78e9ea8cab352624cb58414c69eb7f8e, type: 3}
       propertyPath: m_Name
       value: RightDirectionButton
