@@ -93,6 +93,13 @@ public class ScoreManager : MonoBehaviour
 
         int addedScore = Mathf.RoundToInt(ScoreProperties.BASED_GAINED_SCORE_PER_CORRECT_RESPONSE * ratio);
 
+        if (_isDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Invoking the {nameof(EventHandler.OnCorrectResponseProcessedEvent)} Event.");
+
+        EventHandler.OnCorrectResponseProcessedEvent?.Invoke(
+            new ResponseResult(addedScore, ratio, ResponseProperties.GetResponseRemainingTimeResult(ratio))
+        );
+
         AddScore(addedScore);
 
         if (_isDebugModeOn)
