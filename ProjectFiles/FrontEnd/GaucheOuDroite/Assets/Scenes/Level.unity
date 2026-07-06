@@ -806,10 +806,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 888107794}
     m_Modifications:
-    - target: {fileID: 5438247828692790437, guid: 69084a08d58c4f84a99e7a771835af98, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7682989165148178686, guid: 69084a08d58c4f84a99e7a771835af98, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
