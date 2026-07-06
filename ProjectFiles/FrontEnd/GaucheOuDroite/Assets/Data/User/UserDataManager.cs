@@ -312,19 +312,29 @@ namespace FrontEnd.Data.User
         #region - User progression data -
 
         /// <summary>
-        /// Returns a reference to a specific LevelProgression for a Level.
+        /// Returns if the method managed to get the <see cref="LevelProgression"/> reference. <para></para>
+        /// 
+        /// If true, the <paramref name="p_levelProgression"/> will contain the <see cref="LevelProgression"/> reference, otherwise null.
         /// </summary>
-        /// <param name="p_levelId"> The Id of the Level associated with the LevelProgression you want. </param>
-        /// <returns></returns>
-        public LevelProgression GetLevelProgression(int p_levelId)
+        /// <param name="p_levelId"> The Id of the Level that is associated with the <see cref="LevelProgression"/> you want. </param>
+        public bool TryGetLevelProgression(int p_levelId, out LevelProgression p_levelProgression)
         {
-            if (!_userProgression.LevelProgressions.TryGetValue(p_levelId, out LevelProgression levelProgressionData))
-            {
-                Debug.LogWarning($"WARNING: [{GetType().Name}] There is no {nameof(LevelProgression)} associated with level id '{p_levelId}'. Returning null.");
-                return null;
-            }
+            p_levelProgression = null;
 
-            return levelProgressionData;
+            if (!_userProgression.LevelProgressions.TryGetValue(p_levelId, out LevelProgression levelProgression))
+            {
+                if (_isDebugModeOn)
+                    Debug.Log($"DEBUG: [{GetType().Name}] Failed to get the {nameof(LevelProgression)} {p_levelId}. There is no {nameof(LevelProgression)} associated with the Level Id: {p_levelId}. Returning false.");
+
+                return false;
+            }
+            
+            p_levelProgression = levelProgression;
+
+            if (_isDebugModeOn)
+                Debug.Log($"DEBUG: [{GetType().Name}] Successfully got the {nameof(LevelProgression)} {p_levelId}. Returning true.");
+
+            return true;
         }
 
         /// <summary>
@@ -353,22 +363,20 @@ namespace FrontEnd.Data.User
 
         #region - User progression data -
 
-        public void UpdateLevelProgression(int p_levelId, LevelProgression p_newLevelProgressionData)
+        public void UpdateLevelProgression(int p_levelId, LevelProgression p_newLevelProgression)
         {
             // Note:
             // We don't replace the variable because we don't want to break possible references.
             // That's why we replace the values of the LevelProgression but not the LevelProgression itself.
             
-            LevelProgression levelProgressionData = GetLevelProgression(p_levelId);
-
-            if (levelProgressionData == null)
+            if (!TryGetLevelProgression(p_levelId, out LevelProgression levelProgression))
             {
-                Debug.LogWarning($"WARNING: [{GetType().Name}] There is no {nameof(LevelProgression)} associated with the level id: {p_levelId}. No modifications have been done. Returning.");
+                Debug.LogWarning($"WARNING: [{GetType().Name}] Failed to get the {nameof(LevelProgression)} {p_levelId}. There is no {nameof(LevelProgression)} associated with the Level Id: {p_levelId}. No modifications have been done. Returning.");
                 return;
             }
 
-            levelProgressionData.IsUnlocked = p_newLevelProgressionData.IsUnlocked;
-            levelProgressionData.BestScore = p_newLevelProgressionData.BestScore;
+            levelProgression.IsUnlocked = p_newLevelProgression.IsUnlocked;
+            levelProgression.BestScore = p_newLevelProgression.BestScore;
         }
 
         #endregion

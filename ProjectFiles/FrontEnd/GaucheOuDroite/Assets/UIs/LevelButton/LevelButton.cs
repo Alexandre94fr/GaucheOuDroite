@@ -136,27 +136,36 @@ public class LevelButton : MonoBehaviour
 
         // -- Getting the Game's and User's data -- //
 
-        Level levelData = GameDataManager.Instance.GetLevel(_associatedLevelId);
-        LevelProgression userLevelProgressionData = UserDataManager.Instance.GetLevelProgression(_associatedLevelId);
+        if (!GameDataManager.Instance.TryGetLevel(_associatedLevelId, out Level levelProperties))
+        {
+            Debug.LogWarning($"WARNING: [{GetType().Name}] Failed to get the {nameof(Level)} {_associatedLevelId}. There is no {nameof(Level)} associated with {nameof(Level)} Id: {_associatedLevelId}. Initialization failed. Returning.");
+            return;
+        }
+
+        if (!UserDataManager.Instance.TryGetLevelProgression(_associatedLevelId, out LevelProgression levelProgression))
+        {
+            Debug.LogWarning($"WARNING: [{GetType().Name}] Failed to get the {nameof(LevelProgression)} {_associatedLevelId}. There is no {nameof(LevelProgression)} associated with the {nameof(Level)} Id: {_associatedLevelId}. Initialization failed. Returning.");
+            return;
+        }
         
         // -- Updating the LevelButton visuals based on the Game's and User's data -- //
 
-        UpdateName(levelData.Name);
-        UpdateDifficulty(levelData.Difficulty);
-        UpdateBestScore(userLevelProgressionData.BestScore);
+        UpdateName(levelProperties.Name);
+        UpdateDifficulty(levelProperties.Difficulty);
+        UpdateBestScore(levelProgression.BestScore);
 
         UpdateStars(
-            userLevelProgressionData.BestScore,
-            levelData.Star1MinimumScore,
-            levelData.Star2MinimumScore,
-            levelData.Star3MinimumScore
+            levelProgression.BestScore,
+            levelProperties.Star1MinimumScore,
+            levelProperties.Star2MinimumScore,
+            levelProperties.Star3MinimumScore
         );
 
-        UpdateFogLock(userLevelProgressionData.IsUnlocked);
+        UpdateFogLock(levelProgression.IsUnlocked);
 
         // -- Updating the LevelButton fonctionnalities based on the Game's and User's data -- //
 
-        UpdateLevelAccecibility(userLevelProgressionData.IsUnlocked);
+        UpdateLevelAccecibility(levelProgression.IsUnlocked);
     }
 
 
@@ -267,12 +276,8 @@ public class LevelButton : MonoBehaviour
 
     public void OnButtonPressed()
     {
-        // -- Telling the LevelManager which Level we will load -- //
+        // -- Starting a new Level -- //
 
-        // TODO:
-
-        // -- Switching Scene -- //
-
-        _sceneChanger.SwitchToAsync(_levelSceneName);
+        LevelManager.Instance.StartNewLevel(_associatedLevelId);
     }
 }

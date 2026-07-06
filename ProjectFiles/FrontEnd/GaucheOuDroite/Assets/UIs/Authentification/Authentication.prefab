@@ -3947,7 +3947,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3729083975763355449}
         m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: SwitchTo
+        m_MethodName: LoadAsync
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

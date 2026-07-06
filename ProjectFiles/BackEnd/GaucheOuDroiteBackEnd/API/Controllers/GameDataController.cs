@@ -82,8 +82,8 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                     // Convertion: List<LevelResponseTimeSteps> -> List<LevelResponseTimeStepDTO>
                     levelResponseTimeStepsDTOByLevel.Add(new()
                     {
-                        TriggerTimeInSeconds = levelResponseTimeStep.TriggerTimeInSeconds,
-                        MaxResponseTimeInSeconds = levelResponseTimeStep.MaxResponseTimeInSeconds,
+                        MinimumCorrectResponses = levelResponseTimeStep.MinimumCorrectResponses,
+                        MaximumResponseTimeInSeconds = levelResponseTimeStep.MaximumResponseTimeInSeconds,
                     });
                 }
 

@@ -113,6 +113,6 @@ public class AccountDeletionButton : MonoBehaviour
 
         // -- Switching Scene -- //
 
-        _sceneChanger.SwitchToAsync(_signUpSceneName);
+        _sceneChanger.LoadAsync(_signUpSceneName);
     }
 }
