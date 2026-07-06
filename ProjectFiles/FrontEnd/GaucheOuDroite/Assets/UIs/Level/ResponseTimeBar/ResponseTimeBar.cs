@@ -9,6 +9,9 @@ public class ResponseTimeBar : MonoBehaviour
     [Header("Internal references:")]
     [SerializeField] Image _fillImage;
 
+    [Space]
+    [SerializeField] Image _perfectResponseTimeAreaFillImage;
+
 
     float _maximumRemainingTime = -1;
 
@@ -18,7 +21,9 @@ public class ResponseTimeBar : MonoBehaviour
         // -- Class properties verifications -- //
 
         if (!VariablesChecker.AreVariablesValid(name, null,
-            (_fillImage, nameof(_fillImage))
+            (_fillImage, nameof(_fillImage)),
+
+            (_perfectResponseTimeAreaFillImage, nameof(_perfectResponseTimeAreaFillImage))
         )) return;
 
         // -- Handling events -- //
@@ -37,6 +42,8 @@ public class ResponseTimeBar : MonoBehaviour
     void OnMaximumRemainingResponseTimeChanged(float p_maximumRemainingTimeInSeconds)
     {
         _maximumRemainingTime = p_maximumRemainingTimeInSeconds;
+
+        _perfectResponseTimeAreaFillImage.fillAmount = ScoreProperties.MINIMUM_REMAINING_TIME_IN_SECONDS_FOR_MAXIMUM_SCORE / _maximumRemainingTime;
     }
 
     void OnRemainingResponseTimeChanged(float p_remainingTimeInSeconds)
