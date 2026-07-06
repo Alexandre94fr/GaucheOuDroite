@@ -82,6 +82,23 @@ public class ScoreManager : MonoBehaviour
             Debug.Log($"DEBUG: [{GetType().Name}] Successfully added {p_addedValue} to the score and invoked the {nameof(EventHandler.OnScoreChangedEvent)} Event.");
     }
 
+    public void AddScoreBasedOnRemainingResponseTime(float p_remainingTimeInSeconds, float p_maximumResponseTimeInSeconds)
+    {
+        if (_isDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Starting to add score to the player based on the remaining response time.");
+
+        float ratio = p_remainingTimeInSeconds / (p_maximumResponseTimeInSeconds - ScoreProperties.MINIMUM_REMAINING_TIME_IN_SECONDS_FOR_MAXIMUM_SCORE);
+
+        ratio = Mathf.Clamp01(ratio);
+
+        int addedScore = Mathf.RoundToInt(ScoreProperties.BASED_GAINED_SCORE_PER_CORRECT_RESPONSE * ratio);
+
+        AddScore(addedScore);
+
+        if (_isDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Successfully added {addedScore} to the score of the player based on the remaining response time.");
+    }
+
 
     public int ConvertScoreToStars()
     {
