@@ -26,6 +26,7 @@ public class EventHandler
 
     public static Action<DirectionProperties.Direction> OnNextLevelDirectionComputedEvent;
 
+    public static Action<ResponseResult> OnCorrectResponseProcessedEvent;
     public static Action<int> OnScoreChangedEvent;
 
 
