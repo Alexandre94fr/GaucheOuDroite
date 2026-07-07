@@ -99,6 +99,22 @@ public class LevelManager : MonoBehaviour
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Starting a new Level (Id: {p_levelId}).");
 
+        // -- Checking if the given Id is correct by trying to get the Level's properties and LevelProgression -- //
+
+        _gameDataManager = GameDataManager.Instance;
+        _userDataManager = UserDataManager.Instance;
+
+        if (!_gameDataManager.TryGetLevel(p_levelId, out _levelProperties))
+        {
+            Debug.LogWarning($"WARNING: [{GetType().Name}] Failed to get the {nameof(Level)} {p_levelId}. There is no {nameof(Level)} associated with {nameof(Level)} Id: {p_levelId}. Initialization failed. Returning.");
+            return;
+        }
+
+        if (!_userDataManager.TryGetLevelProgression(p_levelId, out _levelProgression))
+        {
+            Debug.LogWarning($"WARNING: [{GetType().Name}] Failed to get the {nameof(LevelProgression)} {p_levelId}. There is no {nameof(LevelProgression)} associated with the {nameof(Level)} Id: {p_levelId}. Initialization failed. Returning.");
+            return;
+        }
 
         _currentLevelId = p_levelId;
 
@@ -119,6 +135,11 @@ public class LevelManager : MonoBehaviour
     public void RestartLevel()
     {
         StartNewLevel(_currentLevelId);
+    }
+
+    public void StartNextLevel()
+    {
+        StartNewLevel(_currentLevelId + 1);
     }
 
     void OnSceneLoaded(Scene p_scene, LoadSceneMode p_loadSceneMode)
@@ -142,21 +163,6 @@ public class LevelManager : MonoBehaviour
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Starting to initialize the different Level's managers.");
 
-        _gameDataManager = GameDataManager.Instance;
-        _userDataManager = UserDataManager.Instance;
-
-
-        if (!_gameDataManager.TryGetLevel(_currentLevelId, out _levelProperties))
-        {
-            Debug.LogWarning($"WARNING: [{GetType().Name}] Failed to get the {nameof(Level)} {_currentLevelId}. There is no {nameof(Level)} associated with {nameof(Level)} Id: {_currentLevelId}. Initialization failed. Returning.");
-            return;
-        }
-
-        if (!_userDataManager.TryGetLevelProgression(_currentLevelId, out _levelProgression))
-        {
-            Debug.LogWarning($"WARNING: [{GetType().Name}] Failed to get the {nameof(LevelProgression)} {_currentLevelId}. There is no {nameof(LevelProgression)} associated with the {nameof(Level)} Id: {_currentLevelId}. Initialization failed. Returning.");
-            return;
-        }
 
         ScoreManager.Initialize(_levelProperties, _levelProgression);
         ResponseSequenceManager.Initialize(_levelProperties);
