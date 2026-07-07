@@ -203,16 +203,27 @@ public class LevelManager : MonoBehaviour
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Received the '{nameof(GameplayLoopManager.OnGameplayLoopWonEvent)}' Event call.");
 
-        int score = ScoreManager.GetScore();
+        bool isPreviousBestScoreBeaten = TrySaveLocallyNewBestScore();
 
-        bool isNextLevelUnlocked = TrySaveNewBestScore(score);
+        bool hasNextLevelBeenUnlocked = TryUnlockLocallyNextLevel(out bool isNextLevelAlreadyUnlocked);
 
-        bool isPreviousBestScoreBeaten = TryUnlockNextLevel();
+        
+        // If we modified any player's LevelProgression, we should save it on the server.
+        bool isLocalLevelProgressionModified = isPreviousBestScoreBeaten || hasNextLevelBeenUnlocked;
+
+        if (isLocalLevelProgressionModified)
+        {
+            StartCoroutine(_userDataManager.SaveAllUserDataAsync());
+
+            if (_isDebugModeOn)
+                Debug.Log($"DEBUG: [{GetType().Name}] Successfully sent a request to the server to save all locally modified player's LevelProgression.");
+        }
+        
 
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Invoking the {nameof(EventHandler.OnLevelWonEvent)} Event.");
 
-        EventHandler.OnLevelWonEvent?.Invoke(_levelProperties, isNextLevelUnlocked, score, isPreviousBestScoreBeaten);
+        EventHandler.OnLevelWonEvent?.Invoke(_levelProperties, hasNextLevelBeenUnlocked, isNextLevelAlreadyUnlocked, ScoreManager.GetScore(), isPreviousBestScoreBeaten);
     }
 
     void OnGameplayLoopLost()
@@ -220,34 +231,51 @@ public class LevelManager : MonoBehaviour
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Received the '{nameof(GameplayLoopManager.OnGameplayLoopLostEvent)}' Event call.");
 
-        int score = ScoreManager.GetScore();
+        bool isPreviousBestScoreBeaten = TrySaveLocallyNewBestScore();
 
-        bool isPreviousBestScoreBeaten = TrySaveNewBestScore(score);
+        bool isNextLevelAlreadyUnlocked = IsLevelUnlocked(_currentLevelId + 1);
+
+
+        // If we modified any player's LevelProgression, we should save it on the server.
+        bool isLocalLevelProgressionModified = isPreviousBestScoreBeaten;
+
+        if (isLocalLevelProgressionModified)
+        {
+            StartCoroutine(_userDataManager.SaveAllUserDataAsync());
+
+            if (_isDebugModeOn)
+                Debug.Log($"DEBUG: [{GetType().Name}] Successfully sent a request to the server to save all locally modified player's LevelProgression.");
+        }
+
 
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Invoking the {nameof(EventHandler.OnLevelLostEvent)} Event.");
 
         // When you lost a Level, you never unlock the next Level.
-        EventHandler.OnLevelLostEvent?.Invoke(_levelProperties, false, score, isPreviousBestScoreBeaten);
+        EventHandler.OnLevelLostEvent?.Invoke(_levelProperties, false, isNextLevelAlreadyUnlocked, ScoreManager.GetScore(), isPreviousBestScoreBeaten);
     }
 
 
-    bool TryUnlockNextLevel()
+    bool TryUnlockLocallyNextLevel(out bool p_isNextLevelAlreadyUnlocked)
     {
         int nextLevelId = _currentLevelId + 1;
+
+        p_isNextLevelAlreadyUnlocked = false;
 
         if (!_userDataManager.TryGetLevelProgression(nextLevelId, out LevelProgression nextLevelProgression))
         {
             if (_isDebugModeOn)
                 Debug.Log($"DEBUG: [{GetType().Name}] Failed to get the {nameof(LevelProgression)} {nextLevelId}. There is no {nameof(LevelProgression)} associated with the {nameof(Level)} Id: {nextLevelId}. Returning false.");
-            
+
             return false;
         }
 
-        if (nextLevelProgression.IsUnlocked == true)
+        if (nextLevelProgression.IsUnlocked)
         {
             if (_isDebugModeOn)
                 Debug.Log($"DEBUG: [{GetType().Name}] The {nameof(Level)} {nextLevelId} is already unlocked. Returning false.");
+
+            p_isNextLevelAlreadyUnlocked = true;
 
             return false;
         }
@@ -255,31 +283,51 @@ public class LevelManager : MonoBehaviour
         nextLevelProgression.IsUnlocked = true;
         _userDataManager.UpdateLevelProgression(nextLevelId, nextLevelProgression);
 
-        StartCoroutine(_userDataManager.SaveAllUserDataAsync());
-
         if (_isDebugModeOn)
-            Debug.Log($"DEBUG: [{GetType().Name}] Successfully sent a request to the server to save that next {nameof(Level)} (Id: {nextLevelId}) is unlocked. Returning true.");
+            Debug.Log($"DEBUG: [{GetType().Name}] Successfully saved locally that next {nameof(Level)} (Id: {nextLevelId}) is unlocked. Returning true.");
 
         return true;
     }
 
-    bool TrySaveNewBestScore(int p_score)
+    bool IsLevelUnlocked(int p_levelId)
     {
-        if (!ScoreManager.HasNewBestScore())
+        if (!_userDataManager.TryGetLevelProgression(p_levelId, out LevelProgression nextLevelProgression))
         {
             if (_isDebugModeOn)
-                Debug.Log($"DEBUG: [{GetType().Name}] Tried to save a new best score, but the score of the player is inferior or equal to the current best score. Returning false.");
+                Debug.Log($"DEBUG: [{GetType().Name}] Failed to get the {nameof(LevelProgression)} {p_levelId}. There is no {nameof(LevelProgression)} associated with the {nameof(Level)} Id: {p_levelId}. Returning false.");
 
             return false;
         }
 
-        _levelProgression.BestScore = p_score;
-        _userDataManager.UpdateLevelProgression(_currentLevelId, _levelProgression);
+        if (nextLevelProgression.IsUnlocked == false)
+        {
+            if (_isDebugModeOn)
+                Debug.Log($"DEBUG: [{GetType().Name}] The {nameof(Level)} {p_levelId} is not unlocked. Returning false.");
 
-        StartCoroutine(_userDataManager.SaveAllUserDataAsync());
+            return false;
+        }
 
         if (_isDebugModeOn)
-            Debug.Log($"DEBUG: [{GetType().Name}] Successfully sent a request to the server to save a new best score. Returning true.");
+            Debug.Log($"DEBUG: [{GetType().Name}] The {nameof(Level)} {p_levelId} is unlocked. Returning true.");
+
+        return true;
+    }
+
+    bool TrySaveLocallyNewBestScore()
+    {
+        if (!ScoreManager.HasNewBestScore())
+        {
+            if (_isDebugModeOn)
+                Debug.Log($"DEBUG: [{GetType().Name}] Tried to save locally a new best score, but the score of the player is inferior or equal to the current best score. Returning false.");
+
+            return false;
+        }
+
+        _levelProgression.BestScore = ScoreManager.GetScore();
+        _userDataManager.UpdateLevelProgression(_currentLevelId, _levelProgression);
+
+        if (_isDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Successfully saved locally a new best score. Returning true.");
 
         return true;
     }
