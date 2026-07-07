@@ -8,14 +8,20 @@ using VariableCheckerPackage;
 public class GameOver : MonoBehaviour
 {
     [Header("Internal references:")]
-    [SerializeField] ScoreBar _scoreBar;
-
-    [Space]
     [SerializeField] GameObject _gameOverUIGameObject;
 
     [Space]
     [SerializeField] TextMeshProUGUI _levelNameText;
     [SerializeField] TextMeshProUGUI _titleText;
+
+    [Space]
+    [SerializeField] ScoreBar _scoreBar;
+
+    [Space]
+    [SerializeField] TextMeshProUGUI _isNextLevelUnclockedText;
+
+    [Space]
+    [SerializeField] NextLevelButton _nextLevelButton;
 
 
     void Start()
@@ -23,12 +29,16 @@ public class GameOver : MonoBehaviour
         // -- Class properties verifications -- //
 
         if (!VariablesChecker.AreVariablesValid(name, null,
-            (_scoreBar, nameof(_scoreBar)),
-
             (_gameOverUIGameObject, nameof(_gameOverUIGameObject)),
 
             (_levelNameText, nameof(_levelNameText)),
-            (_titleText, nameof(_titleText))
+            (_titleText, nameof(_titleText)),
+
+            (_scoreBar, nameof(_scoreBar)),
+
+            (_isNextLevelUnclockedText, nameof(_isNextLevelUnclockedText)),
+
+            (_nextLevelButton, nameof(_nextLevelButton))
         )) return;
 
         // -- Handling events -- //
@@ -44,7 +54,7 @@ public class GameOver : MonoBehaviour
     }
 
 
-    void OnLevelWon(Level p_levelProperties, bool p_isNextLevelUnlocked, int p_score, bool p_isPreviousBestScoreBeaten)
+    void OnLevelWon(Level p_levelProperties, bool p_hasNextLevelBeenUnlocked, bool p_isNextLevelAlreadyUnlocked, int p_score, bool p_isPreviousBestScoreBeaten)
     {
         _gameOverUIGameObject.SetActive(true);
 
@@ -52,9 +62,13 @@ public class GameOver : MonoBehaviour
         _titleText.text = "Terminé !";
 
         _scoreBar.UpdateVisuals(p_levelProperties, p_score);
+
+        _isNextLevelUnclockedText.enabled = p_hasNextLevelBeenUnlocked;
+
+        _nextLevelButton.SetButtonInteractability(p_hasNextLevelBeenUnlocked || p_isNextLevelAlreadyUnlocked);
     }
 
-    void OnLevelLost(Level p_levelProperties, bool p_isNextLevelUnlocked, int p_score, bool p_isPreviousBestScoreBeaten)
+    void OnLevelLost(Level p_levelProperties, bool p_hasNextLevelBeenUnlocked, bool p_isNextLevelAlreadyUnlocked, int p_score, bool p_isPreviousBestScoreBeaten)
     {
         _gameOverUIGameObject.SetActive(true);
 
@@ -62,5 +76,9 @@ public class GameOver : MonoBehaviour
         _titleText.text = "Échoué !";
 
         _scoreBar.UpdateVisuals(p_levelProperties, p_score);
+
+        _isNextLevelUnclockedText.enabled = p_hasNextLevelBeenUnlocked;
+
+        _nextLevelButton.SetButtonInteractability(p_hasNextLevelBeenUnlocked || p_isNextLevelAlreadyUnlocked);
     }
 }
