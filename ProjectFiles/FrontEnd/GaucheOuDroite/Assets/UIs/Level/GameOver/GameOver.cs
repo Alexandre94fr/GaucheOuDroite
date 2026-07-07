@@ -8,6 +8,9 @@ using VariableCheckerPackage;
 public class GameOver : MonoBehaviour
 {
     [Header("Internal references:")]
+    [SerializeField] ScoreBar _scoreBar;
+
+    [Space]
     [SerializeField] GameObject _gameOverUIGameObject;
 
     [Space]
@@ -20,6 +23,8 @@ public class GameOver : MonoBehaviour
         // -- Class properties verifications -- //
 
         if (!VariablesChecker.AreVariablesValid(name, null,
+            (_scoreBar, nameof(_scoreBar)),
+
             (_gameOverUIGameObject, nameof(_gameOverUIGameObject)),
 
             (_levelNameText, nameof(_levelNameText)),
@@ -45,6 +50,8 @@ public class GameOver : MonoBehaviour
 
         _levelNameText.text = p_levelProperties.Name;
         _titleText.text = "Terminé !";
+
+        _scoreBar.UpdateVisuals(p_levelProperties, p_score);
     }
 
     void OnLevelLost(Level p_levelProperties, bool p_isNextLevelUnlocked, int p_score, bool p_isPreviousBestScoreBeaten)
@@ -53,5 +60,7 @@ public class GameOver : MonoBehaviour
 
         _levelNameText.text = p_levelProperties.Name;
         _titleText.text = "Échoué !";
+
+        _scoreBar.UpdateVisuals(p_levelProperties, p_score);
     }
 }
