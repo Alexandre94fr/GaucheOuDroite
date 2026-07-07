@@ -182,19 +182,31 @@ public class LevelManager : MonoBehaviour
             Debug.Log($"DEBUG: [{GetType().Name}] Starting to start the Level (Id: {_currentLevelId}).");
 
 
-        // -- Starting a count-down -- //
+        // -- Starting a countdown -- //
 
-        // TODO: Make a count-down, afterward tell the ResponseSequenceManager to start
+        LevelCountdown levelCountdown = FindFirstObjectByType<LevelCountdown>();
 
-        // -- Starting the gameplay loop -- //
+        if (levelCountdown == null) 
+        {
+            Debug.LogWarning($"WARNING: [{GetType().Name}] Tried to find a {nameof(LevelCountdown)} in the '{_levelSceneName}' Scene, but failed. Skipping the countdown.");
 
-        GameplayLoopManager.StartGameplayLoop();
+            GameplayLoopManager.StartGameplayLoop();
 
+            if (_isDebugModeOn)
+                Debug.Log($"DEBUG: [{GetType().Name}] Successfully started the Level (Id: {_currentLevelId}).");
 
-        if (_isDebugModeOn)
-            Debug.Log($"DEBUG: [{GetType().Name}] Successfully started the Level (Id: {_currentLevelId}).");
+            yield break;
+        }
 
-        yield return null; // TODO: Delete after calling the count-down creation
+        levelCountdown.StartCountdown(_levelProperties.LevelResponseTimeSteps[0].MaximumResponseTimeInSeconds, 
+            () =>
+            {
+                GameplayLoopManager.StartGameplayLoop();
+
+                if (_isDebugModeOn)
+                    Debug.Log($"DEBUG: [{GetType().Name}] Successfully started the Level (Id: {_currentLevelId}).");
+            }
+        );
     }
 
 
