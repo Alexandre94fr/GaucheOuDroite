@@ -116,6 +116,17 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
+        // -- Stopping the already looping gameplay loop if looping -- //
+
+        // Prevent having two gameplay loop timers (from two different gameplay loop) running at the same time.
+        // That case can happen for a short period of time when you start a game, pause the game, and restart the game using the PauseMenu UI.
+        // This is because the first gameplay loop hadn't taken the time to stop his timer, because of the Scene change. 
+
+        if (GameplayLoopManager.IsGameplayLoopAlreadyRunning())
+            GameplayLoopManager.StopGameplayLoop();
+
+        // -- Updating the Level Id -- //
+
         _currentLevelId = p_levelId;
 
         // -- Loading the Level Scene -- //

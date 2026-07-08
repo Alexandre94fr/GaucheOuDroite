@@ -64,7 +64,7 @@ public class GameplayLoopManager : MonoBehaviour
             Debug.Log($"DEBUG: [{GetType().Name}] Successfully initialized the {GetType().Name} Class for Level '{p_levelProperties.Name}'.");
     }
 
-    bool IsGameplayLoopAlreadyRunning()
+    public bool IsGameplayLoopAlreadyRunning()
     {
         if (_gameplayLoopCoroutine == null)
             return false;
