@@ -283,4 +283,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39ab60d41a1279e40a7364cf684c0380, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DirectionButton
+  _button: {fileID: 2667895339805825920}
   _buttonDirection: 0
