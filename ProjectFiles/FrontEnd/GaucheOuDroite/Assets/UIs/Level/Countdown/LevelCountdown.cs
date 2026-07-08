@@ -9,7 +9,7 @@ using VariableCheckerPackage;
 public class LevelCountdown : MonoBehaviour
 {
     [Header("----- DEBUG -----:")]
-    bool _isDebugModeOn = false;
+    [SerializeField] bool _isDebugModeOn = false;
 
 
     [Header("Internal references:")]
@@ -21,8 +21,6 @@ public class LevelCountdown : MonoBehaviour
 
     [Header("Properties:")]
     [SerializeField] int _numberOfSeconds = 3;
-
-
 
 
     void Start()
