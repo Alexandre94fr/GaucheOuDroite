@@ -36,13 +36,13 @@ public class GameplayLoopManager : MonoBehaviour
     void Start()
     {
         EventHandler.OnDirectionChoiceInputEvent += OnDirectionChoiceInput;
-        EventHandler.OnPauseInputEvent += OnPauseInput;
+        PauseManager.OnPauseEvent += OnPause;
     }
 
     void OnDestroy()
     {
         EventHandler.OnDirectionChoiceInputEvent -= OnDirectionChoiceInput;
-        EventHandler.OnPauseInputEvent -= OnPauseInput;
+        PauseManager.OnPauseEvent -= OnPause;
     }
 
 
@@ -64,7 +64,7 @@ public class GameplayLoopManager : MonoBehaviour
             Debug.Log($"DEBUG: [{GetType().Name}] Successfully initialized the {GetType().Name} Class for Level '{p_levelProperties.Name}'.");
     }
 
-    bool IsGameplayLoopAlreadyRunning()
+    public bool IsGameplayLoopAlreadyRunning()
     {
         if (_gameplayLoopCoroutine == null)
             return false;
@@ -309,11 +309,11 @@ public class GameplayLoopManager : MonoBehaviour
         _playerDirectionResponse = p_direction;
     }
 
-    void OnPauseInput()
+    void OnPause(bool p_isGamePaused)
     {
         if (_isDebugModeOn)
-            Debug.Log($"DEBUG: [{GetType().Name}] The '{nameof(EventHandler.OnPauseInputEvent)}' Event has been fired. Changing the '{nameof(_isGamePaused)}' property from: {_isGamePaused}, to: {!_isGamePaused}.");
+            Debug.Log($"DEBUG: [{GetType().Name}] The '{nameof(PauseManager.OnPauseEvent)}' Event has been fired. Changing the '{nameof(_isGamePaused)}' property from: {_isGamePaused}, to: {p_isGamePaused}.");
 
-        _isGamePaused = !_isGamePaused;
+        _isGamePaused = p_isGamePaused;
     }
 }

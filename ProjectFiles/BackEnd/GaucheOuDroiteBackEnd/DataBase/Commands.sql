@@ -19,6 +19,7 @@ PRAGMA foreign_keys = ON;
 -- Code for GaucheOuDroite project:
 
 -- You should prefer dropping the tables that are the last created.
+
 DROP TABLE IF EXISTS LevelResponseTimeSteps;
 DROP TABLE IF EXISTS UserProgressions;
 DROP TABLE IF EXISTS Levels;
@@ -98,63 +99,63 @@ VALUES (
         0,
         FALSE,
         'LRLRRLLL',
-        1000,
-        2500,
-        5000
+        3000,
+        5000,
+        8000
     ),
     (
         'Niveau 2',
         0,
         FALSE,
         'LLRLRRLRLL',
-        1250,
-        3000,
-        6000
+        5000,
+        7500,
+        10000
     ),
     (
         'Niveau 3',
         1,
         FALSE,
         'LRLLRRLLRLLR',
-        1500,
-        3500,
-        6500
+        7500,
+        10000,
+        12000
     ),
     (
         'Niveau 4',
         1,
         FALSE,
         'RLLRRLRLRLLRLL',
-        1750,
-        4000,
-        7000
+        10000,
+        12000,
+        14000
     ),
     (
         'Niveau 5',
         2,
         FALSE,
         'RLRLLLRRLRLLRRLLRRL',
-        2500,
-        3500,
-        7000
+        12500,
+        15000,
+        19000
     ),
     (
         'Niveau 6',
         2,
         FALSE,
         'LRRLRLLRRRRLRLLRLLRRRLLR',
-        3500,
-        5000,
-        10000
+        15000,
+        20000,
+        24000
     ),
     (
         'Infini',
         3,
         TRUE,
         'L',
-        5000,
-        15000,
-        25000
+        35000,
+        50000,
+        100000
 );
 
 -- No more manual UserProgressions adding 
