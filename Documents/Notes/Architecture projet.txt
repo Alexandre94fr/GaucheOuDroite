@@ -1,0 +1,43 @@
+JWT = Json Web Token
+
+FrontEnd/
+│
+└── UnityProject/
+
+BackEnd/
+│
+├── API/
+│   └── Controllers/
+│
+├── Services/
+│
+├── Models/
+│
+├── DTOs/
+│
+├── Data/
+│   ├── GameDataBaseContext.cs
+│   └── Migrations/
+│
+├── DataBase/
+│   ├── DataBase.sqlite
+│   └── Commands.sql
+│
+├── Security/
+│   ├── JWTService.cs
+│   └── PasswordHasher.cs
+│
+├── Program.cs
+└── appsettings.json
+
+Shared/
+│
+├── Constants/
+│   ├── AuthenticationProperties.cs
+│   └── ...
+│
+├── Enums/
+│
+├── Tools/
+│
+└── ...
