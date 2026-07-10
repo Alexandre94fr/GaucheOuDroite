@@ -32,7 +32,17 @@ public static class ServerRequestManager
     }
 
 
-    public static bool IS_DEBUG_MODE_ON = true;
+    public const bool IS_DEBUG_MODE_ON = true;
+
+    /// <summary>
+    /// The URL the server uses to communicate with the Clients. <para></para>
+    /// 
+    /// <list type="bullet">
+    /// <item><description> http://localhost:9000 For local http request.        </description></item>
+    /// <item><description> https://localhost:9001 For local https request.      </description></item>
+    /// </list> 
+    /// </summary>
+    public const string SERVER_URL = "http://localhost:9000";
 
     public static string CLASS_NAME = typeof(ServerRequestManager).Name;
 
@@ -134,10 +144,7 @@ public static class ServerRequestManager
     {
         // -- Creating the request -- //
 
-        // http://localhost:5131 For local http request
-        // https://localhost:7280 For local https request
-
-        string url = $"https://localhost:7280/api/{p_route}";
+        string url = $"{SERVER_URL}/api/{p_route}";
 
         string requestType = p_requestType.ToString().ToUpper();
 
