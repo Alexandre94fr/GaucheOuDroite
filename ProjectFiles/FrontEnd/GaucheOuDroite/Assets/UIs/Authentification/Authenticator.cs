@@ -67,6 +67,11 @@ public class Authenticator : MonoBehaviour
             Debug.LogWarning($"DEBUG: [{GetType().Name}] The '{nameof(_levelSelectionSceneName)}' property is null or empty. Returning.");
             return;
         }
+
+        // -- Showing the authentication helper texts -- //
+
+        if (_authenticationMode == AuthenticationProperties.AuthenticationMode.SignUp)
+            _autenticationInformationGameObject.SetActive(true);
     }
 
 
