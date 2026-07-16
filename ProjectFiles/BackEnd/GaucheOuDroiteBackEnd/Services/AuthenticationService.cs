@@ -26,7 +26,7 @@ namespace GaucheOuDroiteBackEnd.Services
         readonly JwtTokenService _jwtTokenService = p_jwtTokenService;
 
 
-        async Task<SignUpResultDTO> RevertUserIdentityDataCreation(SignUpResultDTO p_signUpResult, User? p_user, List<UserProgression>? p_userProgressions)
+        async Task RevertUserIdentityDataCreation(User? p_user, List<UserProgression>? p_userProgressions)
         {
             if (p_user != null)
             {
@@ -51,12 +51,8 @@ namespace GaucheOuDroiteBackEnd.Services
             await _dataBaseContext.SaveChangesAsync();
 
 
-            p_signUpResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.InternalServerError;
-
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] Successfully reverted the User's progression data creation. Returning:\n{ObjectToStringFormatter.ObjectToString(p_signUpResult)}");
-
-            return p_signUpResult;
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Successfully reverted the User's progression data creation.");
         }
 
         public async Task<SignUpResultDTO> SignUpAsync(string p_username, string p_password)
@@ -132,7 +128,7 @@ namespace GaucheOuDroiteBackEnd.Services
                     if (IS_DEBUG_MODE_ON)
                         Console.WriteLine($"DEBUG: [{GetType().Name}] Failed to create the User. The SignUp request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}");
 
-                    await RevertUserIdentityDataCreation(signUpResult, user, userProgressions);
+                    await RevertUserIdentityDataCreation(user, userProgressions);
 
                     return signUpResult;
                 }
@@ -157,7 +153,7 @@ namespace GaucheOuDroiteBackEnd.Services
                     if (IS_DEBUG_MODE_ON)
                         Console.WriteLine($"DEBUG: [{GetType().Name}] Failed to create all UserProgressions. The SignUp request has failed. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}");
 
-                    await RevertUserIdentityDataCreation(signUpResult, user, userProgressions);
+                    await RevertUserIdentityDataCreation(user, userProgressions);
 
                     return signUpResult;
                 }
@@ -167,9 +163,13 @@ namespace GaucheOuDroiteBackEnd.Services
             }
             catch (Exception exception)
             {
-                Console.WriteLine($"WARNING: [{GetType().Name}] Caught an error while creating the User's identity data. Reverting the changes. Returning.\nError: {exception}");
+                signUpResult.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.InternalServerError;
 
-                return await RevertUserIdentityDataCreation(signUpResult, user, userProgressions);
+                Console.WriteLine($"WARNING: [{GetType().Name}] Caught an error while creating the User's identity data. Reverting the changes. Returning:\n{ObjectToStringFormatter.ObjectToString(signUpResult)}.\nError: {exception}");
+
+                await RevertUserIdentityDataCreation(user, userProgressions);
+
+                return signUpResult;
             }
 
 
