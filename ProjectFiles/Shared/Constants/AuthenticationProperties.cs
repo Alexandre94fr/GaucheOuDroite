@@ -185,8 +185,8 @@ namespace Shared.Constants
 
         public static readonly Dictionary<AuthenticationErrorReasons, string> PASSWORD_REQUIREMENTS_HELPING_MESSAGES_IN_ENGLISH = new()
         {
-            [AuthenticationErrorReasons.PasswordIsTooShort] = $"Must be at least {USERNAME_MINIMUM_LENGHT} character(s) long.",
-            [AuthenticationErrorReasons.PasswordIsTooLong] = $"Must not be more than {USERNAME_MAXIMUM_LENGHT} character(s) long.",
+            [AuthenticationErrorReasons.PasswordIsTooShort] = $"Must be at least {PASSWORD_MINIMUM_LENGHT} character(s) long.",
+            [AuthenticationErrorReasons.PasswordIsTooLong] = $"Must not be more than {PASSWORD_MAXIMUM_LENGHT} character(s) long.",
 
             [AuthenticationErrorReasons.PasswordContainAtLeastOneSpaceCharacter] = $"Must not contain space characters.",
 
