@@ -172,7 +172,7 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.UserAlreadyHasProgressions] = $"Some progression data have been detected on a user that shouldn't have any.\nPlease try again.",
             [AuthenticationErrorReasons.NoUserProgressionsFound] = $"No progression data have been founded on a user that should have some.\nPlease try again.",
 
-            [AuthenticationErrorReasons.InternalServerError] = $"An internal problem has been detected on the serverr.\nIf the problem persists, restart the application.",
+            [AuthenticationErrorReasons.InternalServerError] = $"An internal problem has been detected on the server.\nIf the problem persists, restart the application.",
         };
 
         public static readonly Dictionary<AuthenticationErrorReasons, string> USERNAME_REQUIREMENTS_HELPING_MESSAGES_IN_ENGLISH = new()
