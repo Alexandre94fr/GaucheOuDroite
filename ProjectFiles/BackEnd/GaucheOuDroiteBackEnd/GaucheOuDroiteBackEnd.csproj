@@ -1,0 +1,82 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>b6b2100d-5ef0-47e0-a806-4bbf46154568</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Shared\Constants\AuthenticationProperties.cs" Link="Shared\Constants\AuthenticationProperties.cs" />
+    <Compile Include="..\..\Shared\Constants\LevelDifficultyProperties.cs" Link="Shared\Constants\LevelDifficultyProperties.cs" />
+    <Compile Include="..\..\Shared\DTOs\ApiResponseDTO.cs" Link="Shared\DTOs\ApiResponseDTO.cs" />
+    <Compile Include="..\..\Shared\DTOs\AuthenticationResultDTO.cs" Link="Shared\DTOs\AuthenticationResultDTO.cs" />
+    <Compile Include="..\..\Shared\DTOs\Data\Game\GetGameDataResponseDTO.cs" Link="Shared\DTOs\Data\Game\GetGameDataResponseDTO.cs" />
+    <Compile Include="..\..\Shared\DTOs\Data\Game\LevelDTO.cs" Link="Shared\DTOs\Data\Game\LevelDTO.cs" />
+    <Compile Include="..\..\Shared\DTOs\Data\Game\LevelResponseTimeStepDTO.cs" Link="Shared\DTOs\Data\Game\LevelResponseTimeStepDTO.cs" />
+    <Compile Include="..\..\Shared\DTOs\Data\User\GetUserProgressionResponseDTO.cs" Link="Shared\DTOs\Data\User\GetUserProgressionResponseDTO.cs" />
+    <Compile Include="..\..\Shared\DTOs\Data\User\GetUserResponseDTO.cs" Link="Shared\DTOs\Data\User\GetUserResponseDTO.cs" />
+    <Compile Include="..\..\Shared\DTOs\Data\User\LevelProgressionDTO.cs" Link="Shared\DTOs\Data\User\LevelProgressionDTO.cs" />
+    <Compile Include="..\..\Shared\DTOs\Data\User\UserProgressionDTO.cs" Link="Shared\DTOs\Data\User\UserProgressionDTO.cs" />
+    <Compile Include="..\..\Shared\DTOs\LogInDTO.cs" Link="Shared\DTOs\LogInDTO.cs" />
+    <Compile Include="..\..\Shared\DTOs\LogInResultDTO.cs" Link="Shared\DTOs\LogInResultDTO.cs" />
+    <Compile Include="..\..\Shared\DTOs\SignUpDTO.cs" Link="Shared\DTOs\SignUpDTO.cs" />
+    <Compile Include="..\..\Shared\DTOs\SignUpResultDTO.cs" Link="Shared\DTOs\SignUpResultDTO.cs" />
+    <Compile Include="..\..\Shared\Enums\LevelDifficulty.cs" Link="Shared\Enums\LevelDifficulty.cs" />
+    <Compile Include="..\..\Shared\Tools\ObjectToStringFormatter.cs" Link="Shared\Tools\ObjectToStringFormatter.cs" />
+    <Compile Include="..\..\Shared\Tools\UserDataChecker.cs" Link="Shared\Tools\UserDataChecker.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Shared\Constants\" />
+    <Folder Include="Shared\DTOs\Data\Game\" />
+    <Folder Include="Shared\DTOs\Data\User\" />
+    <Folder Include="Shared\Enums\" />
+    <Folder Include="Shared\Tools\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Shared\Constants\AuthenticationProperties.cs.meta" Link="Shared\Constants\AuthenticationProperties.cs.meta" />
+    <None Include="..\..\Shared\Constants\LevelDifficultyProperties.cs.meta" Link="Shared\Constants\LevelDifficultyProperties.cs.meta" />
+    <None Include="..\..\Shared\DTOs\ApiResponseDTO.cs.meta" Link="Shared\DTOs\ApiResponseDTO.cs.meta" />
+    <None Include="..\..\Shared\DTOs\AuthenticationResultDTO.cs.meta" Link="Shared\DTOs\AuthenticationResultDTO.cs.meta" />
+    <None Include="..\..\Shared\DTOs\Data\Game\GetGameDataResponseDTO.cs.meta" Link="Shared\DTOs\Data\Game\GetGameDataResponseDTO.cs.meta" />
+    <None Include="..\..\Shared\DTOs\Data\Game\LevelDTO.cs.meta" Link="Shared\DTOs\Data\Game\LevelDTO.cs.meta" />
+    <None Include="..\..\Shared\DTOs\Data\Game\LevelResponseTimeStepDTO.cs.meta" Link="Shared\DTOs\Data\Game\LevelResponseTimeStepDTO.cs.meta" />
+    <None Include="..\..\Shared\DTOs\Data\User\GetUserProgressionResponseDTO.cs.meta" Link="Shared\DTOs\Data\User\GetUserProgressionResponseDTO.cs.meta" />
+    <None Include="..\..\Shared\DTOs\Data\User\GetUserResponseDTO.cs.meta" Link="Shared\DTOs\Data\User\GetUserResponseDTO.cs.meta" />
+    <None Include="..\..\Shared\DTOs\Data\User\LevelProgressionDTO.cs.meta" Link="Shared\DTOs\Data\User\LevelProgressionDTO.cs.meta" />
+    <None Include="..\..\Shared\DTOs\Data\User\UserProgressionDTO.cs.meta" Link="Shared\DTOs\Data\User\UserProgressionDTO.cs.meta" />
+    <None Include="..\..\Shared\DTOs\LogInDTO.cs.meta" Link="Shared\DTOs\LogInDTO.cs.meta" />
+    <None Include="..\..\Shared\DTOs\LogInResultDTO.cs.meta" Link="Shared\DTOs\LogInResultDTO.cs.meta" />
+    <None Include="..\..\Shared\DTOs\SignUpDTO.cs.meta" Link="Shared\DTOs\SignUpDTO.cs.meta" />
+    <None Include="..\..\Shared\DTOs\SignUpResultDTO.cs.meta" Link="Shared\DTOs\SignUpResultDTO.cs.meta" />
+    <None Include="..\..\Shared\Enums\LevelDifficulty.cs.meta" Link="Shared\Enums\LevelDifficulty.cs.meta" />
+    <None Include="..\..\Shared\Tools\ObjectToStringFormatter.cs.meta" Link="Shared\Tools\ObjectToStringFormatter.cs.meta" />
+    <None Include="..\..\Shared\Tools\UserDataChecker.cs.meta" Link="Shared\Tools\UserDataChecker.cs.meta" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="10.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DataBase\Commands.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DataBase\DataBase.sqlite">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
