@@ -198,16 +198,23 @@ namespace Shared.Constants
 
         public const string SERVER_CONNECTION_ERROR_MESSAGE_IN_ENGLISH = "Failed to connect to the server.\nThe server may not be running.\nIf the problem persists, restart the application.";
 
-        public const string DATA_PROCESSING_ERROR_MESSAGE_IN_ENGLISH = "Erreur lors du traitement des données reçues.\nDonnées corrompues ou au mauvais format.\nSi le problème persiste, relancez l'application.";
+        public const string DATA_PROCESSING_ERROR_MESSAGE_IN_ENGLISH = "Error processing the received data.\nThe data is corrupted or in the wrong format.\nIf the problem persists, restart the application.";
 
-        public const string UNKNOWN_ERROR_MESSAGE_IN_ENGLISH = "Erreur inconnue.\nSi le problème persiste, relancez l'application.";
-
-
-        public static readonly string TOO_LONG_LOADING_DATA_ERROR_MESSAGE_IN_ENGLISH = $"Temps maximal de chargement des données dépassé ({MAXIMAL_INITIAL_DATA_LOADING_TIME}s).\nSi le problème persiste, relancez l'application.";
+        public const string UNKNOWN_ERROR_MESSAGE_IN_ENGLISH = "Unknown error.\nIf the problem persists, restart the application.";
 
 
+        public static readonly string TOO_LONG_LOADING_DATA_ERROR_MESSAGE_IN_ENGLISH = $"The maximum data loading time has been exceeded ({MAXIMAL_INITIAL_DATA_LOADING_TIME}s).\nIf the problem persists, restart the application.";
 
-        public const string SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE_IN_ENGLISH = "Authentification validée localement.\nEnvoie des informations au serveur.";
-        public const string SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE_IN_ENGLISH = "Authentification validée par le serveur.";
+
+
+        public const string SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE_IN_ENGLISH = "Authentication validated locally.\nSending information to the server.";
+        public const string SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE_IN_ENGLISH = "Authentication validated by the server.";
+
+
+        public static readonly Dictionary<AuthenticationMode, string> AUTHENTICATION_MODE_IN_ENGLISH = new()
+        {
+            [AuthenticationMode.SignUp] = $"Sign up",
+            [AuthenticationMode.LogIn] = $"Log in",
+        };
     }
 }
