@@ -53,4 +53,14 @@ public class ResponseProperties
 
         [ResponseRemainingTimeResult.CloseCall] = "Juste",
     };
+
+    public static readonly Dictionary<ResponseRemainingTimeResult, string> RESPONSE_REMAINING_TIME_RESULT_NAMES_IN_ENGLISH = new()
+    {
+        [ResponseRemainingTimeResult.Perfect]   = "PERFECT",
+        [ResponseRemainingTimeResult.VeryGood]  = "Very good",
+        [ResponseRemainingTimeResult.Good]      = "Good",
+        [ResponseRemainingTimeResult.Bad]       = "Bad",
+
+        [ResponseRemainingTimeResult.CloseCall] = "Close call",
+    };
 }
