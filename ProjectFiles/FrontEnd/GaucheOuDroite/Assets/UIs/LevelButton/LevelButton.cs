@@ -160,57 +160,22 @@ public class LevelButton : MonoBehaviour
         {
             case GameLanguage.French:
 
-                DIFFICULTY_NAMES = LevelDifficultyProperties.DIFFICULTY_NAMES_IN_FRENCH;
+                levelName = LevelProperties.LEVEL_NAMES_IN_FRENCH[_associatedLevelId];
 
-                levelName = levelProperties.Name;
+                DIFFICULTY_NAMES = LevelDifficultyProperties.DIFFICULTY_NAMES_IN_FRENCH;
 
                 break;
 
             case GameLanguage.English:
 
+                levelName = LevelProperties.LEVEL_NAMES_IN_ENGLISH[_associatedLevelId];
+
                 DIFFICULTY_NAMES = LevelDifficultyProperties.DIFFICULTY_NAMES_IN_ENGLISH;
-
-                // Doing this conversion this way is bad practice, but because the English version of the game is not subject to being clean and must be done quickly, it's not an issue here.
-
-                switch (_associatedLevelId)
-                {
-                    case 1:
-                        levelName = "Level 1";
-                        break;
-
-                    case 2:
-                        levelName = "Level 2";
-                        break;
-
-                    case 3:
-                        levelName = "Level 3";
-                        break;
-
-                    case 4:
-                        levelName = "Level 4";
-                        break;
-
-                    case 5:
-                        levelName = "Level 5";
-                        break;
-
-                    case 6:
-                        levelName = "Level 6";
-                        break;
-
-                    case 7:
-                        levelName = "Infinite";
-                        break;
-
-                    default:
-                        Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for a Level id of {_associatedLevelId}. Returning.");
-                        return;
-                }
 
                 break;
 
             default:
-                Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Using the french level name.");
+                Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Using the Level name inside the DataBase.");
                 break;
         }
 
