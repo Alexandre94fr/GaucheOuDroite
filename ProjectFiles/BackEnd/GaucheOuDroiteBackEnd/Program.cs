@@ -12,6 +12,9 @@ using GaucheOuDroiteBackEnd.Security;
 using GaucheOuDroiteBackEnd.Services;
 
 
+const string SCRIPT_NAME = "Program.cs";
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Project includes
@@ -22,7 +25,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Project data base
-string? connectionString = builder.Configuration.GetConnectionString("DataBaseContext") ?? throw new InvalidOperationException("ERROR: [Program.cs] Connection string 'DataBaseContext' not found.");
+string? connectionString = builder.Configuration.GetConnectionString("DataBaseContext") ?? throw new InvalidOperationException($"ERROR: [{SCRIPT_NAME}] Connection string 'DataBaseContext' not found.");
 
 builder.Services.AddDbContext<DataBaseContext>(options => options.UseSqlite(connectionString));
 
@@ -45,7 +48,10 @@ builder.Services.Configure<JwtTokenSettings>(
 );
 
 JwtTokenSettings jwtTokenSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtTokenSettings>()
-    ?? throw new InvalidOperationException($"ERROR: [Program.cs] JwtSettings not found inside 'appsetting.json'.");
+    ?? throw new InvalidOperationException($"ERROR: [{SCRIPT_NAME}] JwtSettings not found inside 'appsetting.json' or 'secret.json' files.");
+
+if (string.IsNullOrEmpty(jwtTokenSettings.Key))
+    throw new NullReferenceException($"ERROR: [{SCRIPT_NAME}] The JwtSettings.Key inside 'appsetting.json' or 'secret.json' files is null or empty. Please verify that you added the secret JwtSettings Key. Check out the 'appsettings.json' file for more information.");
 
 
 builder.Services
