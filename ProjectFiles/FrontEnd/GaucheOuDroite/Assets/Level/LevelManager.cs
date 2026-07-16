@@ -116,6 +116,27 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
+        // -- Converting the Level's name into the translated one -- //
+
+        switch (GameDataManager.Instance.GameLanguage)
+        {
+            case GameLanguage.French:
+
+                _levelProperties.Name = LevelProperties.LEVEL_NAMES_IN_FRENCH[p_levelId];
+
+                break;
+
+            case GameLanguage.English:
+
+                _levelProperties.Name = LevelProperties.LEVEL_NAMES_IN_ENGLISH[p_levelId];
+
+                break;
+
+            default:
+                Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Using the Level name inside the DataBase.");
+                break;
+        }
+
         // -- Stopping the already looping gameplay loop if looping -- //
 
         // Prevent having two gameplay loop timers (from two different gameplay loop) running at the same time.
