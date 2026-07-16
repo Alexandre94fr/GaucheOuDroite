@@ -148,7 +148,7 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.UsernameIsTooShort] = $"The username is too short (<{USERNAME_MINIMUM_LENGHT}).",
             [AuthenticationErrorReasons.UsernameIsTooLong] = $"The username is too long (>{USERNAME_MAXIMUM_LENGHT}).",
 
-            [AuthenticationErrorReasons.UsernameAlreadyExists] = $"The username is already taken by another user.\nAre you trying to log-in?",
+            [AuthenticationErrorReasons.UsernameAlreadyExists] = $"The username is already taken by another user.\nAre you trying to log in?",
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter] = $"The username contain at least one space character.",
 
