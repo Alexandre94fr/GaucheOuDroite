@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -90,6 +91,9 @@ public class LevelButton : MonoBehaviour
     [SerializeField] float _maxRandomTransparencyMultiplier = 1.05f;
 
 
+    Dictionary<LevelDifficulty, string> DIFFICULTY_NAMES = new();
+
+
     void Start()
     {
         // -- Class properties verifications -- //
@@ -147,10 +151,72 @@ public class LevelButton : MonoBehaviour
             Debug.LogWarning($"WARNING: [{GetType().Name}] Failed to get the {nameof(LevelProgression)} {_associatedLevelId}. There is no {nameof(LevelProgression)} associated with the {nameof(Level)} Id: {_associatedLevelId}. Initialization failed. Returning.");
             return;
         }
-        
+
+        // -- Setting the different properties to the right language -- //
+
+        string levelName = levelProperties.Name;
+
+        switch (GameDataManager.Instance.GameLanguage)
+        {
+            case GameLanguage.French:
+
+                DIFFICULTY_NAMES = LevelDifficultyProperties.DIFFICULTY_NAMES_IN_FRENCH;
+
+                levelName = levelProperties.Name;
+
+                break;
+
+            case GameLanguage.English:
+
+                DIFFICULTY_NAMES = LevelDifficultyProperties.DIFFICULTY_NAMES_IN_ENGLISH;
+
+                // Doing this conversion this way is bad practice, but because the English version of the game is not subject to being clean and must be done quickly, it's not an issue here.
+
+                switch (_associatedLevelId)
+                {
+                    case 1:
+                        levelName = "Level 1";
+                        break;
+
+                    case 2:
+                        levelName = "Level 2";
+                        break;
+
+                    case 3:
+                        levelName = "Level 3";
+                        break;
+
+                    case 4:
+                        levelName = "Level 4";
+                        break;
+
+                    case 5:
+                        levelName = "Level 5";
+                        break;
+
+                    case 6:
+                        levelName = "Level 6";
+                        break;
+
+                    case 7:
+                        levelName = "Infinite";
+                        break;
+
+                    default:
+                        Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for a Level id of {_associatedLevelId}. Returning.");
+                        return;
+                }
+
+                break;
+
+            default:
+                Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Using the french level name.");
+                break;
+        }
+
         // -- Updating the LevelButton visuals based on the Game's and User's data -- //
 
-        UpdateName(levelProperties.Name);
+        UpdateName(levelName);
         UpdateDifficulty(levelProperties.Difficulty);
         UpdateBestScore(levelProgression.BestScore);
 
@@ -181,7 +247,7 @@ public class LevelButton : MonoBehaviour
         Debug.Log($"Level difficulty for {_levelButton.transform.parent.name}: {p_levelDifficulty}");
 
         // Updating text
-        _difficultyText.text = LevelDifficultyProperties.DIFFICULTY_NAMES_IN_FRENCH[p_levelDifficulty];
+        _difficultyText.text = DIFFICULTY_NAMES[p_levelDifficulty];
 
         // Updating text's color
         Color newColor = new(
