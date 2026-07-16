@@ -1,7 +1,10 @@
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 using VariableCheckerPackage;
+
+using FrontEnd.Data.Game;
 
 
 public class DirectionText : MonoBehaviour
@@ -13,6 +16,9 @@ public class DirectionText : MonoBehaviour
     string _currentDirectionText = "";
 
 
+    Dictionary<DirectionProperties.Direction, string> DIRECTIONS = new();
+
+
     void Start()
     {
         // -- Class properties verifications -- //
@@ -20,6 +26,27 @@ public class DirectionText : MonoBehaviour
         if (!VariablesChecker.AreVariablesValid(name, null,
             (_directionText, nameof(_directionText))
         )) return;
+
+        // -- Setting the different properties to the right language -- //
+
+        switch (GameDataManager.Instance.GameLanguage)
+        {
+            case GameLanguage.French:
+
+                DIRECTIONS = DirectionProperties.DIRECTIONS_IN_FRENCH;
+
+                break;
+
+            case GameLanguage.English:
+
+                DIRECTIONS = DirectionProperties.DIRECTIONS_IN_ENGLISH;
+
+                break;
+
+            default:
+                Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Using the Level name inside the DataBase.");
+                break;
+        }
 
         // -- Handling events -- //
 
@@ -36,7 +63,7 @@ public class DirectionText : MonoBehaviour
 
     void OnNextLevelDirectionComputed(DirectionProperties.Direction p_direction)
     {
-        _currentDirectionText = DirectionProperties.DIRECTIONS_IN_FRENCH[p_direction] + " !";
+        _currentDirectionText = DIRECTIONS[p_direction] + " !";
 
         _directionText.text = _currentDirectionText;
     }
