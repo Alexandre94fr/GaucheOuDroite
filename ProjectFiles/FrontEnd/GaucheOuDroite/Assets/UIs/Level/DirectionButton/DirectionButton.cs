@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 using VariableCheckerPackage;
@@ -23,14 +25,36 @@ public class DirectionButton : MonoBehaviour
 
         // -- Handling events -- //
 
+        EventHandler.OnDirectionChoiceInputEvent += OnDirectionChoiceInput;
         PauseManager.OnPauseEvent += OnPause;
     }
 
     void OnDestroy()
     {
+        EventHandler.OnDirectionChoiceInputEvent -= OnDirectionChoiceInput;
         PauseManager.OnPauseEvent -= OnPause;
     }
 
+
+
+    IEnumerator SimulatePress()
+    {
+        PointerEventData eventData = new(EventSystem.current);
+
+        _button.OnPointerDown(eventData);
+
+        yield return new WaitForSeconds(0.1f); 
+
+        _button.OnPointerUp(eventData);
+    }
+
+    void OnDirectionChoiceInput(DirectionProperties.Direction p_direction)
+    {
+        if (p_direction != _buttonDirection) 
+            return;
+
+        StartCoroutine(SimulatePress());
+    }
 
     public void OnButtonPressed()
     {
