@@ -16,6 +16,13 @@ public class GameplayLoopManager : MonoBehaviour
     [Header("----- DEBUG -----")]
     [SerializeField] bool _isDebugModeOn;
 
+    [Header("Internal references:")]
+    [SerializeField] AudioSource _audioSource;
+
+    [Header("Properties:")]
+    [SerializeField] AudioClip _correctAwnserSFX;
+
+
 
     Level _levelProperties;
 
@@ -240,6 +247,10 @@ public class GameplayLoopManager : MonoBehaviour
             _responseTimer.StopTimer();
 
             // -- Handling correct player response -- //
+
+            // Playing SFX
+            _audioSource.clip = _correctAwnserSFX;
+            _audioSource.Play();
 
             if (!_levelProperties.IsInfinite && correctResponsesNumber >= _responseSequenceManager.GetLevelResponseNumber())
             {
