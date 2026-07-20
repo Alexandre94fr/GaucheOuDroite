@@ -155,7 +155,7 @@ namespace Shared.Constants
             // --- //
 
             [AuthenticationErrorReasons.PasswordIsEmpty] = $"The password is empty.",
-            [AuthenticationErrorReasons.PasswordIsTooShort] = $"The password is too short (<{PASSWORD_MAXIMUM_LENGHT}).",
+            [AuthenticationErrorReasons.PasswordIsTooShort] = $"The password is too short (<{PASSWORD_MINIMUM_LENGHT}).",
             [AuthenticationErrorReasons.PasswordIsTooLong] = $"The password is too long (>{PASSWORD_MAXIMUM_LENGHT}).",
 
             [AuthenticationErrorReasons.PasswordContainAtLeastOneSpaceCharacter] = $"The password contain at least one space character.",
