@@ -1,8 +1,9 @@
-using FrontEnd.Data.Game;
-using TMPro;
 using UnityEngine;
+using TMPro;
 
 using VariableCheckerPackage;
+
+using FrontEnd.Data.Game;
 
 
 public class GameOver : MonoBehaviour
@@ -54,12 +55,71 @@ public class GameOver : MonoBehaviour
     }
 
 
-    void OnLevelWon(Level p_levelProperties, bool p_hasNextLevelBeenUnlocked, bool p_isNextLevelAlreadyUnlocked, int p_score, bool p_isPreviousBestScoreBeaten)
+    void UpdateTitleText(bool p_isLevelWon)
+    {
+        string titleText;
+
+        if (p_isLevelWon)
+        {
+            // Doing this conversion this way is bad practice, but because the English version of the game is not subject to being clean and must be done quickly, it's not an issue here.
+
+            switch (GameDataManager.Instance.GameLanguage)
+            {
+                case GameLanguage.French:
+
+                    titleText = "Terminé !";
+
+                    break;
+
+                case GameLanguage.English:
+
+                    titleText = "Finished!";
+
+                    break;
+
+                default:
+                    Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Using the English translation.");
+                    titleText = "Finished!";
+                    break;
+            }
+
+            _titleText.text = titleText;
+
+            return;
+        }
+
+        // Doing this conversion this way is bad practice, but because the English version of the game is not subject to being clean and must be done quickly, it's not an issue here.
+
+        switch (GameDataManager.Instance.GameLanguage)
+        {
+            case GameLanguage.French:
+
+                titleText = "Échoué !";
+
+                break;
+
+            case GameLanguage.English:
+
+                titleText = "Failed!";
+
+                break;
+
+            default:
+                Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Using the English translation.");
+                titleText = "Failed!";
+                break;
+        }
+
+        _titleText.text = titleText;
+    }
+
+    void OnLevelEnd(bool p_isLevelWon, Level p_levelProperties, bool p_hasNextLevelBeenUnlocked, bool p_isNextLevelAlreadyUnlocked, int p_score, bool p_isPreviousBestScoreBeaten)
     {
         _gameOverUIGameObject.SetActive(true);
 
         _levelNameText.text = p_levelProperties.Name;
-        _titleText.text = "Terminé !";
+
+        UpdateTitleText(p_isLevelWon);
 
         _scoreBar.UpdateVisuals(p_levelProperties, p_score);
 
@@ -68,17 +128,13 @@ public class GameOver : MonoBehaviour
         _nextLevelButton.SetButtonInteractability(p_hasNextLevelBeenUnlocked || p_isNextLevelAlreadyUnlocked);
     }
 
+    void OnLevelWon(Level p_levelProperties, bool p_hasNextLevelBeenUnlocked, bool p_isNextLevelAlreadyUnlocked, int p_score, bool p_isPreviousBestScoreBeaten)
+    {
+        OnLevelEnd(true, p_levelProperties, p_hasNextLevelBeenUnlocked, p_isNextLevelAlreadyUnlocked, p_score, p_isPreviousBestScoreBeaten);
+    }
+
     void OnLevelLost(Level p_levelProperties, bool p_hasNextLevelBeenUnlocked, bool p_isNextLevelAlreadyUnlocked, int p_score, bool p_isPreviousBestScoreBeaten)
     {
-        _gameOverUIGameObject.SetActive(true);
-
-        _levelNameText.text = p_levelProperties.Name;
-        _titleText.text = "Échoué !";
-
-        _scoreBar.UpdateVisuals(p_levelProperties, p_score);
-
-        _isNextLevelUnclockedText.enabled = p_hasNextLevelBeenUnlocked;
-
-        _nextLevelButton.SetButtonInteractability(p_hasNextLevelBeenUnlocked || p_isNextLevelAlreadyUnlocked);
+        OnLevelEnd(false, p_levelProperties, p_hasNextLevelBeenUnlocked, p_isNextLevelAlreadyUnlocked, p_score, p_isPreviousBestScoreBeaten);
     }
 }
