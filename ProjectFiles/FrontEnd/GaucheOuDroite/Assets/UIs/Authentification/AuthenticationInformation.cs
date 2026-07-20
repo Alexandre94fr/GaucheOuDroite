@@ -4,6 +4,8 @@ using TMPro;
 
 using VariableCheckerPackage;
 
+using FrontEnd.Data.Game;
+
 using Shared.Constants;
 
 
@@ -21,6 +23,10 @@ public class AuthenticationInformation : MonoBehaviour
     [SerializeField] GameObject _passwordTextsGameObject;
 
 
+    Dictionary<AuthenticationProperties.AuthenticationErrorReasons, string> USERNAME_REQUIREMENTS_HELPING_MESSAGES = new();
+    Dictionary<AuthenticationProperties.AuthenticationErrorReasons, string> PASSWORD_REQUIREMENTS_HELPING_MESSAGES = new();
+
+
     void Start()
     {
         if (!VariablesChecker.AreVariablesValid(name, null,
@@ -29,13 +35,38 @@ public class AuthenticationInformation : MonoBehaviour
             (_passwordTextsGameObject, nameof(_passwordTextsGameObject))
         )) return;
 
+        // -- Setting the different dictionaries to the right language -- //
+
+        switch (GameDataManager.Instance.GameLanguage)
+        {
+            case GameLanguage.French:
+
+                USERNAME_REQUIREMENTS_HELPING_MESSAGES = AuthenticationProperties.USERNAME_REQUIREMENTS_HELPING_MESSAGES_IN_FRENCH;
+                PASSWORD_REQUIREMENTS_HELPING_MESSAGES = AuthenticationProperties.PASSWORD_REQUIREMENTS_HELPING_MESSAGES_IN_FRENCH;
+
+                break;
+
+            case GameLanguage.English:
+
+                USERNAME_REQUIREMENTS_HELPING_MESSAGES = AuthenticationProperties.USERNAME_REQUIREMENTS_HELPING_MESSAGES_IN_ENGLISH;
+                PASSWORD_REQUIREMENTS_HELPING_MESSAGES = AuthenticationProperties.PASSWORD_REQUIREMENTS_HELPING_MESSAGES_IN_ENGLISH;
+
+                break;
+
+            default:
+                Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Returning.");
+                return;
+        }
+
+        // -- Initializing all the texts -- //
+
         // Before the game launches, some texts GameObject may already be inside the '_usernameTextsGameObject' or '_passwordTextsGameObject'.
         // To avoid any issues, we will destroy all the GameObjects inside them.
         DestroyAllGameObjectsIn(_usernameTextsGameObject);
         DestroyAllGameObjectsIn(_passwordTextsGameObject);
 
-        InstantiateAllTexts(AuthenticationProperties.USERNAME_REQUIREMENTS_HELPING_MESSAGES, _ruleTextPrefab, _usernameTextsGameObject);
-        InstantiateAllTexts(AuthenticationProperties.PASSWORD_REQUIREMENTS_HELPING_MESSAGES, _ruleTextPrefab, _passwordTextsGameObject);
+        InstantiateAllTexts(USERNAME_REQUIREMENTS_HELPING_MESSAGES, _ruleTextPrefab, _usernameTextsGameObject);
+        InstantiateAllTexts(PASSWORD_REQUIREMENTS_HELPING_MESSAGES, _ruleTextPrefab, _passwordTextsGameObject);
     }
 
 
