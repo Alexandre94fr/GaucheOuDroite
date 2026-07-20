@@ -22,7 +22,7 @@ public class LevelButtonStar
 
     public bool IsFilled = false;
 
-    
+
     public void SetFilled(bool p_isFilled, Color p_emptyColor, Color p_filledColor)
     {
         if (p_isFilled)

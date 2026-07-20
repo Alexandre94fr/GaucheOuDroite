@@ -4,6 +4,8 @@ using TMPro;
 
 using VariableCheckerPackage;
 
+using FrontEnd.Data.Game;
+
 using Shared.Constants;
 
 using FrontEnd.Data.Game;

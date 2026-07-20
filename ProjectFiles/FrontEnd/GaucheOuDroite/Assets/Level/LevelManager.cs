@@ -218,7 +218,7 @@ public class LevelManager : MonoBehaviour
 
         LevelCountdown levelCountdown = FindFirstObjectByType<LevelCountdown>();
 
-        if (levelCountdown == null) 
+        if (levelCountdown == null)
         {
             Debug.LogWarning($"WARNING: [{GetType().Name}] Tried to find a {nameof(LevelCountdown)} in the '{_levelSceneName}' Scene, but failed. Skipping the countdown.");
 
@@ -230,7 +230,7 @@ public class LevelManager : MonoBehaviour
             yield break;
         }
 
-        levelCountdown.StartCountdown(_levelProperties.LevelResponseTimeSteps[0].MaximumResponseTimeInSeconds, 
+        levelCountdown.StartCountdown(_levelProperties.LevelResponseTimeSteps[0].MaximumResponseTimeInSeconds,
             () =>
             {
                 GameplayLoopManager.StartGameplayLoop();
@@ -251,7 +251,7 @@ public class LevelManager : MonoBehaviour
 
         bool hasNextLevelBeenUnlocked = TryUnlockLocallyNextLevel(out bool isNextLevelAlreadyUnlocked);
 
-        
+
         // If we modified any player's LevelProgression, we should save it on the server.
         bool isLocalLevelProgressionModified = isPreviousBestScoreBeaten || hasNextLevelBeenUnlocked;
 
@@ -262,7 +262,7 @@ public class LevelManager : MonoBehaviour
             if (_isDebugModeOn)
                 Debug.Log($"DEBUG: [{GetType().Name}] Successfully sent a request to the server to save all locally modified player's LevelProgression.");
         }
-        
+
 
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Invoking the {nameof(EventHandler.OnLevelWonEvent)} Event.");

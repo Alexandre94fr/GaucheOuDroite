@@ -13,6 +13,13 @@ public class ResponseRemainingTimeResultText : MonoBehaviour
     [SerializeField] TextMeshProUGUI _responseRemainingTimeResultText;
     [SerializeField] TextMeshProUGUI _addedScoreText;
 
+    [Header("Properties:")]
+    [SerializeField] float _minimumRandomRotation = -5;
+    [SerializeField] float _maximumRandomRotation = 5;
+
+
+    Dictionary<ResponseProperties.ResponseRemainingTimeResult, string> RESPONSE_REMAINING_TIME_RESULT_NAMES = new();
+
 
     Dictionary<ResponseProperties.ResponseRemainingTimeResult, string> RESPONSE_REMAINING_TIME_RESULT_NAMES = new();
 
@@ -43,7 +50,8 @@ public class ResponseRemainingTimeResultText : MonoBehaviour
                 break;
 
             default:
-                Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Using the Level name inside the DataBase.");
+                Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Using the English version.");
+                RESPONSE_REMAINING_TIME_RESULT_NAMES = ResponseProperties.RESPONSE_REMAINING_TIME_RESULT_NAMES_IN_ENGLISH;
                 break;
         }
 
@@ -68,7 +76,30 @@ public class ResponseRemainingTimeResultText : MonoBehaviour
 
         _responseRemainingTimeResultText.text = RESPONSE_REMAINING_TIME_RESULT_NAMES[p_responseResult.Result];
         _responseRemainingTimeResultText.color = ResponseProperties.RESPONSE_REMAINING_TIME_RESULT_COLORS[p_responseResult.Result];
+        _responseRemainingTimeResultText.transform.parent.GetComponent<RectTransform>().localScale = ResponseProperties.RESPONSE_REMAINING_TIME_RESULT_SCALE_SIZES[p_responseResult.Result];
+
+        RandomizeRotation();
 
         _addedScoreText.text = "+" + p_responseResult.AddedScore;
+    }
+
+    void RandomizeRotation()
+    {
+        RectTransform responseRemainingTimeResultTextRectTransform = _responseRemainingTimeResultText.GetComponent<RectTransform>();
+        RectTransform addedScoreTextRectTransform = _addedScoreText.GetComponent<RectTransform>();
+
+        float randomRotation = UnityEngine.Random.Range(_minimumRandomRotation, _maximumRandomRotation);
+
+        responseRemainingTimeResultTextRectTransform.rotation = Quaternion.Euler(
+            responseRemainingTimeResultTextRectTransform.rotation.x,
+            responseRemainingTimeResultTextRectTransform.rotation.y,
+            randomRotation
+        );
+
+        addedScoreTextRectTransform.rotation = Quaternion.Euler(
+            addedScoreTextRectTransform.rotation.x,
+            addedScoreTextRectTransform.rotation.y,
+            randomRotation
+        );
     }
 }

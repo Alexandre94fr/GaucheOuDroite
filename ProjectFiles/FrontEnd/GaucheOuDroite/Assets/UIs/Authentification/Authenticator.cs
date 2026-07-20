@@ -137,7 +137,7 @@ public class Authenticator : MonoBehaviour
                 // Doing: new string('*', p_newInputFieldValue.Length), transform the password 'Password123' into '***********', avoiding printing the password.
                 Debug.Log($"DEBUG: [{GetType().Name}] Setting '{nameof(_password)}' variable to: '{new string('*', p_newInputFieldValue.Length)}'.");
         }
-        
+
         if (p_isUsernameValueModified)
             _username = p_newInputFieldValue;
         else
@@ -246,7 +246,7 @@ public class Authenticator : MonoBehaviour
                 Debug.Log($"DEBUG: [{GetType().Name}] The given username '{_username}' is not valid, reason: {errorMessage} Returning");
 
             return;
-        }   
+        }
 
         if (!IsPasswordValid(_password, out errorReason))
         {
