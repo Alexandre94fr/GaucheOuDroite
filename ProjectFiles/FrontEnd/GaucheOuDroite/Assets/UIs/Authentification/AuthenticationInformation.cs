@@ -8,8 +8,6 @@ using FrontEnd.Data.Game;
 
 using Shared.Constants;
 
-using FrontEnd.Data.Game;
-
 
 public class AuthenticationInformation : MonoBehaviour
 {

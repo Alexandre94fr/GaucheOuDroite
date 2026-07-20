@@ -28,10 +28,4 @@ public class DirectionProperties
         [Direction.Left]    = "Left",
         [Direction.Right]   = "Right",
     };
-
-    public static readonly Dictionary<Direction, string> DIRECTIONS_IN_ENGLISH = new()
-    {
-        [Direction.Left] = "Left",
-        [Direction.Right] = "Right",
-    };
 }

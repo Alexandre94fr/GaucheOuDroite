@@ -137,7 +137,7 @@ namespace FrontEnd.Data.Game
         /// 
         /// If the project scales up, this property may be saved on the server and the property will be used to update ALL the UIs automatically.
         /// </summary>
-        [HideInInspector] public readonly GameLanguage GameLanguage = GameLanguage.English;
+        [HideInInspector] public readonly GameLanguage GameLanguage = GameLanguage.French;
 
 
         [Header("----- DEBUG -----")]

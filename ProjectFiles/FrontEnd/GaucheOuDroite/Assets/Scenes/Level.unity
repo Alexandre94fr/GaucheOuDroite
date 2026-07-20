@@ -670,7 +670,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 494997426806322231, guid: 78e9ea8cab352624cb58414c69eb7f8e, type: 3}
       propertyPath: m_text
-      value: Right
+      value: Droite
       objectReference: {fileID: 0}
     - target: {fileID: 835628785974347460, guid: 78e9ea8cab352624cb58414c69eb7f8e, type: 3}
       propertyPath: _buttonDirection
