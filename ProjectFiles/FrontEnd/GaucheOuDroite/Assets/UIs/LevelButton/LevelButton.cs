@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,7 +22,7 @@ public class LevelButtonStar
 
     public bool IsFilled = false;
 
-    
+
     public void SetFilled(bool p_isFilled, Color p_emptyColor, Color p_filledColor)
     {
         if (p_isFilled)
@@ -90,6 +91,9 @@ public class LevelButton : MonoBehaviour
     [SerializeField] float _maxRandomTransparencyMultiplier = 1.05f;
 
 
+    Dictionary<LevelDifficulty, string> DIFFICULTY_NAMES = new();
+
+
     void Start()
     {
         // -- Class properties verifications -- //
@@ -147,10 +151,37 @@ public class LevelButton : MonoBehaviour
             Debug.LogWarning($"WARNING: [{GetType().Name}] Failed to get the {nameof(LevelProgression)} {_associatedLevelId}. There is no {nameof(LevelProgression)} associated with the {nameof(Level)} Id: {_associatedLevelId}. Initialization failed. Returning.");
             return;
         }
-        
+
+        // -- Setting the different properties to the right language -- //
+
+        string levelName = levelProperties.Name;
+
+        switch (GameDataManager.Instance.GameLanguage)
+        {
+            case GameLanguage.French:
+
+                levelName = LevelProperties.LEVEL_NAMES_IN_FRENCH[_associatedLevelId];
+
+                DIFFICULTY_NAMES = LevelDifficultyProperties.DIFFICULTY_NAMES_IN_FRENCH;
+
+                break;
+
+            case GameLanguage.English:
+
+                levelName = LevelProperties.LEVEL_NAMES_IN_ENGLISH[_associatedLevelId];
+
+                DIFFICULTY_NAMES = LevelDifficultyProperties.DIFFICULTY_NAMES_IN_ENGLISH;
+
+                break;
+
+            default:
+                Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Using the Level name inside the DataBase.");
+                break;
+        }
+
         // -- Updating the LevelButton visuals based on the Game's and User's data -- //
 
-        UpdateName(levelProperties.Name);
+        UpdateName(levelName);
         UpdateDifficulty(levelProperties.Difficulty);
         UpdateBestScore(levelProgression.BestScore);
 
@@ -181,7 +212,7 @@ public class LevelButton : MonoBehaviour
         Debug.Log($"Level difficulty for {_levelButton.transform.parent.name}: {p_levelDifficulty}");
 
         // Updating text
-        _difficultyText.text = LevelDifficultyProperties.DIFFICULTY_NAMES_IN_FRENCH[p_levelDifficulty];
+        _difficultyText.text = DIFFICULTY_NAMES[p_levelDifficulty];
 
         // Updating text's color
         Color newColor = new(

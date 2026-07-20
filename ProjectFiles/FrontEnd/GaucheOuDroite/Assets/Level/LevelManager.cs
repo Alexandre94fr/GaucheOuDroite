@@ -116,6 +116,27 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
+        // -- Converting the Level's name into the translated one -- //
+
+        switch (GameDataManager.Instance.GameLanguage)
+        {
+            case GameLanguage.French:
+
+                _levelProperties.Name = LevelProperties.LEVEL_NAMES_IN_FRENCH[p_levelId];
+
+                break;
+
+            case GameLanguage.English:
+
+                _levelProperties.Name = LevelProperties.LEVEL_NAMES_IN_ENGLISH[p_levelId];
+
+                break;
+
+            default:
+                Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Using the Level name inside the DataBase.");
+                break;
+        }
+
         // -- Stopping the already looping gameplay loop if looping -- //
 
         // Prevent having two gameplay loop timers (from two different gameplay loop) running at the same time.
@@ -197,7 +218,7 @@ public class LevelManager : MonoBehaviour
 
         LevelCountdown levelCountdown = FindFirstObjectByType<LevelCountdown>();
 
-        if (levelCountdown == null) 
+        if (levelCountdown == null)
         {
             Debug.LogWarning($"WARNING: [{GetType().Name}] Tried to find a {nameof(LevelCountdown)} in the '{_levelSceneName}' Scene, but failed. Skipping the countdown.");
 
@@ -209,7 +230,7 @@ public class LevelManager : MonoBehaviour
             yield break;
         }
 
-        levelCountdown.StartCountdown(_levelProperties.LevelResponseTimeSteps[0].MaximumResponseTimeInSeconds, 
+        levelCountdown.StartCountdown(_levelProperties.LevelResponseTimeSteps[0].MaximumResponseTimeInSeconds,
             () =>
             {
                 GameplayLoopManager.StartGameplayLoop();
@@ -230,7 +251,7 @@ public class LevelManager : MonoBehaviour
 
         bool hasNextLevelBeenUnlocked = TryUnlockLocallyNextLevel(out bool isNextLevelAlreadyUnlocked);
 
-        
+
         // If we modified any player's LevelProgression, we should save it on the server.
         bool isLocalLevelProgressionModified = isPreviousBestScoreBeaten || hasNextLevelBeenUnlocked;
 
@@ -241,7 +262,7 @@ public class LevelManager : MonoBehaviour
             if (_isDebugModeOn)
                 Debug.Log($"DEBUG: [{GetType().Name}] Successfully sent a request to the server to save all locally modified player's LevelProgression.");
         }
-        
+
 
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Invoking the {nameof(EventHandler.OnLevelWonEvent)} Event.");

@@ -11,6 +11,13 @@ using Shared.DTOs.Data.Game;
 
 namespace FrontEnd.Data.Game
 {
+    public enum GameLanguage
+    {
+        French,
+        English,
+    }
+
+
     public class GameData
     {
         public Dictionary<int, Level> Levels { get; internal set; } = new();
@@ -124,6 +131,13 @@ namespace FrontEnd.Data.Game
         /// If you want to load the data, call the: <see cref="LoadDataFromServerAsync"/> method.
         /// </summary>
         [HideInInspector] public bool HasLoadedServerData = false;
+
+        /// <summary>
+        /// Tells in what language the FrontEnd (Unity) is. <para></para>
+        /// 
+        /// If the project scales up, this property may be saved on the server and the property will be used to update ALL the UIs automatically.
+        /// </summary>
+        [HideInInspector] public readonly GameLanguage GameLanguage = GameLanguage.French;
 
 
         [Header("----- DEBUG -----")]
