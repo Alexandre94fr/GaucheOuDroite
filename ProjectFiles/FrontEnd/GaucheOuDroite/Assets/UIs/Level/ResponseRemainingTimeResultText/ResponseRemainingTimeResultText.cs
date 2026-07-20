@@ -21,9 +21,6 @@ public class ResponseRemainingTimeResultText : MonoBehaviour
     Dictionary<ResponseProperties.ResponseRemainingTimeResult, string> RESPONSE_REMAINING_TIME_RESULT_NAMES = new();
 
 
-    Dictionary<ResponseProperties.ResponseRemainingTimeResult, string> RESPONSE_REMAINING_TIME_RESULT_NAMES = new();
-
-
     void Start()
     {
         // -- Class properties verifications -- //
