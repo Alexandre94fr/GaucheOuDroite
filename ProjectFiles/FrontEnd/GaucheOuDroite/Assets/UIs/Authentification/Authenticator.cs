@@ -206,7 +206,7 @@ public class Authenticator : MonoBehaviour
     string GetErrorMessage(AuthenticationProperties.AuthenticationErrorReasons errorReason)
     {
         string errorMessage = AUTHENTICATION_ERROR_MESSAGES[errorReason];
-
+        
         if (errorMessage == null)
             errorMessage = UNKNOWN_ERROR_MESSAGE;
 

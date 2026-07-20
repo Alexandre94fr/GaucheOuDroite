@@ -36,5 +36,14 @@ namespace Shared.Constants
 
             [LevelDifficulty.Progressive]   = "Progressive",
         };
+
+        public static readonly Dictionary<LevelDifficulty, string> DIFFICULTY_NAMES_IN_ENGLISH = new()
+        {
+            [LevelDifficulty.Easy]              = "Easy",
+            [LevelDifficulty.Medium]            = "Medium",
+            [LevelDifficulty.Hard]              = "Hard",
+
+            [LevelDifficulty.Progressive]       = "Progressive",
+        };
     }
 }

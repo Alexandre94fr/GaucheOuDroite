@@ -21,6 +21,9 @@ public class ResponseRemainingTimeResultText : MonoBehaviour
     Dictionary<ResponseProperties.ResponseRemainingTimeResult, string> RESPONSE_REMAINING_TIME_RESULT_NAMES = new();
 
 
+    Dictionary<ResponseProperties.ResponseRemainingTimeResult, string> RESPONSE_REMAINING_TIME_RESULT_NAMES = new();
+
+
     void Start()
     {
         // -- Class properties verifications -- //
@@ -70,7 +73,7 @@ public class ResponseRemainingTimeResultText : MonoBehaviour
 
         if (_addedScoreText.enabled == false)
             _addedScoreText.enabled = true;
-        
+
         _responseRemainingTimeResultText.text = RESPONSE_REMAINING_TIME_RESULT_NAMES[p_responseResult.Result];
         _responseRemainingTimeResultText.color = ResponseProperties.RESPONSE_REMAINING_TIME_RESULT_COLORS[p_responseResult.Result];
         _responseRemainingTimeResultText.transform.parent.GetComponent<RectTransform>().localScale = ResponseProperties.RESPONSE_REMAINING_TIME_RESULT_SCALE_SIZES[p_responseResult.Result];
