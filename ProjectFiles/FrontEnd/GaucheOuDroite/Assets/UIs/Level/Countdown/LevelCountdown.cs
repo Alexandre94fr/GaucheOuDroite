@@ -1,7 +1,8 @@
 using System;
 using System.Collections;
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 using VariableCheckerPackage;
 
@@ -13,6 +14,9 @@ public class LevelCountdown : MonoBehaviour
 
 
     [Header("Internal references:")]
+    [SerializeField] AudioSource _audioSource;
+
+    [Space]
     [SerializeField] GameObject _gameOverUIGameObject;
 
     [Space]
@@ -22,12 +26,16 @@ public class LevelCountdown : MonoBehaviour
     [Header("Properties:")]
     [SerializeField] int _numberOfSeconds = 3;
 
+    [SerializeField] List<AudioClip> _countdownSFXs = new();
+
 
     void Start()
     {
         // -- Class properties verifications -- //
 
         if (!VariablesChecker.AreVariablesValid(name, null,
+            (_audioSource, nameof(_audioSource)),
+
             (_gameOverUIGameObject, nameof(_gameOverUIGameObject)),
 
             (_counterText, nameof(_counterText))
@@ -57,12 +65,22 @@ public class LevelCountdown : MonoBehaviour
 
         while (numberOfSecondsFinished < _numberOfSeconds)
         {
+            // -- Text -- //
+
             _counterText.text = (_numberOfSeconds - numberOfSecondsFinished).ToString();
+
+            // -- Countdown SFX -- //
+
+            TryPlayCountdownSFX(numberOfSecondsFinished);
 
             yield return new WaitForSeconds(p_timeInSecondsPerCooldownSecond);
 
             numberOfSecondsFinished++;
         }
+
+        // -- Countdown SFX end -- //
+
+        TryPlayCountdownSFX(numberOfSecondsFinished);
 
 
         if (_isDebugModeOn)
@@ -71,5 +89,25 @@ public class LevelCountdown : MonoBehaviour
         _gameOverUIGameObject.SetActive(false);
 
         p_onCountdownFinished?.Invoke();
+    }
+
+    bool TryPlayCountdownSFX(int p_numberOfSecondsFinished)
+    {
+        AudioClip sfx;
+
+        try
+        {
+            sfx = _countdownSFXs[p_numberOfSecondsFinished];
+        }
+        catch (Exception exception)
+        {
+            Debug.LogWarning($"WARNING: [{GetType().Name}] There is no countdown SFX with the index {p_numberOfSecondsFinished} inside the '{nameof(_countdownSFXs)}' property. No SFX will be played. Returning false.\nException: {exception}");
+            return false;
+        }
+
+        _audioSource.clip = sfx;
+        _audioSource.Play();
+
+        return true;
     }
 }
