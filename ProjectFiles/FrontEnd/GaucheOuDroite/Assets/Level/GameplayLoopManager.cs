@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+using VariableCheckerPackage;
+
 using FrontEnd.Data.Game;
 
 
@@ -21,6 +23,10 @@ public class GameplayLoopManager : MonoBehaviour
 
     [Header("Properties:")]
     [SerializeField] AudioClip _correctAwnserSFX;
+
+    [Space]
+    [SerializeField] AudioClip _levelWonSFX;
+    [SerializeField] AudioClip _levelLostSFX;
 
 
 
@@ -42,6 +48,19 @@ public class GameplayLoopManager : MonoBehaviour
 
     void Start()
     {
+        // -- Class properties verifications -- //
+
+        if (!VariablesChecker.AreVariablesValid(name, null,
+            (_audioSource, nameof(_audioSource)),
+
+            (_correctAwnserSFX, nameof(_correctAwnserSFX)),
+
+            (_levelWonSFX, nameof(_levelWonSFX)),
+            (_levelLostSFX, nameof(_levelLostSFX))
+        )) return;
+
+        // -- Handling events -- //
+
         EventHandler.OnDirectionChoiceInputEvent += OnDirectionChoiceInput;
         PauseManager.OnPauseEvent += OnPause;
     }
@@ -248,9 +267,7 @@ public class GameplayLoopManager : MonoBehaviour
 
             // -- Handling correct player response -- //
 
-            // Playing SFX
-            _audioSource.clip = _correctAwnserSFX;
-            _audioSource.Play();
+            PlaySFX(_correctAwnserSFX);
 
             if (!_levelProperties.IsInfinite && correctResponsesNumber >= _responseSequenceManager.GetLevelResponseNumber())
             {
@@ -288,6 +305,8 @@ public class GameplayLoopManager : MonoBehaviour
 
     void Win()
     {
+        PlaySFX(_levelWonSFX);
+
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Invoking the '{nameof(OnGameplayLoopWonEvent)}' Event.");
 
@@ -296,6 +315,8 @@ public class GameplayLoopManager : MonoBehaviour
 
     void Lose()
     {
+        PlaySFX(_levelLostSFX);
+
         if (_isDebugModeOn)
             Debug.Log($"DEBUG: [{GetType().Name}] Invoking the '{nameof(OnGameplayLoopLostEvent)}' Event.");
 
@@ -326,5 +347,20 @@ public class GameplayLoopManager : MonoBehaviour
             Debug.Log($"DEBUG: [{GetType().Name}] The '{nameof(PauseManager.OnPauseEvent)}' Event has been fired. Changing the '{nameof(_isGamePaused)}' property from: {_isGamePaused}, to: {p_isGamePaused}.");
 
         _isGamePaused = p_isGamePaused;
+    }
+
+    void PlaySFX(AudioClip p_sfx)
+    {
+        if (p_sfx == null)
+        {
+            Debug.LogWarning($"WARNING: [{GetType().Name}] The given SFX is null. No SFX will be played. Returning.");
+            return;
+        }
+
+        if (_isDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Playing the '{p_sfx.name}' SFX.");
+
+        _audioSource.clip = p_sfx;
+        _audioSource.Play();
     }
 }
