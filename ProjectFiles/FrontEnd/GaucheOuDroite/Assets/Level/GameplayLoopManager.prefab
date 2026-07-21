@@ -48,6 +48,8 @@ MonoBehaviour:
   _isDebugModeOn: 0
   _audioSource: {fileID: 7093504931166500012}
   _correctAwnserSFX: {fileID: 8300000, guid: 8c32e8e39a1b4604eb355dd4ab7d8951, type: 3}
+  _levelWonSFX: {fileID: 8300000, guid: 99e4b7891292d994193f68a10605d901, type: 3}
+  _levelLostSFX: {fileID: 8300000, guid: 98d4b1855df157942848779756e4b1b8, type: 3}
 --- !u!82 &7093504931166500012
 AudioSource:
   m_ObjectHideFlags: 0
