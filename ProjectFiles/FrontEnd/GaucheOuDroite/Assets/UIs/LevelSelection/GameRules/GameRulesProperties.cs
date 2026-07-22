@@ -7,6 +7,8 @@ public static class GameRulesProperties
     // -- FRENCH -- //
     // ------------ //
 
+    public static string GAME_RULES_BUTTON_TEXT_IN_FRENCH       = "Règle du jeu";
+
     public static string TITLE_TEXT_IN_FRENCH                   = "Règles du jeu :";
 
     public static string GAME_GOAL_TITLE_TEXT_IN_FRENCH         = "But du jeu :";
@@ -30,6 +32,8 @@ public static class GameRulesProperties
     // ------------- //
     // -- ENGLISH -- //
     // ------------- //
+
+    public static string GAME_RULES_BUTTON_TEXT_IN_ENGLISH      = "Game rules";
 
     public static string TITLE_TEXT_IN_ENGLISH                  = "Game rules:";
 
