@@ -12,6 +12,7 @@ public class GameRules : MonoBehaviour
 {
     [Header("External references:")]
     [SerializeField] Button _gameRulesButton;
+    [SerializeField] TextMeshProUGUI _gameRulesButtonText;
 
     [Header("Internal references:")]
     [SerializeField] GameObject _gameRulesUIGameObject;
@@ -36,6 +37,8 @@ public class GameRules : MonoBehaviour
 
 
     // Localization
+    string GAME_RULES_BUTTON_TEXT = null;
+
     string TITLE_TEXT = null;
 
     string GAME_GOAL_TITLE_TEXT = null;
@@ -53,6 +56,7 @@ public class GameRules : MonoBehaviour
 
         if (!VariablesChecker.AreVariablesValid(name, null,
             (_gameRulesButton, nameof(_gameRulesButton)),
+            (_gameRulesButtonText, nameof(_gameRulesButtonText)),
 
             (_gameRulesUIGameObject, nameof(_gameRulesUIGameObject)),
 
@@ -79,6 +83,8 @@ public class GameRules : MonoBehaviour
         {
             case GameLanguage.French:
 
+                GAME_RULES_BUTTON_TEXT = GameRulesProperties.GAME_RULES_BUTTON_TEXT_IN_FRENCH;
+
                 TITLE_TEXT = GameRulesProperties.TITLE_TEXT_IN_FRENCH;
 
                 GAME_GOAL_TITLE_TEXT = GameRulesProperties.GAME_GOAL_TITLE_TEXT_IN_FRENCH;
@@ -92,6 +98,8 @@ public class GameRules : MonoBehaviour
                 break;
 
             case GameLanguage.English:
+
+                GAME_RULES_BUTTON_TEXT = GameRulesProperties.GAME_RULES_BUTTON_TEXT_IN_ENGLISH;
 
                 TITLE_TEXT = GameRulesProperties.TITLE_TEXT_IN_ENGLISH;
 
@@ -133,6 +141,8 @@ public class GameRules : MonoBehaviour
 
     void InitializeTexts()
     {
+        _gameRulesButtonText.text = GAME_RULES_BUTTON_TEXT;
+
         _titleText.text = TITLE_TEXT;
 
         _gameGoalTitleText.text = GAME_GOAL_TITLE_TEXT;
