@@ -93,12 +93,82 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "UI",
+            "id": "1c5cebb5-0b39-4e6f-8c1d-77355f405737",
+            "actions": [
+                {
+                    "name": "AuthenticationNavigation",
+                    "type": "Button",
+                    "id": "a1ca37b2-3269-4992-9ccd-001232b4e2fb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AuthenticationValidation",
+                    "type": "Button",
+                    "id": "e0724280-8be4-4ccc-9ad7-79f37ed78926",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "18cfe45c-babd-4e43-a320-033b3e97b921",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";UI",
+                    "action": "AuthenticationNavigation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "71f96e0b-726b-4ce8-b0d4-dd25ebe77053",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";UI",
+                    "action": "AuthenticationValidation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f740452a-75e9-4c4a-8ad0-3914e19ce3fc",
+                    "path": "<Keyboard>/numpadEnter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";UI",
+                    "action": "AuthenticationValidation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
         {
             "name": "Game",
             "bindingGroup": "Game",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "bindingGroup": "UI",
             "devices": [
                 {
                     "devicePath": "<Keyboard>",
