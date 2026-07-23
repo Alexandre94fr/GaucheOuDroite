@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 
 using FrontEnd.Data.Game;
 
@@ -18,6 +19,11 @@ public class EventHandler
     public static Action<DirectionProperties.Direction> OnDirectionChoiceInputEvent;
 
     public static Action OnPauseInputEvent;
+
+    // Authentication shortcuts
+    public static Action OnAuthenticationNavigationInputEvent;
+    public static Action OnAuthenticationValidationInputEvent;
+
 
     // -- Levels events -- //
 
