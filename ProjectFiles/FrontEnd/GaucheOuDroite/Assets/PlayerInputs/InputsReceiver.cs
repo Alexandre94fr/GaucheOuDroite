@@ -8,6 +8,9 @@ public class InputsReceiver : MonoBehaviour
     [Header("----- DEBUG -----")]
     public bool IsDebugModeOn;
 
+
+    // -- Game -- //
+
     public void OnDirectionChoiceInput(InputAction.CallbackContext p_callbackContext)
     {
         if (IsDebugModeOn)
@@ -64,5 +67,45 @@ public class InputsReceiver : MonoBehaviour
             Debug.Log($"DEBUG: [{GetType().Name}] Trying firing the OnPauseInputEvent: EventHandler.OnPauseInputEvent?.Invoke().");
 
         EventHandler.OnPauseInputEvent?.Invoke();
+    }
+
+    // -- UIs -- //
+
+    public void OnAuthenticationNavigationInput(InputAction.CallbackContext p_callbackContext)
+    {
+        if (IsDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Authentication navigation input interactation detected. OnAuthenticationNavigationInput() method called.");
+
+        if (!p_callbackContext.performed)
+            return;
+
+        if (IsDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Authentication navigation input pressed.");
+
+
+        // Firing the Event
+        if (IsDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Trying firing the OnAuthenticationNavigationInputEvent: EventHandler.OnAuthenticationNavigationInputEvent?.Invoke().");
+
+        EventHandler.OnAuthenticationNavigationInputEvent?.Invoke();
+    }
+
+    public void OnAuthenticationValidationInput(InputAction.CallbackContext p_callbackContext)
+    {
+        if (IsDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Authentication validation input interactation detected. OnAuthenticationNavigationInput() method called.");
+
+        if (!p_callbackContext.performed)
+            return;
+
+        if (IsDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Authentication validation input pressed.");
+
+
+        // Firing the Event
+        if (IsDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Trying firing the OnAuthenticationValidationInputEvent: EventHandler.OnAuthenticationValidationInputEvent?.Invoke().");
+
+        EventHandler.OnAuthenticationValidationInputEvent?.Invoke();
     }
 }
