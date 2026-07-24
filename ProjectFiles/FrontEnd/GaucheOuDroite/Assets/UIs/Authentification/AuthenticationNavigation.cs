@@ -107,7 +107,9 @@ public class AuthenticationNavigation : MonoBehaviour
         if (selectedGameObject == null)
         {
             if (_isDebugModeOn)
-                Debug.Log($"DEBUG: [{GetType().Name}] There is no GameObject currently selected by the player. Returning.");
+                Debug.Log($"DEBUG: [{GetType().Name}] There is no GameObject currently selected by the player. Pressing the authentication button. Returning.");
+
+            PressAuthenticationButton();
 
             return;
         }
@@ -128,6 +130,11 @@ public class AuthenticationNavigation : MonoBehaviour
             return;
         }
 
+        PressAuthenticationButton();
+    }
+
+    void PressAuthenticationButton()
+    {
         // To tell the button to do the visual effects when being pressed.
         _authenticationButton.OnSubmit(new BaseEventData(EventSystem.current));
 
