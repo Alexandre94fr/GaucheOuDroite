@@ -72,6 +72,9 @@ public class AuthenticationNavigation : MonoBehaviour
 
     void OnAuthenticationNavigationInput()
     {
+        if (_isDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Received a call form the OnAuthenticationNavigationInputEvent Event. OnAuthenticationNavigationInput() method called.");
+
         GameObject selectedGameObject = EventSystem.current.currentSelectedGameObject;
 
         if (selectedGameObject == null)
@@ -102,6 +105,9 @@ public class AuthenticationNavigation : MonoBehaviour
 
     void OnAuthenticationValidationInput()
     {
+        if (_isDebugModeOn)
+            Debug.Log($"DEBUG: [{GetType().Name}] Received a call form the OnAuthenticationValidationInputEvent Event. OnAuthenticationValidationInput() method called.");
+
         GameObject selectedGameObject = EventSystem.current.currentSelectedGameObject;
 
         if (selectedGameObject == null)
@@ -135,13 +141,15 @@ public class AuthenticationNavigation : MonoBehaviour
 
     void PressAuthenticationButton()
     {
-        // To tell the button to do the visual effects when being pressed.
+        // To tell the button to do the logic and visual effects when being pressed.
         _authenticationButton.OnSubmit(new BaseEventData(EventSystem.current));
 
-        // To tell the button to do the logic when being pressed.
-        _authenticationButton.onClick?.Invoke();
+        // Note: Was previously only doing the logic when being pressed.
+        // But later it looks like the .OnSubmit() method does also the logic.
+        // We keep this method commented, in case a new bug happens here.
+        //_authenticationButton.onClick?.Invoke();
 
         if (_isDebugModeOn)
-            Debug.Log($"DEBUG: [{GetType().Name}] Successfully told the authentication button '{_authenticationButton.name}' to be pressed. He should start an authentication request.");
+            Debug.Log($"DEBUG: [{GetType().Name}] Successfully told the authentication button '{_authenticationButton.name}' to be pressed. That should start an authentication request.");
     }
 }
