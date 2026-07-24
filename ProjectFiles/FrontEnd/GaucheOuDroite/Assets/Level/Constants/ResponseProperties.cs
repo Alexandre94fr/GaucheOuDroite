@@ -42,6 +42,16 @@ public class ResponseProperties
         [ResponseRemainingTimeResult.CloseCall] = new(1.00f, 0.00f, 0.00f),
     };
 
+    public static readonly Dictionary<ResponseRemainingTimeResult, Vector2> RESPONSE_REMAINING_TIME_RESULT_SCALE_SIZES = new()
+    {
+        [ResponseRemainingTimeResult.Perfect]   = new(1.00f, 1.00f),
+        [ResponseRemainingTimeResult.VeryGood]  = new(0.90f, 0.90f),
+        [ResponseRemainingTimeResult.Good]      = new(0.80f, 0.80f),
+        [ResponseRemainingTimeResult.Bad]       = new(0.70f, 0.70f),
+
+        [ResponseRemainingTimeResult.CloseCall] = new(0.60f, 0.60f),
+    };
+
     // -- Localization -- //
 
     public static readonly Dictionary<ResponseRemainingTimeResult, string> RESPONSE_REMAINING_TIME_RESULT_NAMES_IN_FRENCH = new()
@@ -52,5 +62,15 @@ public class ResponseProperties
         [ResponseRemainingTimeResult.Bad]       = "Bof",
 
         [ResponseRemainingTimeResult.CloseCall] = "Juste",
+    };
+
+    public static readonly Dictionary<ResponseRemainingTimeResult, string> RESPONSE_REMAINING_TIME_RESULT_NAMES_IN_ENGLISH = new()
+    {
+        [ResponseRemainingTimeResult.Perfect]   = "PERFECT",
+        [ResponseRemainingTimeResult.VeryGood]  = "Very good",
+        [ResponseRemainingTimeResult.Good]      = "Good",
+        [ResponseRemainingTimeResult.Bad]       = "Bad",
+
+        [ResponseRemainingTimeResult.CloseCall] = "Close call",
     };
 }

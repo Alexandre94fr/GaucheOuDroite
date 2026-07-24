@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f74202d6ea866e4992422523591dec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputsReceiver
-  IsDebugModeOn: 1
+  IsDebugModeOn: 0
 --- !u!114 &4776258161071667134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,6 +103,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: bb6ffa28-4393-4a6e-83d5-e3645d1d29aa
     m_ActionName: 'Game/Pause[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3923972877503021407}
+        m_TargetAssemblyTypeName: InputsReceiver, Assembly-CSharp
+        m_MethodName: OnAuthenticationNavigationInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a1ca37b2-3269-4992-9ccd-001232b4e2fb
+    m_ActionName: 'UI/AuthenticationNavigation[/Keyboard/tab]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3923972877503021407}
+        m_TargetAssemblyTypeName: InputsReceiver, Assembly-CSharp
+        m_MethodName: OnAuthenticationValidationInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e0724280-8be4-4ccc-9ad7-79f37ed78926
+    m_ActionName: 'UI/AuthenticationValidation[/Keyboard/enter]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Game
   m_DefaultActionMap: Game

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -50,6 +51,18 @@ public class Authenticator : MonoBehaviour
     string _password = "";
 
 
+    Dictionary<AuthenticationProperties.AuthenticationErrorReasons, string> AUTHENTICATION_ERROR_MESSAGES = new();
+
+    string SERVER_CONNECTION_ERROR_MESSAGE = null;
+    string DATA_PROCESSING_ERROR_MESSAGE = null;
+    string UNKNOWN_ERROR_MESSAGE = null;
+
+    string TOO_LONG_LOADING_DATA_ERROR_MESSAGE = null;
+
+    string SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE = null;
+    string SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE = null;
+
+
     void Start()
     {
         // -- Class properties verifications -- //
@@ -66,6 +79,45 @@ public class Authenticator : MonoBehaviour
         {
             Debug.LogWarning($"DEBUG: [{GetType().Name}] The '{nameof(_levelSelectionSceneName)}' property is null or empty. Returning.");
             return;
+        }
+
+        // -- Setting the different properties to the right language -- //
+
+        switch (GameDataManager.Instance.GameLanguage)
+        {
+            case GameLanguage.French:
+
+                AUTHENTICATION_ERROR_MESSAGES = AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGES_IN_FRENCH;
+
+                SERVER_CONNECTION_ERROR_MESSAGE = AuthenticationProperties.SERVER_CONNECTION_ERROR_MESSAGE_IN_FRENCH;
+                DATA_PROCESSING_ERROR_MESSAGE = AuthenticationProperties.DATA_PROCESSING_ERROR_MESSAGE_IN_FRENCH;
+                UNKNOWN_ERROR_MESSAGE = AuthenticationProperties.UNKNOWN_ERROR_MESSAGE_IN_FRENCH;
+
+                TOO_LONG_LOADING_DATA_ERROR_MESSAGE = AuthenticationProperties.TOO_LONG_LOADING_DATA_ERROR_MESSAGE_IN_FRENCH;
+
+                SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE = AuthenticationProperties.SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE_IN_FRENCH;
+                SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE = AuthenticationProperties.SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE_IN_FRENCH;
+
+                break;
+
+            case GameLanguage.English:
+
+                AUTHENTICATION_ERROR_MESSAGES = AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGES_IN_ENGLISH;
+
+                SERVER_CONNECTION_ERROR_MESSAGE = AuthenticationProperties.SERVER_CONNECTION_ERROR_MESSAGE_IN_ENGLISH;
+                DATA_PROCESSING_ERROR_MESSAGE = AuthenticationProperties.DATA_PROCESSING_ERROR_MESSAGE_IN_ENGLISH;
+                UNKNOWN_ERROR_MESSAGE = AuthenticationProperties.UNKNOWN_ERROR_MESSAGE_IN_ENGLISH;
+
+                TOO_LONG_LOADING_DATA_ERROR_MESSAGE = AuthenticationProperties.TOO_LONG_LOADING_DATA_ERROR_MESSAGE_IN_ENGLISH;
+
+                SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE = AuthenticationProperties.SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE_IN_ENGLISH;
+                SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE = AuthenticationProperties.SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE_IN_ENGLISH;
+
+                break;
+
+            default:
+                Debug.LogError($"ERROR: [{GetType().Name}] There is no case planned in the switch for '{GameDataManager.Instance.GameLanguage}'. Returning.");
+                return;
         }
 
         // -- Showing the authentication helper texts -- //
@@ -85,7 +137,7 @@ public class Authenticator : MonoBehaviour
                 // Doing: new string('*', p_newInputFieldValue.Length), transform the password 'Password123' into '***********', avoiding printing the password.
                 Debug.Log($"DEBUG: [{GetType().Name}] Setting '{nameof(_password)}' variable to: '{new string('*', p_newInputFieldValue.Length)}'.");
         }
-        
+
         if (p_isUsernameValueModified)
             _username = p_newInputFieldValue;
         else
@@ -153,10 +205,10 @@ public class Authenticator : MonoBehaviour
 
     string GetErrorMessage(AuthenticationProperties.AuthenticationErrorReasons errorReason)
     {
-        string errorMessage = AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGES[errorReason];
-        
+        string errorMessage = AUTHENTICATION_ERROR_MESSAGES[errorReason];
+
         if (errorMessage == null)
-            errorMessage = AuthenticationProperties.UNKNOWN_ERROR_MESSAGE;
+            errorMessage = UNKNOWN_ERROR_MESSAGE;
 
         return errorMessage;
     }
@@ -194,7 +246,7 @@ public class Authenticator : MonoBehaviour
                 Debug.Log($"DEBUG: [{GetType().Name}] The given username '{_username}' is not valid, reason: {errorMessage} Returning");
 
             return;
-        }   
+        }
 
         if (!IsPasswordValid(_password, out errorReason))
         {
@@ -224,7 +276,7 @@ public class Authenticator : MonoBehaviour
         string authenticationModeString = AuthenticationProperties.AUTHENTICATION_MODE_IN_FRENCH[_authenticationMode].ToUpper();
 
         DisplayFeedback(
-            AuthenticationProperties.SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE,
+            SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE,
             new(
                 AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.X,
                 AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.Y,
@@ -307,7 +359,7 @@ public class Authenticator : MonoBehaviour
     void OnRequestSuccess(AuthenticationResultDTO p_authenticationResultDTO)
     {
         DisplayFeedback(
-            AuthenticationProperties.SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE,
+            SUCCESSFUL_SERVER_AUTHENTICATION_MESSAGE,
             new(
                 AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.X,
                 AuthenticationProperties.AUTHENTICATION_SUCCESS_MESSAGE_COLOR.Y,
@@ -352,7 +404,7 @@ public class Authenticator : MonoBehaviour
                 hasLoadingTookTooLong = true;
 
                 DisplayFeedback(
-                    AuthenticationProperties.TOO_LONG_LOADING_DATA_ERROR_MESSAGE,
+                    TOO_LONG_LOADING_DATA_ERROR_MESSAGE,
                     new(
                         AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.X,
                         AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Y,
@@ -385,7 +437,7 @@ public class Authenticator : MonoBehaviour
             case UnityWebRequest.Result.ConnectionError:
                 {
                     DisplayFeedback(
-                        AuthenticationProperties.SERVER_CONNECTION_ERROR_MESSAGE,
+                        SERVER_CONNECTION_ERROR_MESSAGE,
                         new(
                             AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.X,
                             AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Y,
@@ -401,9 +453,9 @@ public class Authenticator : MonoBehaviour
 
                 // Using the .AuthenticationError value to get a string from the AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGES dictionary
                 // If we fail, the shown error will be an Unknown error message
-                if (!AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGES.TryGetValue(authenticationResultDTO.AuthenticationError, out string authenticationMessage))
+                if (!AUTHENTICATION_ERROR_MESSAGES.TryGetValue(authenticationResultDTO.AuthenticationError, out string authenticationMessage))
                 {
-                    authenticationMessage = AuthenticationProperties.UNKNOWN_ERROR_MESSAGE;
+                    authenticationMessage = UNKNOWN_ERROR_MESSAGE;
                 }
 
                 DisplayFeedback(
@@ -421,7 +473,7 @@ public class Authenticator : MonoBehaviour
             case UnityWebRequest.Result.DataProcessingError:
 
                 DisplayFeedback(
-                    AuthenticationProperties.DATA_PROCESSING_ERROR_MESSAGE,
+                    DATA_PROCESSING_ERROR_MESSAGE,
                     new(
                         AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.X,
                         AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Y,
@@ -437,7 +489,7 @@ public class Authenticator : MonoBehaviour
                 Debug.LogWarning($"WARNING: [{GetType().Name}] The received '{p_request.result}' UnityWebRequest.Result is not planned in the switch. Showing unknown error and returning.");
 
                 DisplayFeedback(
-                    AuthenticationProperties.UNKNOWN_ERROR_MESSAGE,
+                    UNKNOWN_ERROR_MESSAGE,
                     new(
                         AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.X,
                         AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGE_COLOR.Y,

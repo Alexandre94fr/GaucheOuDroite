@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 using VariableCheckerPackage;
 
@@ -7,8 +8,11 @@ using FrontEnd.Data.User;
 
 public class ShortcutTutorial : MonoBehaviour
 {
+    [Header("External references:")]
+    [SerializeField] Button _shortcutTutorialButton;
+
     [Header("Internal references:")]
-    [SerializeField] GameObject _gameOverUIGameObject;
+    [SerializeField] GameObject _shortcutTutorialUIGameObject;
 
 
     [Header("Properties:")]
@@ -20,7 +24,9 @@ public class ShortcutTutorial : MonoBehaviour
         // -- Class properties verifications -- //
 
         if (!VariablesChecker.AreVariablesValid(name, null,
-            (_gameOverUIGameObject, nameof(_gameOverUIGameObject))
+            (_shortcutTutorialButton, nameof(_shortcutTutorialButton)),
+
+            (_shortcutTutorialUIGameObject, nameof(_shortcutTutorialUIGameObject))
         )) return;
 
         if (_neededUnlockedLevelToStopTutorialAutoShow <= 0)
@@ -38,6 +44,18 @@ public class ShortcutTutorial : MonoBehaviour
         }
 
         if (levelProgression.IsUnlocked == false)
-            _gameOverUIGameObject.SetActive(true);
+        {
+            _shortcutTutorialUIGameObject.SetActive(true);
+
+            _shortcutTutorialButton.interactable = false;
+        }
+    }
+
+
+    public void OnButtonPressed()
+    {
+        _shortcutTutorialUIGameObject.SetActive(false);
+
+        _shortcutTutorialButton.interactable = true;
     }
 }
