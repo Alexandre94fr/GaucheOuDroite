@@ -337,6 +337,14 @@ public class GameplayLoopManager : MonoBehaviour
             return;
         }
 
+        if (_isGamePaused)
+        {
+            if (_isDebugModeOn)
+                Debug.Log($"DEBUG: [{GetType().Name}] The player is trying to give a new response even though the game is paused. Returning.");
+
+            return;
+        }
+
         _hasReceivedPlayerResponse = true;
         _playerDirectionResponse = p_direction;
     }
