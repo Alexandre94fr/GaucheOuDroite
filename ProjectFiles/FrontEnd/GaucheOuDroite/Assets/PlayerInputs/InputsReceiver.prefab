@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f74202d6ea866e4992422523591dec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputsReceiver
-  IsDebugModeOn: 1
+  IsDebugModeOn: 0
 --- !u!114 &4776258161071667134
 MonoBehaviour:
   m_ObjectHideFlags: 0
