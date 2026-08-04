@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -205,10 +206,24 @@ public class Authenticator : MonoBehaviour
 
     string GetErrorMessage(AuthenticationProperties.AuthenticationErrorReasons errorReason)
     {
-        string errorMessage = AUTHENTICATION_ERROR_MESSAGES[errorReason];
-        
+        string errorMessage = null;
+
+        try
+        {
+            errorMessage = AUTHENTICATION_ERROR_MESSAGES[errorReason];
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError(
+                $"ERROR: [{GetType().Name}] Failed to get the authentication error message inside the '{nameof(AUTHENTICATION_ERROR_MESSAGES)}' Dictionary using the '{errorReason}' error key. " +
+                $"Showing '{nameof(UNKNOWN_ERROR_MESSAGE)}'.\n" +
+                $"Exception: {exception}"
+            );
+        }
+
         if (errorMessage == null)
             errorMessage = UNKNOWN_ERROR_MESSAGE;
+
 
         return errorMessage;
     }
