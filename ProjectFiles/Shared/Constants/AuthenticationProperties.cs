@@ -23,6 +23,8 @@ namespace Shared.Constants
 
             UsernameContainAtLeastOneSpaceCharacter,
 
+            UsernameContainNotAllowedCharacters,
+
             // --- //
 
             PasswordIsEmpty,
@@ -47,6 +49,7 @@ namespace Shared.Constants
 
         public const int USERNAME_MINIMUM_LENGHT = 1;
         public const int USERNAME_MAXIMUM_LENGHT = 16;
+        public const string USERNAME_ALLOWED_SPECIAL_CHARACTERS = "_.-"; // If you change this property, don't forget to update te Regex of the Authentication Prefab (UsernameInputField.InputFieldSettings.ContentType.RegexValue)
 
         public const int PASSWORD_MINIMUM_LENGHT = 8;
         public const int PASSWORD_MAXIMUM_LENGHT = 16;
@@ -73,6 +76,8 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.UsernameAlreadyExists]                      = $"Le pseudonyme est déjà pris par un autre utilisateur.\nSouhaitez-vous plutôt vous connecter ?",
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"Le pseudonyme contient au moins un caractère vide.",
+
+            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"Le pseudonyme contient au moins un caractère spécial non-autorisé.\nVous ne pouvez utiliser que ceux-là : {string.Join(", ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
 
             // --- //
 
@@ -103,6 +108,8 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.UsernameIsTooLong]                          = $"Ne doit pas dépasser {USERNAME_MAXIMUM_LENGHT} caractère(s).",
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"Ne doit pas contenir d'espace.",
+
+            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"Peut contenir uniquement les caractères spéciaux suivants : {string.Join(", ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
         };
 
         public static readonly Dictionary<AuthenticationErrorReasons, string> PASSWORD_REQUIREMENTS_HELPING_MESSAGES_IN_FRENCH = new()
@@ -153,6 +160,8 @@ namespace Shared.Constants
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"The username contain at least one space character.",
 
+            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"The username contain not allowed special characters.\nYou can only use these one: {string.Join(", ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
+
             // --- //
 
             [AuthenticationErrorReasons.PasswordIsEmpty]                            = $"The password is empty.",
@@ -182,6 +191,8 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.UsernameIsTooLong]                          = $"Must not be more than {USERNAME_MAXIMUM_LENGHT} character(s) long.",
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"Must not contain space characters.",
+
+            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"Can only contain the following special characters: {string.Join(", ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
         };
 
         public static readonly Dictionary<AuthenticationErrorReasons, string> PASSWORD_REQUIREMENTS_HELPING_MESSAGES_IN_ENGLISH = new()
