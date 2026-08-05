@@ -16,10 +16,14 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
 {
     [ApiController]
     [Route("api/user-progressions")]
-    public class UserProgressionController(UserProgressionService p_userProgressionService, DataBaseContext p_dataBaseContext) : ControllerBase
+    public class UserProgressionController(LevelService p_levelService, UserProgressionService p_userProgressionService, DataBaseContext p_dataBaseContext) : ControllerBase
     {
         const bool IS_DEBUG_MODE_ON = true;
 
+        // The DataBase stores the BestScore using an 'int', we don't want a User to break the DataBase by passing a value bigger than an 'int'.
+        const int INFINITE_LEVEL_MAXIMAL_SCORE = int.MaxValue;
+
+        readonly LevelService _levelService = p_levelService;
         readonly UserProgressionService _userProgressionService = p_userProgressionService;
         readonly DataBaseContext _dataBaseContext = p_dataBaseContext;
 
@@ -87,7 +91,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                 ErrorMessage = "",
             };
 
-
+            
             #region -- Security checks --
 
             if (p_userProgressionDTO == null)
@@ -117,6 +121,11 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                 return BadRequest(apiResponseDTO);
             }
 
+
+            // Getting all Levels' properties.
+            // Will be used to verify received LevelProgression data.
+            List<Level> levels = await _levelService.GetAllLevelsAsync();
+            
             for (int i = 0; i < p_userProgressionDTO.LevelProgressions.Count; i++)
             {
                 if (p_userProgressionDTO.LevelProgressions[i].Id < 0)
@@ -128,6 +137,7 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                     return BadRequest(apiResponseDTO);
                 }
 
+
                 if (p_userProgressionDTO.LevelProgressions[i].LevelId < 0)
                 {
                     apiResponseDTO.ErrorMessage = $"The given UserProgressionDTO.LevelProgressions[{i}].LevelId argument is under 0. Returning:\n{ObjectToStringFormatter.ObjectToString(apiResponseDTO)}";
@@ -137,9 +147,34 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                     return BadRequest(apiResponseDTO);
                 }
 
+
+                // TODO: Add a check that checks if the previous Level is unlocked
+                // If the, for example, Level3 is unlocked but not the Level2 and Level1 (recursion) then throw error
+
+
                 if (p_userProgressionDTO.LevelProgressions[i].BestScore < 0)
                 {
                     apiResponseDTO.ErrorMessage = $"The given UserProgressionDTO.LevelProgressions[{i}].BestScore argument is under 0. Returning:\n{ObjectToStringFormatter.ObjectToString(apiResponseDTO)}";
+
+                    Console.WriteLine($"WARNING: [{GetType().Name}] {apiResponseDTO.ErrorMessage}");
+
+                    return BadRequest(apiResponseDTO);
+                }
+
+                // Note: If the Level is not infinite you can't have more score than the 'Star3MinimumScore'.
+                if (levels[i].IsInfinite == false && p_userProgressionDTO.LevelProgressions[i].BestScore > levels[i].Star3MinimumScore)
+                {
+                    apiResponseDTO.ErrorMessage = $"The given UserProgressionDTO.LevelProgressions[{i}].BestScore argument is superior to the maximal score for a finite Level. Returning:\n{ObjectToStringFormatter.ObjectToString(apiResponseDTO)}";
+
+                    Console.WriteLine($"WARNING: [{GetType().Name}] {apiResponseDTO.ErrorMessage}");
+
+                    return BadRequest(apiResponseDTO);
+                }
+
+                // Note: The DataBase stores the BestScore using an 'int', we don't want a User to break the DataBase by passing a value bigger than an 'int'.
+                if (levels[i].IsInfinite == true && p_userProgressionDTO.LevelProgressions[i].BestScore > INFINITE_LEVEL_MAXIMAL_SCORE)
+                {
+                    apiResponseDTO.ErrorMessage = $"The given UserProgressionDTO.LevelProgressions[{i}].BestScore argument is superior to the maximal score for an infinite Level. Returning:\n{ObjectToStringFormatter.ObjectToString(apiResponseDTO)}";
 
                     Console.WriteLine($"WARNING: [{GetType().Name}] {apiResponseDTO.ErrorMessage}");
 
