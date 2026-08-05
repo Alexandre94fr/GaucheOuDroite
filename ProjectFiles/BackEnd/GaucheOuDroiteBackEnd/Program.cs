@@ -1,15 +1,24 @@
+// For data base
 using Microsoft.EntityFrameworkCore;
 
-// For Token
+// For controllers
+using GaucheOuDroiteBackEnd.Data;
+using GaucheOuDroiteBackEnd.Security;
+using GaucheOuDroiteBackEnd.Services;
+
+// For authentication token (JWT)
 using System.Text;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-using GaucheOuDroiteBackEnd.Data;
 using GaucheOuDroiteBackEnd.Models;
-using GaucheOuDroiteBackEnd.Security;
-using GaucheOuDroiteBackEnd.Services;
+
+// For request rate limitation
+using System.Threading.RateLimiting;
+
+using Shared.DTOs;
+using Shared.Tools;
 
 
 const string SCRIPT_NAME = "Program.cs";
@@ -80,6 +89,51 @@ builder.Services
 
 builder.Services.AddAuthentication();
 
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+    {
+        return RateLimitPartition.GetFixedWindowLimiter(
+
+            // We use the IP address to detect who is sending the request
+            //
+            // Note:
+            // Creating partitions on client IP addresses makes the app vulnerable to Denial of Service Attacks which employ IP Source Address Spoofing.
+            // For more information, see BCP 38 RFC 2827 Network Ingress Filtering: Defeating Denial of Service Attacks which employ IP Source Address Spoofing.
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+
+            
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromSeconds(10),
+
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }
+        );
+    });
+
+    // Creating a custom rejection handling logic
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        Console.WriteLine($"WARNING: [{SCRIPT_NAME}] Rate limit exceeded for IP: {context.HttpContext.Connection.RemoteIpAddress}");
+
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.Headers.RetryAfter = "10";
+
+        ApiResponseDTO apiResponseDTO = new()
+        {
+            HasSucceeded = false,
+            ErrorMessage = "Rate limit exceeded. Please try again a little later."
+        };
+
+        await context.HttpContext.Response.WriteAsync(ObjectToStringFormatter.ObjectToString(apiResponseDTO), cancellationToken);
+    };
+});
+
+
 // Development tools
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -88,7 +142,7 @@ builder.Services.AddSwaggerGen();
 
 // ---
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -99,10 +153,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// For request rate limitation
+// Note: If the rate limiter is using authentication token to work be sure to put 'app.UseRateLimiter();' after 'builder.Services.AddAuthentication();' and 'WebApplication app = builder.Build();'.
+app.UseRateLimiter();
+
+
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 
