@@ -45,6 +45,8 @@ namespace Shared.Constants
             NoUserProgressionsFound, // When there is no UserProgression associated with the User (full BackEnd error)
 
             InternalServerError, // When any kind of server error happens and is not registered in this enum
+
+            TooManyRequest, // When the User send too many request in a short amount of time
         }
 
         public const int USERNAME_MINIMUM_LENGHT = 1;
@@ -100,6 +102,8 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.NoUserProgressionsFound]                    = $"Aucune donnée de progression n'a été trouvée sur un utilisateur qui devrait en avoir.\nVeuillez réessayer.",
 
             [AuthenticationErrorReasons.InternalServerError]                        = $"Un problème interne a été détecté côté serveur.\nSi le problème persiste, relancez l'application.",
+
+            [AuthenticationErrorReasons.TooManyRequest]                             = $"Trop de requête ont été envoyées au serveur\nen un trop court laps de temps.\nVeuillez réessayer un peu plus tard.",
         };
 
         public static readonly Dictionary<AuthenticationErrorReasons, string> USERNAME_REQUIREMENTS_HELPING_MESSAGES_IN_FRENCH = new()
@@ -183,6 +187,8 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.NoUserProgressionsFound]                    = $"No progression data have been founded on a user that should have some.\nPlease try again.",
 
             [AuthenticationErrorReasons.InternalServerError]                        = $"An internal problem has been detected on the server.\nIf the problem persists, restart the application.",
+
+            [AuthenticationErrorReasons.TooManyRequest]                             = $"Too many requests were sent to the server\nin a too short amount of time.\nPlease try again a little later.",
         };
 
         public static readonly Dictionary<AuthenticationErrorReasons, string> USERNAME_REQUIREMENTS_HELPING_MESSAGES_IN_ENGLISH = new()
