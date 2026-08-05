@@ -466,6 +466,12 @@ public class Authenticator : MonoBehaviour
 
             case UnityWebRequest.Result.ProtocolError:
 
+                // This part of the logic handles the case where too many requests were sent
+                if (p_request.responseCode == 429) // TooManyRequest code
+                {
+                    authenticationResultDTO.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.TooManyRequest;
+                }
+
                 // Using the .AuthenticationError value to get a string from the AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGES dictionary
                 // If we fail, the shown error will be an Unknown error message
                 if (!AUTHENTICATION_ERROR_MESSAGES.TryGetValue(authenticationResultDTO.AuthenticationError, out string authenticationMessage))
