@@ -79,7 +79,7 @@ namespace Shared.Constants
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"Le pseudonyme contient au moins un caractère vide.",
 
-            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"Le pseudonyme contient au moins un caractère spécial non-autorisé.\nVous ne pouvez utiliser que ceux-là : {string.Join(", ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
+            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"Le pseudonyme contient au moins un caractère spécial non-autorisé.\nVous ne pouvez utiliser que ceux-là : {string.Join(" ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
 
             // --- //
 
@@ -113,7 +113,7 @@ namespace Shared.Constants
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"Ne doit pas contenir d'espace.",
 
-            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"Peut contenir uniquement les caractères spéciaux suivants : {string.Join(", ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
+            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"Peut contenir uniquement les caractères spéciaux suivants : {string.Join(" ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
         };
 
         public static readonly Dictionary<AuthenticationErrorReasons, string> PASSWORD_REQUIREMENTS_HELPING_MESSAGES_IN_FRENCH = new()
@@ -164,7 +164,7 @@ namespace Shared.Constants
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"The username contain at least one space character.",
 
-            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"The username contain not allowed special characters.\nYou can only use these one: {string.Join(", ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
+            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"The username contain not allowed special characters.\nYou can only use these one: {string.Join(" ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
 
             // --- //
 
@@ -198,7 +198,7 @@ namespace Shared.Constants
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"Must not contain space characters.",
 
-            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"Can only contain the following special characters: {string.Join(", ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
+            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"Can only contain the following special characters: {string.Join(" ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
         };
 
         public static readonly Dictionary<AuthenticationErrorReasons, string> PASSWORD_REQUIREMENTS_HELPING_MESSAGES_IN_ENGLISH = new()
