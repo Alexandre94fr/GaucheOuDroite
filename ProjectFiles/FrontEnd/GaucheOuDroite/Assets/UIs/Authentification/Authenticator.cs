@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -205,10 +206,24 @@ public class Authenticator : MonoBehaviour
 
     string GetErrorMessage(AuthenticationProperties.AuthenticationErrorReasons errorReason)
     {
-        string errorMessage = AUTHENTICATION_ERROR_MESSAGES[errorReason];
+        string errorMessage = null;
+
+        try
+        {
+            errorMessage = AUTHENTICATION_ERROR_MESSAGES[errorReason];
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError(
+                $"ERROR: [{GetType().Name}] Failed to get the authentication error message inside the '{nameof(AUTHENTICATION_ERROR_MESSAGES)}' Dictionary using the '{errorReason}' error key. " +
+                $"Showing '{nameof(UNKNOWN_ERROR_MESSAGE)}'.\n" +
+                $"Exception: {exception}"
+            );
+        }
 
         if (errorMessage == null)
             errorMessage = UNKNOWN_ERROR_MESSAGE;
+
 
         return errorMessage;
     }
@@ -450,6 +465,12 @@ public class Authenticator : MonoBehaviour
                 }
 
             case UnityWebRequest.Result.ProtocolError:
+
+                // This part of the logic handles the case where too many requests were sent
+                if (p_request.responseCode == 429) // TooManyRequest code
+                {
+                    authenticationResultDTO.AuthenticationError = AuthenticationProperties.AuthenticationErrorReasons.TooManyRequest;
+                }
 
                 // Using the .AuthenticationError value to get a string from the AuthenticationProperties.AUTHENTICATION_ERROR_MESSAGES dictionary
                 // If we fail, the shown error will be an Unknown error message

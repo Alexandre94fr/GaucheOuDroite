@@ -50,7 +50,7 @@ public static class ServerRequestManager
     public static string AuthenticationToken = null;
 
 
-    public static string RequestResponseToString(UnityWebRequest p_request)
+    public static string RequestResponseToString(UnityWebRequest p_request, bool p_mustDeserializedDownloadHandlerText = true)
     {
         return
         $"Request response received. Data:\n" +
@@ -60,7 +60,7 @@ public static class ServerRequestManager
         $"- HTTP error: {p_request.error}\n" +
         $"- Response code: {p_request.responseCode}\n" +
         $"- Response body (formated):\n" +
-        $"{JsonConvert.DeserializeObject(p_request.downloadHandler.text)}";
+        $"{(p_mustDeserializedDownloadHandlerText ? JsonConvert.DeserializeObject(p_request.downloadHandler.text) : p_request.downloadHandler.text)}";
     }
 
     /// <summary>
@@ -219,7 +219,16 @@ public static class ServerRequestManager
         }
         catch (Exception exception)
         {
-            Debug.LogWarning($"WARNING: [{CLASS_NAME}] Caught an error while trying to deserialize the server response content into '{typeof(TResponse)}' type. Returning.\nError: {exception}");
+            // Note:
+            // This catch will be called if 'request.downloadHandler.text' is a pure string, not an object serialized into a string, like expected
+            // But the error can still be caused by something else, check the warning below to gain more information
+
+            Debug.LogWarning(
+                $"WARNING: [{CLASS_NAME}] Caught an error while trying to deserialize the server response content into '{typeof(TResponse)}' type. Returning." +
+                $"\nREQUEST CONTENT:\n{RequestResponseToString(request, false)}\n" +
+                $"\nERROR:\n{exception}"
+            );
+
             yield break;
         }
         

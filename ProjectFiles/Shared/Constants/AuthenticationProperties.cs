@@ -23,6 +23,8 @@ namespace Shared.Constants
 
             UsernameContainAtLeastOneSpaceCharacter,
 
+            UsernameContainNotAllowedCharacters,
+
             // --- //
 
             PasswordIsEmpty,
@@ -43,10 +45,13 @@ namespace Shared.Constants
             NoUserProgressionsFound, // When there is no UserProgression associated with the User (full BackEnd error)
 
             InternalServerError, // When any kind of server error happens and is not registered in this enum
+
+            TooManyRequest, // When the User send too many request in a short amount of time
         }
 
         public const int USERNAME_MINIMUM_LENGHT = 1;
         public const int USERNAME_MAXIMUM_LENGHT = 16;
+        public const string USERNAME_ALLOWED_SPECIAL_CHARACTERS = "_.-"; // If you change this property, don't forget to update te Regex of the Authentication Prefab (UsernameInputField.InputFieldSettings.ContentType.RegexValue)
 
         public const int PASSWORD_MINIMUM_LENGHT = 8;
         public const int PASSWORD_MAXIMUM_LENGHT = 16;
@@ -74,6 +79,8 @@ namespace Shared.Constants
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"Le pseudonyme contient au moins un caractère vide.",
 
+            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"Le pseudonyme contient au moins un caractère spécial non-autorisé.\nVous ne pouvez utiliser que ceux-là : {string.Join(" ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
+
             // --- //
 
             [AuthenticationErrorReasons.PasswordIsEmpty]                            = $"Le mot de passe est vide.",
@@ -95,6 +102,8 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.NoUserProgressionsFound]                    = $"Aucune donnée de progression n'a été trouvée sur un utilisateur qui devrait en avoir.\nVeuillez réessayer.",
 
             [AuthenticationErrorReasons.InternalServerError]                        = $"Un problème interne a été détecté côté serveur.\nSi le problème persiste, relancez l'application.",
+
+            [AuthenticationErrorReasons.TooManyRequest]                             = $"Trop de requête ont été envoyées au serveur\nen un trop court laps de temps.\nVeuillez réessayer un peu plus tard.",
         };
 
         public static readonly Dictionary<AuthenticationErrorReasons, string> USERNAME_REQUIREMENTS_HELPING_MESSAGES_IN_FRENCH = new()
@@ -103,6 +112,8 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.UsernameIsTooLong]                          = $"Ne doit pas dépasser {USERNAME_MAXIMUM_LENGHT} caractère(s).",
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"Ne doit pas contenir d'espace.",
+
+            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"Peut contenir uniquement les caractères spéciaux suivants : {string.Join(" ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
         };
 
         public static readonly Dictionary<AuthenticationErrorReasons, string> PASSWORD_REQUIREMENTS_HELPING_MESSAGES_IN_FRENCH = new()
@@ -153,6 +164,8 @@ namespace Shared.Constants
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"The username contain at least one space character.",
 
+            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"The username contain not allowed special characters.\nYou can only use these one: {string.Join(" ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
+
             // --- //
 
             [AuthenticationErrorReasons.PasswordIsEmpty]                            = $"The password is empty.",
@@ -174,6 +187,8 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.NoUserProgressionsFound]                    = $"No progression data have been founded on a user that should have some.\nPlease try again.",
 
             [AuthenticationErrorReasons.InternalServerError]                        = $"An internal problem has been detected on the server.\nIf the problem persists, restart the application.",
+
+            [AuthenticationErrorReasons.TooManyRequest]                             = $"Too many requests were sent to the server\nin a too short amount of time.\nPlease try again a little later.",
         };
 
         public static readonly Dictionary<AuthenticationErrorReasons, string> USERNAME_REQUIREMENTS_HELPING_MESSAGES_IN_ENGLISH = new()
@@ -182,6 +197,8 @@ namespace Shared.Constants
             [AuthenticationErrorReasons.UsernameIsTooLong]                          = $"Must not be more than {USERNAME_MAXIMUM_LENGHT} character(s) long.",
 
             [AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter]    = $"Must not contain space characters.",
+
+            [AuthenticationErrorReasons.UsernameContainNotAllowedCharacters]        = $"Can only contain the following special characters: {string.Join(" ", USERNAME_ALLOWED_SPECIAL_CHARACTERS.ToCharArray())}",
         };
 
         public static readonly Dictionary<AuthenticationErrorReasons, string> PASSWORD_REQUIREMENTS_HELPING_MESSAGES_IN_ENGLISH = new()

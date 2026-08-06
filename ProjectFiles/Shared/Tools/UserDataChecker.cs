@@ -45,6 +45,37 @@ namespace Shared.Tools
                 return false;
             }
 
+
+            // Note:
+            // We do this check separately from the check below because we want to be precise about the reason of the error.
+            if (p_username.Contains(' '))
+            {
+                p_authenticationErrorReason = AuthenticationProperties.AuthenticationErrorReasons.UsernameContainAtLeastOneSpaceCharacter;
+
+                if (p_isDebugModeOn)
+                    Console.WriteLine($"DEBUG: [{CLASS_NAME}] The given username contains at least one space character. Returning false + {p_authenticationErrorReason}.");
+
+                return false;
+            }
+
+
+            foreach (char character in p_username)
+            {
+                if (char.IsLetterOrDigit(character))
+                    continue;
+
+                if (AuthenticationProperties.USERNAME_ALLOWED_SPECIAL_CHARACTERS.Contains(character))
+                    continue;
+
+                p_authenticationErrorReason = AuthenticationProperties.AuthenticationErrorReasons.UsernameContainNotAllowedCharacters;
+
+                if (p_isDebugModeOn)
+                    Console.WriteLine($"DEBUG: [{CLASS_NAME}] The given username contains an unauthorized character ('{character}'). Returning false + {p_authenticationErrorReason}.");
+
+                return false;
+            }
+
+
             if (p_isDebugModeOn)
                 Console.WriteLine($"DEBUG: [{CLASS_NAME}] The given username is valid. Returning true + {p_authenticationErrorReason}.");
 
