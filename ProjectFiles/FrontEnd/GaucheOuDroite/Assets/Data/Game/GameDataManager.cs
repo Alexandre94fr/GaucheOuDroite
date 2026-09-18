@@ -124,7 +124,7 @@ namespace FrontEnd.Data.Game
         // This is why each action doesn't have its own route.
         [HideInInspector] public const string GAME_DATA_API_ROUTE = "game-data";
 
-        [HideInInspector] public const string GAME_VERSION = "1.2.1";
+        [HideInInspector] public const string GAME_VERSION = "1.2.2";
 
 
         /// <summary>
