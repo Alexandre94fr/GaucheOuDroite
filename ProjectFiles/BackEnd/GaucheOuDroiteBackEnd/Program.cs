@@ -73,7 +73,10 @@ JwtTokenSettings jwtTokenSettings = builder.Configuration.GetSection("JwtSetting
     ?? throw new InvalidOperationException($"ERROR: [{SCRIPT_NAME}] JwtSettings not found inside 'appsetting.json' or 'secret.json' files.");
 
 if (string.IsNullOrEmpty(jwtTokenSettings.Key))
-    throw new NullReferenceException($"ERROR: [{SCRIPT_NAME}] The JwtSettings.Key inside 'appsetting.json' or 'secret.json' files is null or empty. Please verify that you added the secret JwtSettings Key. Check out the 'appsettings.json' file for more information.");
+    throw new NullReferenceException(
+        $"ERROR: [{SCRIPT_NAME}] The JwtSettings.Key inside 'appsetting.json' or 'secret.json' files is null or empty. " +
+        $"Please verify that you added the secret JwtSettings Key. Check out the 'appsettings.json' file for more information."
+    );
 
 
 builder.Services
