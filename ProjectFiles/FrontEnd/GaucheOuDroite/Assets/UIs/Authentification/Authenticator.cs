@@ -349,7 +349,12 @@ public class Authenticator : MonoBehaviour
                 break;
 
             default:
+
                 Debug.LogWarning($"WARNING: [{GetType().Name}] The given '{p_authenticationMode}' AuthenticationProperties.AuthenticationMode is not planned in the switch. Returning.");
+
+                _requestSenderButton.interactable = true;
+                _autenticationModeChangerButton.interactable = true;
+
                 yield break;
         }
 
