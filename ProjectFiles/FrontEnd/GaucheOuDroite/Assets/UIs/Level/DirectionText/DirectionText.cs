@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -12,8 +13,13 @@ public class DirectionText : MonoBehaviour
     [Header("Internal references:")]
     [SerializeField] TextMeshProUGUI _directionText;
 
+    [Header("Properties:")]
+    [SerializeField] int _numberOfWaitingFramesBeforeUpdatingDirectionText = 3;
+
 
     string _currentDirectionText = "";
+
+    Coroutine _updateDirectionTextCoroutine;
 
 
     Dictionary<DirectionProperties.Direction, string> DIRECTIONS = new();
@@ -65,7 +71,11 @@ public class DirectionText : MonoBehaviour
     {
         _currentDirectionText = DIRECTIONS[p_direction] + " !";
 
-        _directionText.text = _currentDirectionText;
+
+        if (_updateDirectionTextCoroutine != null)
+            StopCoroutine(_updateDirectionTextCoroutine);
+
+        _updateDirectionTextCoroutine = StartCoroutine(UpdateDirectionText(_currentDirectionText));
     }
 
 
@@ -75,11 +85,33 @@ public class DirectionText : MonoBehaviour
 
         if (p_isGamePaused)
         {
+            if (_updateDirectionTextCoroutine != null)
+            {
+                StopCoroutine(_updateDirectionTextCoroutine);
+                _updateDirectionTextCoroutine = null;
+            }
+
             _directionText.text = "";
         }
         else
         {
             _directionText.text = _currentDirectionText;
         }
+    }
+
+
+    IEnumerator UpdateDirectionText(string p_newDirectionText)
+    {
+        // Explanation:
+        // We change the text to empty for multiple frames so that the player realizes that a new direction has been given, even if it is the same as the previous one ("Left !" -> "Left !").
+
+        _directionText.text = "";
+
+        for (int i = 0; i < _numberOfWaitingFramesBeforeUpdatingDirectionText; i++)
+        {
+            yield return null;
+        }
+
+        _directionText.text = p_newDirectionText;
     }
 }
