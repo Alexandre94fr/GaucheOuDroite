@@ -105,6 +105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameRules
   _gameRulesButton: {fileID: 0}
+  _gameRulesButtonText: {fileID: 0}
   _gameRulesUIGameObject: {fileID: 9000491027420664852}
   _titleText: {fileID: 1870101007923339095}
   _gameGoalTitleText: {fileID: 6687593112881967946}
@@ -112,7 +113,7 @@ MonoBehaviour:
   _scoringSystemTitleText: {fileID: 7918113259879565231}
   _scoringSystemText: {fileID: 3596718579667258849}
   _closeButtonText: {fileID: 1212371242806982285}
-  _neededUnlockedLevelToStopUIShow: 2
+  _neededUnlockedLevelToStopUIShow: 3
 --- !u!1 &2901459479359755000
 GameObject:
   m_ObjectHideFlags: 0
