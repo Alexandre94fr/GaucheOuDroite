@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DirectionText
   _directionText: {fileID: 3367934682234929532}
+  _numberOfWaitingFramesBeforeUpdatingDirectionText: 3
 --- !u!114 &3367934682234929532
 MonoBehaviour:
   m_ObjectHideFlags: 0
