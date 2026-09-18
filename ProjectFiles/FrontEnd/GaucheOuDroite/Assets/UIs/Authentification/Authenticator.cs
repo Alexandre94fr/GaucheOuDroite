@@ -288,8 +288,6 @@ public class Authenticator : MonoBehaviour
         #endregion
 
         // Modifying the UI to tell the player, that his username and password are correct and that we sent a request to the server.
-        string authenticationModeString = AuthenticationProperties.AUTHENTICATION_MODE_IN_FRENCH[_authenticationMode].ToUpper();
-
         DisplayFeedback(
             SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE,
             new(
