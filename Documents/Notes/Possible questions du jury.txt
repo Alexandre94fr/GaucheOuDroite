@@ -1,0 +1,159 @@
+POSSIBLE QUESTIONS DU JURY :
+============================
+
+
+====
+Quelle méthode de gestion de projet avez-vous utilisée ?
+--
+Je n'ai pas utilisé une méthode Agile formelle avec l'ensemble des cérémonies Scrum. J'ai adopté une organisation inspirée des méthodes Agiles, adaptée à la taille et à la durée du projet.
+
+L'objectif était d'enlever le plus de tâches de gestion de projet superflues afin d'allouer plus de temps au développement du projet.
+
+J'ai découpé le développement en fonctionnalités et tâches, que je suivais dans un Daily. Chaque jour, je notais les travaux réalisés ainsi que les tâches prévues à court terme. 
+Les fonctionnalités étaient développées puis testées dans une copie du projet avant d'être intégrées à la véritable version du projet (dans la branche nommée "dev").
+
+J'utilisais également GitHub pour assurer le versionnement du projet et des Releases pour identifier les versions considérées comme suffisamment stables.
+
+Cette organisation m'a permis d'adapter les priorités au fur et à mesure du développement plutôt que de définir l'intégralité des tâches de manière rigide au début du projet.
+
+
+====
+Pourquoi Unity ?
+--
+Unity a été choisi car le projet possède une forte composante interactive et temps réel, et car cette technologie permet un développement rapide du gameplay.
+De plus, j'ai déjà beaucoup utilisé Unity pour de précédents projets. Cela me permet de développer le projet plus rapidement, que si j'utilisais un moteur que je ne connaissais pas.
+
+
+====
+Pourquoi ASP.NET Core ?
+--
+ASP.NET Core a été choisi afin de conserver un environnement 100% C#, simplifiant le développement et réduisant le coût d’apprentissage des technologies BackEnd.
+De plus, ASP.NET Core fournit de nombreuses bibliothèques et fonctionnalités qui sont très utile pour le développement d'application impliquant un serveur.
+
+
+====
+Pourquoi SQLite ?
+--
+SQLite a été choisi afin de réduire la complexité d’installation et de configuration du projet dans un contexte de temps limité, tout en conservant une base de données relationnelle SQL suffisante pour les besoins fonctionnels de l’application et les demandes du CDA.
+
+
+====
+Pourquoi l'API REST ?
+--
+L'API REST permet une séparation claire entre FrontEnd et BackEnd dans une architecture multicouche.
+
+Elle permet au client de communiquer avec le serveur via HTTP en utilisant des ressources et des méthodes HTTP standardisées comme GET, POST et DELETE. Le FrontEnd n'a ainsi pas besoin de connaître l'implémentation interne du BackEnd.
+
+Documentation : https://www.redhat.com/fr/topics/api/what-is-a-rest-api#larchitecture-rest
+
+
+====
+Pourquoi avoir mis en place des DTO ?
+--
+Les DTO définissent le contrat de données attendu par l'API. Le FrontEnd les utilise pour connaître les données à envoyer, tandis que le BackEnd les utilise pour contrôler et valider les données reçues.
+
+Les DTO permettent également d'éviter d'exposer directement les modèles (les Classes [ex: User, Level, etc...]) internes de l'application tout en contrôlant précisément les données qui peuvent être reçues ou envoyées par l'API.
+
+
+====
+Pourquoi avoir séparé FrontEnd, BackEnd et Shared ?
+--
+Le projet Shared sert à centraliser les mêmes données entre le FrontEnd (Client) et le BackEnd (Server)
+
+Le FrontEnd et le BackEnd sont séparés afin de complètement séparer les blocs de responsabilités du projet.
+De plus, le BackEnd est considéré comme la source de vérité et valide les données reçues indépendamment des contrôles effectués par le Client. Le Client ne possède jamais un accès direct à la base de données.
+
+
+====
+Pourquoi Entity Framework ?
+--
+Entity Framework de Microsoft est une technologie qui se combine avec le C# .NET, elle permet au BackEnd de plus facilement interagir avec la DataBase du projet.
+De plus, elle permet d'éviter que le BackEnd envoie des requêtes SQL à la DataBase sous la forme de chaîne de caractères. 
+Ce qui limite le risque d'injection SQL (attention cependant, cela ne l'empêche pas complètement).
+
+
+====
+Pourquoi utiliser JWT (Json Web Token) ?
+--
+JWT permet au Server de fournir au Client un jeton signé après authentification. Le Client peut ensuite présenter ce jeton lors des requêtes suivantes afin que le Server puisse vérifier son identité sans lui demander de renvoyer son mot de passe.
+
+
+====
+Pourquoi Localhost ?
+--
+Étant donné que je n'ai qu'une courte période de développement pour créer le projet de toute pièce, il faut que je limite le plus possible les éléments complexes qui pourraient me ralentir voir m'empêcher de finir le projet dans les temps.
+
+Le projet étant destiné à démontrer les compétences du CDA plutôt qu'à fournir un service commercial réellement déployé, mettre en place une infrastructure distante aurait augmenté inutilement la complexité du projet.
+
+
+====
+Pourquoi avoir ajouté un Rate Limiting ?
+--
+Le Rate Limiting protège les ressources de l'application contre un client qui envoie un nombre excessif de requêtes. 
+Il ne constitue cependant pas une protection complète contre un DDoS, car celui-ci doit généralement être traité plus en amont, par l'infrastructure réseau ou un service spécialisé.
+
+
+====
+Quelles pratiques DevOps avez-vous mises en œuvre ?
+--
+Je n'ai pas mis en place une chaîne DevOps entièrement automatisée, mais j'ai intégré plusieurs pratiques associées à une démarche DevOps.
+
+Le projet utilise GitHub pour le versionnement avec des commits réguliers et des Releases numérotées. À chaque version officielle, une Build complète du client et du serveur est générée puis distribuée sous forme d'une archive ZIP. 
+La configuration de production est séparée de celle du développement grâce aux fichiers appsettings, et les informations sensibles, comme la clé JWT, ne sont pas stockées directement dans le code source. 
+J'ai également travaillé sur le déploiement du serveur ASP.NET Core afin qu'il puisse fonctionner sans que l'utilisateur qui lance le serveur est besoin d'avoir installé Visual Studio et tous les composants que le serveur a besoin.
+
+Méthodologie lors d'une création de Build :
+- Créer la Build (Client + Server) a partir de la branch stable et centrale (main)
+- Tester la Build dans son intégralité afin de détecter de potentielle bug qui serait uniquement visible en testant une Build
+- Si un ou plusieurs bugs sont détectés, alors la création de Build est annulée, et ce, jusqu'à que les bugs soit réglés
+- Création d'une Release GitHub versionnée, contenant le dossier compressé (.zip) de la Build
+- Test de la Build par des personnes extérieures au projet
+- Listage des retours et autres bugs détectés par les testers
+- Réglage des bugs
+- Modification du projet afin d'implémenter les retours utilisateurs (si ils sont pertinents)
+- Relancer la création de Build jusqu'à qu'il n'y est plus de bugs, ou de retours utilisateurs pertinents 
+- Poursuite du développement du projet
+
+Build → tests → Release → tests externes → retours → corrections → nouvelle Build
+
+L'objectif de ce processus était de disposer d'une version reproductible et identifiable du projet à chaque Release. Une Release correspond à une version du logiciel pouvant être distribuée et testée indépendamment de l'état actuel du développement.
+
+
+====
+[SUIS LA QUESTION PRÉCÉDENTE] Pourquoi ne pas avoir automatisé ce processus ?
+--
+L'automatisation aurait été possible avec une pipeline CI/CD, mais j'ai choisi de ne pas l'implémenter compte tenu du temps disponible et de la taille du projet. Le processus manuel restait suffisamment rapide pour mes besoins.
+
+
+====
+Avez-vous fait de la CI/CD ?
+--
+Non, je n'ai pas mis en place une chaîne DevOps complète avec CI/CD automatisée. En revanche, j'ai appliqué certaines pratiques associées à une démarche DevOps : versionnement avec GitHub, Releases versionnées, génération de Builds, séparation des configurations Development/Production et préparation du déploiement du BackEnd. 
+La construction et la distribution des versions restent cependant manuelles.
+
+[Expliquer ma méthodologie lors d'une création de Build]
+
+
+====
+Pourquoi ne pas avoir implémenter de tests automatisés (UnitTest) ?
+--
+J'ai choisi de privilégier les tests fonctionnels manuels pour ce projet, car les fonctionnalités présentes dans le jeu sont relativement peu nombreuses et peuvent être testées rapidement dans leur ensemble. 
+Après chaque modification importante, je testais la fonctionnalité concernée ainsi que les fonctionnalités susceptibles d'être impactées. 
+Chaque version officielle (Release GitHub) était également testée par plusieurs personnes extérieures au projet afin de détecter des bugs et d'obtenir des retours utilisateurs.
+
+Attention, je ne considère pas que les tests unitaires soient inutiles. 
+Sur un projet plus complexe, ils permettraient notamment d'automatiser la vérification de nombreux cas et de faciliter les tests de régression. 
+J'utilise d'ailleurs des tests unitaires sur un autre projet car ce dernier est bien plus complexe, et que tester tous les cas manuellement prendrait trop de temps.
+
+
+====
+[SUIS LA QUESTION PRÉCÉDENTE] Donc vous avez décidé vous-même que les tests unitaires n'étaient pas nécessaires ? Sur quels critères ?
+--
+J'ai choisi de privilégier les tests fonctionnels manuels pour ce projet, car les fonctionnalités sont relativement peu nombreuses et peuvent être testées rapidement dans leur ensemble. Le coût de mise en place et de maintenance d'une suite de tests automatisés m'a semblé supérieur au bénéfice qu'elle aurait apporté dans le contexte et la durée de ce projet.
+
+Après chaque modification importante, je testais la fonctionnalité concernée ainsi que les fonctionnalités susceptibles d'être impactées. Chaque version officielle était également testée par plusieurs personnes extérieures au projet afin de détecter des bugs et d'obtenir des retours utilisateurs.
+
+Cela ne signifie pas que je considère les tests unitaires comme inutiles. Au contraire, je les utilise sur un autre projet plus complexe, où le nombre de cas à tester rend les tests manuels beaucoup moins pertinents.
+
+
+

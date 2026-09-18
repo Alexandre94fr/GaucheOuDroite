@@ -13,6 +13,9 @@ Ce bloc-note liste les features / compétences requises pour obtenir le CDA.
 - Gestion des priorités
 - Dépôt GitHub
 
+Pour parler de comment j'ai organisé pour temps / tâches :
+J'ai utilisé une approche inspirée des méthodes agiles. Étant seul sur le projet, je n'avais pas besoin de mettre en place un Scrum complet avec Product Owner, Sprint Planning ou Sprint Review. En revanche, je tenais quotidiennement un journal de développement (Daily), je définissais mes priorités à court terme et j'organisais le travail sous forme de petites tâches. Mon dépot GitHub ainsi que mon Daily, me servait à suivre l'évolution du projet grâce à des commits réguliers ainsi que mes divers notes de Daily.
+
 2. ANALYSE ET CONCEPTION
 
 À produire :
@@ -189,6 +192,14 @@ Plan de tests :
 - Cas nominal
 - Cas erreur
 - Résultat attendu
+
+
+
+Expliquer que pour ce projet, j'ai choisi de privilégier une stratégie de tests adaptée à la taille du projet, les tests manuels effectués par de vrai personnes étaient suffisants (car le projet est petit, rendant les tests manuels court à faire).
+Expliquer qu'à chaque Build (nouvelle version officielle du jeu) je faisais tester le jeu à d'autres personnes afin d'obtenir des avis, ainsi que de détecter des bugs.
+Évidemment à chaque ajout / modification ou suppression de feature, je testais le / les composants modifiés mais aussi le projet dans son ensemble.
+
+J'ai conscience que sur un projet plus important, j'aurais mis en place des tests unitaires. D'ailleurs j'ai déjà eu l'occasion d'en réaliser sur un autre projet.
 
 10. DOCUMENTATION TECHNIQUE
 

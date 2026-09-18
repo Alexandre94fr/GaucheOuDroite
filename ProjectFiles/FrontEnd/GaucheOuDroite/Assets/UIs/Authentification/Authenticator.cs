@@ -30,7 +30,7 @@ public class Authenticator : MonoBehaviour
 
     [Header("Internal references:")]
     [SerializeField] Button _requestSenderButton;
-    [SerializeField] Button _autenticationModeChangerButton;
+    [SerializeField] Button _authenticationModeChangerButton;
 
     [Space]
     [SerializeField] TextMeshProUGUI _feedbackText;
@@ -70,7 +70,7 @@ public class Authenticator : MonoBehaviour
 
         if (!VariablesChecker.AreVariablesValid(name, null,
             (_requestSenderButton, nameof(_requestSenderButton)),
-            (_autenticationModeChangerButton, nameof(_autenticationModeChangerButton)),
+            (_authenticationModeChangerButton, nameof(_authenticationModeChangerButton)),
             (_feedbackText, nameof(_feedbackText)),
             (_autenticationInformationGameObject, nameof(_autenticationInformationGameObject)),
             (_sceneChanger, nameof(_sceneChanger))
@@ -288,8 +288,6 @@ public class Authenticator : MonoBehaviour
         #endregion
 
         // Modifying the UI to tell the player, that his username and password are correct and that we sent a request to the server.
-        string authenticationModeString = AuthenticationProperties.AUTHENTICATION_MODE_IN_FRENCH[_authenticationMode].ToUpper();
-
         DisplayFeedback(
             SUCCESSFUL_LOCAL_AUTHENTICATION_MESSAGE,
             new(
@@ -318,7 +316,7 @@ public class Authenticator : MonoBehaviour
         // Disabling some UI buttons to avoid creating bugs.
         // The UI buttons will be interactive again when the server will respond to the request.
         _requestSenderButton.interactable = false;
-        _autenticationModeChangerButton.interactable = false;
+        _authenticationModeChangerButton.interactable = false;
 
         // Getting and creating the good route and DTO depending of the given AuthenticationMode 
         string route;
@@ -351,7 +349,12 @@ public class Authenticator : MonoBehaviour
                 break;
 
             default:
+
                 Debug.LogWarning($"WARNING: [{GetType().Name}] The given '{p_authenticationMode}' AuthenticationProperties.AuthenticationMode is not planned in the switch. Returning.");
+
+                _requestSenderButton.interactable = true;
+                _authenticationModeChangerButton.interactable = true;
+
                 yield break;
         }
 
@@ -368,7 +371,7 @@ public class Authenticator : MonoBehaviour
 
         // We received a response from the server, we can make the buttons intractable again
         _requestSenderButton.interactable = true;
-        _autenticationModeChangerButton.interactable = true;
+        _authenticationModeChangerButton.interactable = true;
     }
 
     void OnRequestSuccess(AuthenticationResultDTO p_authenticationResultDTO)

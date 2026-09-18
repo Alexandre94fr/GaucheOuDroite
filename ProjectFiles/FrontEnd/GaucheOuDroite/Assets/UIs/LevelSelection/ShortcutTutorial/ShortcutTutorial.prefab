@@ -1173,7 +1173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShortcutTutorial
   _shortcutTutorialButton: {fileID: 0}
   _shortcutTutorialUIGameObject: {fileID: 4600307834719378656}
-  _neededUnlockedLevelToStopTutorialAutoShow: 2
+  _neededUnlockedLevelToStopTutorialAutoShow: 3
 --- !u!1 &5597394969602817197
 GameObject:
   m_ObjectHideFlags: 0
