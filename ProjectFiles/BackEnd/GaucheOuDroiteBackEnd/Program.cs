@@ -24,7 +24,20 @@ using Shared.Tools;
 const string SCRIPT_NAME = "Program.cs";
 
 
-var builder = WebApplication.CreateBuilder(args);
+
+// --- Server state logging
+
+Console.ForegroundColor = ConsoleColor.DarkYellow;
+
+Console.WriteLine($"=====================================================");
+Console.WriteLine($"         The server is currently starting...         ");
+Console.WriteLine($"=====================================================\n");
+
+Console.ForegroundColor = ConsoleColor.Gray;
+
+// ---
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // --- Project includes
 
@@ -140,7 +153,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddSwaggerGen();
 
-// ---
+// --- Application building
 
 WebApplication app = builder.Build();
 
@@ -164,5 +177,41 @@ app.UseAuthorization();
 
 
 app.MapControllers();
+
+// --- Server state logging
+
+#region -- Server state logging --
+
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    Console.ForegroundColor = ConsoleColor.DarkYellow;
+
+    Console.WriteLine($"\n=====================================================");
+    Console.WriteLine($"      The server has been successfully started      ");
+    Console.WriteLine($"=====================================================\n");
+
+    Console.WriteLine($"-----------------------------------------------------");
+    Console.WriteLine($"  You can launch the game, if it's not already done  ");
+    Console.WriteLine($"  Closing this console window shuts down the server  ");
+    Console.WriteLine($"-----------------------------------------------------\n");
+
+    Console.ForegroundColor = ConsoleColor.Gray;
+});
+
+// Only triggers when the server is shutdown cleanly, by for example, closing it by pressing Ctrl + C in the server's console.
+app.Lifetime.ApplicationStopped.Register(() =>
+{
+    Console.ForegroundColor = ConsoleColor.DarkYellow;
+
+    Console.WriteLine($"\n=====================================================");
+    Console.WriteLine($"  The server has been successfully cleanly stopped  ");
+    Console.WriteLine($"=====================================================\n");
+
+    Console.ForegroundColor = ConsoleColor.Gray;
+});
+
+#endregion
+
+// --- Application launching 
 
 app.Run();
