@@ -4174,7 +4174,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Authenticator
   _isDebugModeOn: 0
   _requestSenderButton: {fileID: 8184872757169653539}
-  _autenticationModeChangerButton: {fileID: 8978628511075817941}
+  _authenticationModeChangerButton: {fileID: 8978628511075817941}
   _feedbackText: {fileID: 1496472994042399824}
   _autenticationInformationGameObject: {fileID: 3451145694062478303}
   _sceneChanger: {fileID: 3729083975763355449}
