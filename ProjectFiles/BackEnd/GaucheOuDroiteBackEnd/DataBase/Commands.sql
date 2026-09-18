@@ -11,6 +11,7 @@
 
 -- FOR DEVELOPMENT AND DEBUGGING:
 -- DELETE FROM Users WHERE Username = 'Alexandre';
+-- DELETE FROM UserProgressions WHERE UserId = 2;
 
 
 PRAGMA foreign_keys = ON;
@@ -105,7 +106,7 @@ VALUES (
     ),
     (
         'Niveau 2',
-        0,
+        1,
         FALSE,
         'LLRLRRLRLL',
         5000,
@@ -114,7 +115,7 @@ VALUES (
     ),
     (
         'Niveau 3',
-        1,
+        2,
         FALSE,
         'LRLLRRLLRLLR',
         7500,
@@ -123,7 +124,7 @@ VALUES (
     ),
     (
         'Niveau 4',
-        1,
+        2,
         FALSE,
         'RLLRRLRLRLLRLL',
         10000,
@@ -132,7 +133,7 @@ VALUES (
     ),
     (
         'Niveau 5',
-        2,
+        3,
         FALSE,
         'RLRLLLRRLRLLRRLLRRL',
         12500,
@@ -141,7 +142,7 @@ VALUES (
     ),
     (
         'Niveau 6',
-        2,
+        3,
         FALSE,
         'LRRLRLLRRRRLRLLRLLRRRLLR',
         15000,
@@ -150,7 +151,7 @@ VALUES (
     ),
     (
         'Infini',
-        3,
+        4,
         TRUE,
         'L',
         35000,
@@ -207,7 +208,7 @@ VALUES (
         1,
 
         0,
-        1
+        2
     ),
 
     (
