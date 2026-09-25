@@ -167,3 +167,9 @@ ProjectFiles/BackEnd/GaucheOuDroiteBackEnd/[Bb]uild[Ll]og.*
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# For the BackEnd tests #
+#########################
+
+ProjectFiles/BackEnd/GaucheOuDroiteBackEndTests/[Bb]in/
+ProjectFiles/BackEnd/GaucheOuDroiteBackEndTests/[Oo]bj/
