@@ -108,8 +108,6 @@ builder.Services
         };
     });
 
-builder.Services.AddAuthentication();
-
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -181,6 +179,7 @@ app.UseRateLimiter();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 
