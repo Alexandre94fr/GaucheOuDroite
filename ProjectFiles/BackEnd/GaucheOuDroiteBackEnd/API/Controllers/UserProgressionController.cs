@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 using GaucheOuDroiteBackEnd.Data;
 using GaucheOuDroiteBackEnd.Models;
+using GaucheOuDroiteBackEnd.Security.DTOValidators;
 using GaucheOuDroiteBackEnd.Services;
 using GaucheOuDroiteBackEnd.Tools;
 
@@ -16,56 +17,16 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
 {
     [ApiController]
     [Route("api/user-progressions")]
-    public class UserProgressionController(LevelService p_levelService, UserProgressionService p_userProgressionService, DataBaseContext p_dataBaseContext) : ControllerBase
+    public class UserProgressionController(UserProgressionDTOValidator p_userProgressionValidator, UserProgressionService p_userProgressionService, DataBaseContext p_dataBaseContext) : ControllerBase
     {
         const bool IS_DEBUG_MODE_ON = true;
 
-        // The DataBase stores the BestScore using an 'int', we don't want a User to break the DataBase by passing a value bigger than an 'int'.
-        const int INFINITE_LEVEL_MAXIMAL_SCORE = int.MaxValue;
-
-        readonly LevelService _levelService = p_levelService;
+        readonly UserProgressionDTOValidator _userProgressionValidator = p_userProgressionValidator;
         readonly UserProgressionService _userProgressionService = p_userProgressionService;
         readonly DataBaseContext _dataBaseContext = p_dataBaseContext;
 
 
         #region Helping methods
-
-        bool IsPreviousLevelUnlocked(in List<LevelProgressionDTO> p_levelProgressions, int p_i)
-        {
-            if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to try checking if the Level (LevelId: {p_levelProgressions[p_i].LevelId}) has the previous Level unlocked.");
-
-            // We can pass this check if the Level we are checking is the first Level, because it was no previous Level.
-            if (p_levelProgressions[p_i].LevelId == 1)
-            {
-                if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] Tried to check the first Level of the game. It has no previous Level. Returning true.");
-
-                return true;
-            }
-
-            LevelProgressionDTO currentLevelProgression = p_levelProgressions[p_i];
-            LevelProgressionDTO previousLevelProgression = p_levelProgressions.First(levelProgression => levelProgression.LevelId == currentLevelProgression.LevelId - 1);
-
-            if (previousLevelProgression == null)
-            {
-                Console.WriteLine($"WARNING: [{GetType().Name}] Failed to found the previous Level (LevelProgression) that has the LevelId equal to {currentLevelProgression.LevelId - 1}. Returning false.");
-                return false;
-            }
-
-            if (previousLevelProgression.IsUnlocked == false)
-            {
-                if (IS_DEBUG_MODE_ON)
-                    Console.WriteLine($"DEBUG: [{GetType().Name}] The previous Level (LevelId: {previousLevelProgression.LevelId}) is not unlocked. Returning false.");
-
-                return false;
-            }
-
-            if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] The previous Level (LevelId: {previousLevelProgression.LevelId}) is unlocked. Returning true.");
-
-            return true;
-        }
 
         BadRequestObjectResult ReturnBadRequestResult(ref ApiResponseDTO p_apiResponseDTO, string p_errorMessage)
         {
@@ -142,95 +103,30 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                 ErrorMessage = "",
             };
 
-
-            #region -- Security checks --
+            // -- Validating DTO -- //
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to check if the given UserProgressionDTO is valid.");
 
-            // Getting all Levels' properties.
-            // Will be used to verify received LevelProgression data.
-            List<Level> levels = await _levelService.GetAllLevelsAsync();
+            DTOValidationResult userProgressionValidationResult = await _userProgressionValidator.ValidateAsync(p_userProgressionDTO);
 
-
-            if (p_userProgressionDTO == null)
+            if (userProgressionValidationResult.IsValid == false)
             {
-                return ReturnBadRequestResult(ref apiResponseDTO, $"The given UserProgressionDTO argument is null.");
-            }
-
-
-            if (p_userProgressionDTO.LevelProgressions == null)
-            {
-                return ReturnBadRequestResult(ref apiResponseDTO, $"The given UserProgressionDTO.LevelProgressions argument is null.");
-            }
-
-
-            if (p_userProgressionDTO.LevelProgressions.Count <= 0)
-            {
-                return ReturnBadRequestResult(ref apiResponseDTO, $"The given UserProgressionDTO.LevelProgressions argument is an empty list.");
-            }
-
-            if (p_userProgressionDTO.LevelProgressions.Count != levels.Count)
-            {
-                return ReturnBadRequestResult(ref apiResponseDTO, $"The given UserProgressionDTO.LevelProgressions argument is a list that doesn't have the same count as the list of Levels in the game.");
-            }
-
-
-            for (int i = 0; i < p_userProgressionDTO.LevelProgressions.Count; i++)
-            {
-                if (p_userProgressionDTO.LevelProgressions[i].Id < 0)
-                {
-                    return ReturnBadRequestResult(ref apiResponseDTO, $"The given UserProgressionDTO.LevelProgressions[{i}].Id argument is under 0.");
-                }
-
-
-                if (p_userProgressionDTO.LevelProgressions[i].LevelId < 0)
-                {
-                    return ReturnBadRequestResult(ref apiResponseDTO, $"The given UserProgressionDTO.LevelProgressions[{i}].LevelId argument is under 0.");
-                }
-
-                if (p_userProgressionDTO.LevelProgressions[i].LevelId > levels.Count)
-                {
-                    return ReturnBadRequestResult(ref apiResponseDTO, $"The given UserProgressionDTO.LevelProgressions[{i}].LevelId argument is superior to the number of Levels in the game.");
-                }
-
-
-                if (p_userProgressionDTO.LevelProgressions[i].IsUnlocked && !IsPreviousLevelUnlocked(p_userProgressionDTO.LevelProgressions, i))
-                {
-                    return ReturnBadRequestResult(ref apiResponseDTO, $"The given UserProgressionDTO.LevelProgressions[{i}].IsUnlocked (LevelId: {p_userProgressionDTO.LevelProgressions[i].LevelId}) argument is at true, but the previous Level (LevelId: {p_userProgressionDTO.LevelProgressions[i].LevelId - 1}) is not unlocked.");
-                }
-
-                
-                if (p_userProgressionDTO.LevelProgressions[i].BestScore < 0)
-                {
-                    return ReturnBadRequestResult(ref apiResponseDTO, $"The given UserProgressionDTO.LevelProgressions[{i}].BestScore argument is under 0.");
-                }
-
-                // Note: If the Level is not infinite you can't have more score than the 'Star3MinimumScore'.
-                if (levels[i].IsInfinite == false && p_userProgressionDTO.LevelProgressions[i].BestScore > levels[i].Star3MinimumScore)
-                {
-                    return ReturnBadRequestResult(ref apiResponseDTO, $"The given UserProgressionDTO.LevelProgressions[{i}].BestScore argument is superior to the maximal score for a finite Level.");
-                }
-
-                // Note: The DataBase stores the BestScore using an 'int', we don't want a User to break the DataBase by passing a value bigger than an 'int'.
-                if (levels[i].IsInfinite == true && p_userProgressionDTO.LevelProgressions[i].BestScore > INFINITE_LEVEL_MAXIMAL_SCORE)
-                {
-                    return ReturnBadRequestResult(ref apiResponseDTO, $"The given UserProgressionDTO.LevelProgressions[{i}].BestScore argument is superior to the maximal score for an infinite Level.");
-                }
+                return ReturnBadRequestResult(ref apiResponseDTO, userProgressionValidationResult.ErrorMessage);
             }
 
             if (IS_DEBUG_MODE_ON)
                 Console.WriteLine($"DEBUG: [{GetType().Name}] The given UserProgressionDTO is valid.");
 
-            #endregion
-
+            // -- Converting List<LevelProgressionDTO> into List<LevelProgression> -- //
 
             if (IS_DEBUG_MODE_ON)
-                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to update the User's progression data.");
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to convert the list of LevelProgressionDTO into a list of LevelProgression.");
 
             int userId = UserIdGetter.GetUserId(User);
 
-            // Converting List<LevelProgressionDTO> into List<UserProgression>.
+            // TODO: Rename UserProgression to LevelProgression
+            // TODO: Create a real UserProgression (like UserProgressionDTO)
             List<UserProgression> levelsProgressions = new(p_userProgressionDTO.LevelProgressions.Count);
 
             foreach (LevelProgressionDTO levelProgressionDTO in p_userProgressionDTO.LevelProgressions)
@@ -246,10 +142,16 @@ namespace GaucheOuDroiteBackEnd.API.Controllers
                 });
             }
 
-            // Updating the LevelProgressions
+            // -- Modifying DataBase's LevelProgression data -- //
+
+            if (IS_DEBUG_MODE_ON)
+                Console.WriteLine($"DEBUG: [{GetType().Name}] Starting to update the User's LevelProgression data.");
+
             // In order to be able to revert changes done to the DataBase, we will use a IDbContextTransaction
             IDbContextTransaction transaction = await _dataBaseContext.Database.BeginTransactionAsync();
 
+            // TODO: To do after renaming UserProgression to LevelProgression + creating a real UserProgression.
+            //       Verify and change that the variable name or/and strings use the term LevelProgression and UserProgression correctly.
             try
             {
                 foreach (UserProgression levelProgressions in levelsProgressions)
