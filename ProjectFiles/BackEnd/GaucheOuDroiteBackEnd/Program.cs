@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 // For controllers
 using GaucheOuDroiteBackEnd.Data;
 using GaucheOuDroiteBackEnd.Security;
+using GaucheOuDroiteBackEnd.Security.DTOValidators;
 using GaucheOuDroiteBackEnd.Services;
 
 // For authentication token (JWT)
@@ -64,6 +65,10 @@ builder.Services.AddScoped<LevelResponseTimeStepService>();
 builder.Services.AddScoped<PasswordHasher>();
 builder.Services.AddScoped<JwtTokenService>();
 
+builder.Services.AddScoped<DTOValidationResult>();
+builder.Services.AddScoped<UserProgressionDTOValidator>();
+builder.Services.AddScoped<LevelProgressionDTOValidator>();
+
 // Fills the JwtTokenSettings with the data inside the 'appsettings.json'.JwtSettings
 builder.Services.Configure<JwtTokenSettings>(
     builder.Configuration.GetSection("JwtSettings")
@@ -102,8 +107,6 @@ builder.Services
             NameClaimType = ClaimTypes.NameIdentifier,
         };
     });
-
-builder.Services.AddAuthentication();
 
 
 builder.Services.AddRateLimiter(options =>
@@ -176,6 +179,7 @@ app.UseRateLimiter();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 

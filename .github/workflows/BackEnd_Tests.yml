@@ -1,0 +1,33 @@
+name: BackEnd Tests
+
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+
+jobs:
+  tests:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Getting the GitHub repository
+        uses: actions/checkout@v6
+      
+      - name: Installing .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+      
+      - name: Restoring the dependency files
+        run: dotnet restore ProjectFiles\BackEnd\GaucheOuDroiteBackEndTests\GaucheOuDroiteBackEndTests.csproj
+      
+      - name: Compiling
+        run: dotnet build ProjectFiles\BackEnd\GaucheOuDroiteBackEndTests\GaucheOuDroiteBackEndTests.csproj --no-restore
+      
+      - name: Launching the tests
+        env:
+          JwtSettings__Key: ${{ secrets.JWT_KEY }}
+        run: dotnet test ProjectFiles\BackEnd\GaucheOuDroiteBackEndTests\GaucheOuDroiteBackEndTests.csproj --no-build
