@@ -12,6 +12,7 @@ namespace GaucheOuDroiteBackEndTests.Security
         const string EXAMPLE_PASSWORD_2 = "ABCD4321*";
 
 
+        // -- Setup -- //
 
         [ClassInitialize]
         public static void ClassInit(TestContext p_context)
@@ -25,6 +26,8 @@ namespace GaucheOuDroiteBackEndTests.Security
             _passwordHasher = null!;
         }
 
+
+        // -- Tests -- //
 
         [DataRow(EXAMPLE_PASSWORD_1)]
         [DataRow(EXAMPLE_PASSWORD_2)]
