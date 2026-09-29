@@ -28,4 +28,6 @@ jobs:
         run: dotnet build ProjectFiles\BackEnd\GaucheOuDroiteBackEndTests\GaucheOuDroiteBackEndTests.csproj --no-restore
       
       - name: Launching the tests
+        env:
+          JwtSettings__Key: ${{ secrets.JWT_KEY }}
         run: dotnet test ProjectFiles\BackEnd\GaucheOuDroiteBackEndTests\GaucheOuDroiteBackEndTests.csproj --no-build
