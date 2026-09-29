@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 // For controllers
 using GaucheOuDroiteBackEnd.Data;
 using GaucheOuDroiteBackEnd.Security;
+using GaucheOuDroiteBackEnd.Security.DTOValidators;
 using GaucheOuDroiteBackEnd.Services;
 
 // For authentication token (JWT)
@@ -63,6 +64,10 @@ builder.Services.AddScoped<LevelResponseTimeStepService>();
 // Project security
 builder.Services.AddScoped<PasswordHasher>();
 builder.Services.AddScoped<JwtTokenService>();
+
+builder.Services.AddScoped<DTOValidationResult>();
+builder.Services.AddScoped<UserProgressionDTOValidator>();
+builder.Services.AddScoped<LevelProgressionDTOValidator>();
 
 // Fills the JwtTokenSettings with the data inside the 'appsettings.json'.JwtSettings
 builder.Services.Configure<JwtTokenSettings>(
