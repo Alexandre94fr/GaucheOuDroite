@@ -49,6 +49,15 @@ jobs:
     steps:
       - name: Getting the GitHub repository
         uses: actions/checkout@v6
+
+      - name: Caching Unity Library
+        uses: actions/cache@v6
+        with:
+          path: ProjectFiles/FrontEnd/GaucheOuDroite/Library
+          key: Library-GaucheOuDroite-StandaloneWindows64
+          restore-keys: |
+            Library-GaucheOuDroite-
+            Library-
     
       - name: Building the Unity project
         uses: game-ci/unity-builder@v6
@@ -60,12 +69,14 @@ jobs:
           projectPath: ProjectFiles/FrontEnd/GaucheOuDroite
           unityVersion: 6000.3.16f1
           targetPlatform: StandaloneWindows64
+          buildsPath: Build
+          buildName: Client
         
       - name: Uploading the FrontEnd build
         uses: actions/upload-artifact@v6
         with:
           name: FrontEnd-Build_FRA
-          path: Build\Client
+          path: Build/Client # We use the / and not the \ because we are on Ubuntu not Windows
 #
 #
 #  Zip-Builds_FRA: # TODO
