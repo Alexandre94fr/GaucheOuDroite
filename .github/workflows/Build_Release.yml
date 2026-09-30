@@ -76,7 +76,8 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: FrontEnd-Build_FRA
-          path: Build/Client # We use the / and not the \ because we are on Ubuntu not Windows
+          # We use the / and not the \ because we are on Ubuntu not Windows
+          path: Build/StandaloneWindows64/Client
 #
 #
 #  Zip-Builds_FRA: # TODO
