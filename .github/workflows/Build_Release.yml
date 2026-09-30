@@ -1,0 +1,88 @@
+name: Build Release
+
+
+on:
+  push:
+    branches:
+      - main
+
+
+jobs:
+  Build-BackEnd:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Getting the GitHub repository
+        uses: actions/checkout@v6
+      
+      - name: Installing .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+      
+      - name: Publishing the BackEnd
+        run: dotnet publish ProjectFiles\BackEnd\GaucheOuDroiteBackEnd\GaucheOuDroiteBackEnd.csproj --configuration Release --output Build\Server
+              
+      - name: Setting the JWT key
+        env:
+          JWT_KEY: ${{ secrets.JWT_KEY }}
+        shell: pwsh
+        run: |
+          $configPath = "Build\Server\appsettings.Production.json"
+        
+          $config = Get-Content $configPath -Raw | ConvertFrom-Json
+        
+          $config.JwtSettings.Key = $env:JWT_KEY
+        
+          $config | ConvertTo-Json -Depth 10 | Set-Content $configPath
+        
+      - name: Uploading the BackEnd build
+        uses: actions/upload-artifact@v4
+        with:
+          name: BackEnd-Build
+          path: Build\Server
+
+
+#  Build-FrontEnd_FRA: # TODO
+#    runs-on: windows-latest
+#    
+#    steps:
+#      - name: Getting the GitHub repository
+#        uses: actions/checkout@v6
+#
+#
+#  Build-FrontEnd_ENG: # TODO
+#    runs-on: windows-latest
+#    
+#    steps:
+#      - name: Getting the GitHub repository
+#        uses: actions/checkout@v6
+#        with:
+#          ref: feat-EnglishVersion
+#
+#
+#  Zip-Builds_FRA: # TODO
+#    needs: [Build-FrontEnd_FRA, Build-BackEnd]
+#    runs-on: windows-latest
+#    
+#    steps:
+#      - name: Getting the GitHub repository
+#        uses: actions/checkout@v6
+#
+#
+#  Zip-Builds_ENG: # TODO
+#    needs: [Build-FrontEnd_ENG, Build-BackEnd]
+#    runs-on: windows-latest
+#    
+#    steps:
+#      - name: Getting the GitHub repository
+#        uses: actions/checkout@v6
+#      
+#
+#  Create-Release: # TODO
+#    needs: [Zip-Builds_FRA, Zip-Builds_ENG]
+#    runs-on: windows-latest
+#    
+#    steps:
+#      - name: Getting the GitHub repository
+#        uses: actions/checkout@v6
