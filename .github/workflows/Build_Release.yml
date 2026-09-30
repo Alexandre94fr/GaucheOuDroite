@@ -37,7 +37,7 @@ jobs:
           $config | ConvertTo-Json -Depth 10 | Set-Content $configPath
         
       - name: Uploading the BackEnd build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: BackEnd-Build
           path: Build\Server
