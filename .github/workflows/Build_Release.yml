@@ -70,14 +70,13 @@ jobs:
           unityVersion: 6000.3.16f1
           targetPlatform: StandaloneWindows64
           buildsPath: Build
-          buildName: Client
-        
+          buildName: GaucheOuDroite
+
       - name: Uploading the FrontEnd build
         uses: actions/upload-artifact@v6
         with:
           name: FrontEnd-Build_FRA
-          # We use the / and not the \ because we are on Ubuntu not Windows
-          path: Build/StandaloneWindows64/Client
+          path: Build/StandaloneWindows64
 #
 #
 #  Zip-Builds_FRA: # TODO
