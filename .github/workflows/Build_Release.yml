@@ -71,6 +71,22 @@ jobs:
             Library-GaucheOuDroite-
             Library-
     
+      - name: Getting the game version
+        id: game-version
+        run: |
+          unity-editor \
+            -batchmode \
+            -quit \
+            -projectPath ProjectFiles/FrontEnd/GaucheOuDroite \
+            -executeMethod GameProperties.PrintGameVersion \
+            2>&1 | tee unity-output.log
+                  
+          GAME_VERSION=$(grep 'GAME_VERSION=' unity-output.log | tail -n 1 | cut -d '=' -f 2)
+                  
+          echo "Game version: $GAME_VERSION"
+                  
+          echo "version=$GAME_VERSION" >> "$GITHUB_OUTPUT"
+
       - name: Building the Unity project
         uses: game-ci/unity-builder@v6
         env:
@@ -87,7 +103,7 @@ jobs:
       - name: Uploading the FrontEnd build
         uses: actions/upload-artifact@v6
         with:
-          name: FrontEnd-Build_${{ matrix.language }}
+          name: FrontEnd-Build-${{ steps.game-version.outputs.version }}_${{ matrix.language }}
           path: Build/StandaloneWindows64
           
 
