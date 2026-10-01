@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>b6b2100d-5ef0-47e0-a806-4bbf46154568</UserSecretsId>
+    <AssemblyName>GaucheOuDroite_Server</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
