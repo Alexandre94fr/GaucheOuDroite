@@ -5,8 +5,9 @@ using UnityEngine;
 
 using InstantiatorPackage;
 
-using Shared.Enums;
+using Shared.Constants;
 using Shared.DTOs.Data.Game;
+using Shared.Enums;
 
 
 namespace FrontEnd.Data.Game
@@ -124,7 +125,7 @@ namespace FrontEnd.Data.Game
         // This is why each action doesn't have its own route.
         [HideInInspector] public const string GAME_DATA_API_ROUTE = "game-data";
 
-        [HideInInspector] public const string GAME_VERSION = "1.2.2";
+        [HideInInspector] public const string GAME_VERSION = GameProperties.GAME_VERSION;
 
 
         /// <summary>

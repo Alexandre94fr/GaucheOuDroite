@@ -8,9 +8,40 @@ on:
 
 
 jobs:
-  Build-BackEnd:
+  Get-Game-Version:
     runs-on: windows-latest
     
+    outputs:
+      game-version: ${{ steps.game-version.outputs.version }}
+
+    steps:
+      - name: Getting the GitHub repository
+        uses: actions/checkout@v6
+      
+      - name: Getting the game version
+        id: game-version
+        shell: pwsh
+        run: |
+          $gamePropertiesFilePath = "ProjectFiles\Shared\Constants\GameProperties.cs"
+
+          $fileContent = Get-Content $gamePropertiesFilePath -Raw
+
+          if ($fileContent -notmatch 'GAME_VERSION\s*=\s*"([^"]+)"')
+          {
+            Write-Error "ERROR: [Build_Release] Unable to retrieve GAME_VERSION from [$gamePropertiesFilePath]."
+            exit 1
+          }
+
+          $gameVersion = $Matches[1]
+
+          Write-Host "Game version: $gameVersion"
+
+          "version=$gameVersion" >> $env:GITHUB_OUTPUT
+
+
+  Build-BackEnd:
+    runs-on: windows-latest
+
     steps:
       - name: Getting the GitHub repository
         uses: actions/checkout@v6
@@ -19,7 +50,7 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
-      
+
       - name: Publishing the BackEnd
         run: dotnet publish ProjectFiles\BackEnd\GaucheOuDroiteBackEnd\GaucheOuDroiteBackEnd.csproj --configuration Release --output Build\Server
               
@@ -44,6 +75,7 @@ jobs:
 
 
   Build-FrontEnd:
+    needs: [Get-Game-Version]
     runs-on: ubuntu-latest
 
     strategy:
@@ -70,22 +102,6 @@ jobs:
             Library-GaucheOuDroite-StandaloneWindows64-
             Library-GaucheOuDroite-
             Library-
-    
-      - name: Getting the game version
-        id: game-version
-        run: |
-          unity-editor \
-            -batchmode \
-            -quit \
-            -projectPath ProjectFiles/FrontEnd/GaucheOuDroite \
-            -executeMethod GameProperties.PrintGameVersion \
-            2>&1 | tee unity-output.log
-                  
-          GAME_VERSION=$(grep 'GAME_VERSION=' unity-output.log | tail -n 1 | cut -d '=' -f 2)
-                  
-          echo "Game version: $GAME_VERSION"
-                  
-          echo "version=$GAME_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Building the Unity project
         uses: game-ci/unity-builder@v6
@@ -103,7 +119,7 @@ jobs:
       - name: Uploading the FrontEnd build
         uses: actions/upload-artifact@v6
         with:
-          name: FrontEnd-Build-${{ steps.game-version.outputs.version }}_${{ matrix.language }}
+          name: FrontEnd-Build-${{ needs.Get-Game-Version.outputs.game-version }}_${{ matrix.language }}
           path: Build/StandaloneWindows64
           
 
