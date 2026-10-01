@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Getting the GitHub repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       
       - name: Getting the game version
         id: game-version
@@ -44,10 +44,10 @@ jobs:
 
     steps:
       - name: Getting the GitHub repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       
       - name: Installing .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@v7
         with:
           dotnet-version: '10.0.x'
 
@@ -68,14 +68,13 @@ jobs:
           $config | ConvertTo-Json -Depth 10 | Set-Content $configPath
         
       - name: Uploading the BackEnd build
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: BackEnd-Build
           path: Build\Server
 
 
   Build-FrontEnd:
-    needs: [Get-Game-Version]
     runs-on: ubuntu-latest
 
     strategy:
@@ -89,12 +88,12 @@ jobs:
   
     steps:
       - name: Getting the GitHub repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ matrix.branch }}
 
       - name: Caching Unity Library
-        uses: actions/cache@v6
+        uses: actions/cache@v7
         with:
           path: ProjectFiles/FrontEnd/GaucheOuDroite/Library
           key: Library-GaucheOuDroite-StandaloneWindows64-${{ matrix.language }}
@@ -117,34 +116,95 @@ jobs:
           buildName: GaucheOuDroite
 
       - name: Uploading the FrontEnd build
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
-          name: FrontEnd-Build-${{ needs.Get-Game-Version.outputs.game-version }}_${{ matrix.language }}
+          name: FrontEnd-Build_${{ matrix.language }}
           path: Build/StandaloneWindows64
           
 
-#  Zip-Builds_FRA: # TODO
-#    needs: [Build-FrontEnd_FRA, Build-BackEnd]
-#    runs-on: windows-latest
-#    
-#    steps:
-#      - name: Getting the GitHub repository
-#        uses: actions/checkout@v6
-#
-#
-#  Zip-Builds_ENG: # TODO
-#    needs: [Build-FrontEnd_ENG, Build-BackEnd]
-#    runs-on: windows-latest
-#    
-#    steps:
-#      - name: Getting the GitHub repository
-#        uses: actions/checkout@v6
-#      
+  Zip-Builds:
+    needs: [Get-Game-Version, Build-BackEnd, Build-FrontEnd]
+
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        include:
+          - language: FRA
+            front-end-artifact: FrontEnd-Build_FRA
+            instructions-file-name: Instructions d'utilisation.txt
+            instructions-file-content: |
+              Afin de jouer au jeu, il vous faut lancer les exécutables suivants :
+
+              - "GaucheOuDroite_Server.exe" (dans le dossier "Server")
+              - "GaucheOuDroite.exe" (dans le dossier "Client")
+
+          - language: ENG
+            front-end-artifact: FrontEnd-Build_ENG
+            instructions-file-name: Instructions for use.txt
+            instructions-file-content: |
+              To play the game, you need to run the following executables:
+
+              - "GaucheOuDroite_Server.exe" (in "Server" folder)
+              - "GaucheOuDroite.exe" (in "Client" folder)
+
+    steps:
+      - name: Downloading the BackEnd build
+        uses: actions/download-artifact@v7
+        with:
+          name: BackEnd-Build
+          path: Build\BackEnd
+
+      - name: Downloading the FrontEnd build
+        uses: actions/download-artifact@v7
+        with:
+          name: ${{ matrix.front-end-artifact }}
+          path: Build\FrontEnd
+
+      - name: Creating the release directory
+        shell: pwsh
+        run: |
+          $gameVersion = "${{ needs.Get-Game-Version.outputs.game-version }}"
+
+          $releaseDirectory = "Build\GaucheOuDroite-Build-${gameVersion}_${{ matrix.language }}"
+
+          New-Item -ItemType Directory -Path "$releaseDirectory\Client" -Force
+          New-Item -ItemType Directory -Path "$releaseDirectory\Server" -Force
+
+          Copy-Item "Build\FrontEnd\*" "$releaseDirectory\Client" -Recurse -Force
+          Copy-Item "Build\BackEnd\*" "$releaseDirectory\Server" -Recurse -Force
+
+          @"
+          ${{ matrix.instructions-file-content }}
+          "@ | Set-Content "$releaseDirectory\${{ matrix.instructions-file-name }}" -Encoding UTF8
+
+      - name: Creating the ZIP
+        shell: pwsh
+        run: |
+          $gameVersion = "${{ needs.Get-Game-Version.outputs.game-version }}"
+
+          $releaseDirectory = "Build\GaucheOuDroite-Build-${gameVersion}_${{ matrix.language }}"
+          $zipPath = "Build\GaucheOuDroite-Build-${gameVersion}_${{ matrix.language }}.zip"
+
+          Compress-Archive `
+            -Path $releaseDirectory `
+            -DestinationPath $zipPath `
+            -Force
+
+      - name: Uploading the release
+        uses: actions/upload-artifact@v7
+        with:
+          name: GaucheOuDroite-Build-${{ needs.Get-Game-Version.outputs.game-version }}_${{ matrix.language }}
+          path: Build/GaucheOuDroite-Build-${{ needs.Get-Game-Version.outputs.game-version }}_${{ matrix.language }}.zip
+
+
+
+
 #
 #  Create-Release: # TODO
-#    needs: [Zip-Builds_FRA, Zip-Builds_ENG]
+#    needs: [Zip-Builds]
 #    runs-on: windows-latest
 #    
 #    steps:
 #      - name: Getting the GitHub repository
-#        uses: actions/checkout@v6
+#        uses: actions/checkout@v7
