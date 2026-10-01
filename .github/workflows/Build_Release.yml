@@ -43,19 +43,31 @@ jobs:
           path: Build\Server
 
 
-  Build-FrontEnd_FRA:
+  Build-FrontEnd:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - language: FRA
+            branch: main
+
+          - language: ENG
+            branch: feat-EnglishVersion
   
     steps:
       - name: Getting the GitHub repository
         uses: actions/checkout@v6
+        with:
+          ref: ${{ matrix.branch }}
 
       - name: Caching Unity Library
         uses: actions/cache@v6
         with:
           path: ProjectFiles/FrontEnd/GaucheOuDroite/Library
-          key: Library-GaucheOuDroite-StandaloneWindows64
+          key: Library-GaucheOuDroite-StandaloneWindows64-${{ matrix.language }}
           restore-keys: |
+            Library-GaucheOuDroite-StandaloneWindows64-
             Library-GaucheOuDroite-
             Library-
     
@@ -75,10 +87,10 @@ jobs:
       - name: Uploading the FrontEnd build
         uses: actions/upload-artifact@v6
         with:
-          name: FrontEnd-Build_FRA
+          name: FrontEnd-Build_${{ matrix.language }}
           path: Build/StandaloneWindows64
-#
-#
+          
+
 #  Zip-Builds_FRA: # TODO
 #    needs: [Build-FrontEnd_FRA, Build-BackEnd]
 #    runs-on: windows-latest
