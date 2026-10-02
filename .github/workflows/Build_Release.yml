@@ -257,11 +257,16 @@ jobs:
             target_commitish = "${{ github.sha }}"
           } | ConvertTo-Json
 
+          $generateNotesRequestFile = "Build\GenerateReleaseNotesRequest.json"
+
+          $generateNotesBody | Set-Content `
+            $generateNotesRequestFile `
+            -Encoding UTF8
+
           $generatedNotesResponse = gh api `
             --method POST `
             "repos/$owner/$repository/releases/generate-notes" `
-            --input - `
-            <<< $generateNotesBody
+            --input $generateNotesRequestFile
 
           if ($LASTEXITCODE -ne 0)
           {
