@@ -7,6 +7,10 @@ on:
       - main
 
 
+permissions:
+  contents: write
+
+
 jobs:
   Get-Game-Version:
     runs-on: windows-latest
@@ -39,6 +43,7 @@ jobs:
           "version=$gameVersion" >> $env:GITHUB_OUTPUT
 
 
+          
   Build-BackEnd:
     runs-on: windows-latest
 
@@ -59,6 +64,7 @@ jobs:
             --configuration Release `
             -p:PublishProfile=FolderProfile `
             -p:PublishDir="$PWD\Build\Server"
+        # Doing "-p:PublishDir="$PWD\Build\Server" is equivalent of "doing --output Build\Server", we just use the "FolderProfile.pubxml"
               
       - name: Setting the JWT key
         env:
@@ -78,6 +84,7 @@ jobs:
         with:
           name: BackEnd-Build
           path: Build\Server
+
 
 
   Build-FrontEnd:
@@ -127,6 +134,7 @@ jobs:
           name: FrontEnd-Build_${{ matrix.language }}
           path: Build/StandaloneWindows64
           
+
 
   Zip-Builds:
     needs: [Get-Game-Version, Build-BackEnd, Build-FrontEnd]
@@ -206,12 +214,98 @@ jobs:
 
 
 
+  Create-GitHub-Release:
+    needs: [Get-Game-Version, Zip-Builds]
 
-#
-#  Create-Release: # TODO
-#    needs: [Zip-Builds]
-#    runs-on: windows-latest
-#    
-#    steps:
-#      - name: Getting the GitHub repository
-#        uses: actions/checkout@v6
+    runs-on: windows-latest
+
+    steps:
+      - name: Getting the GitHub repository
+        uses: actions/checkout@v6
+
+      - name: Downloading the French Build
+        uses: actions/download-artifact@v8
+        with:
+          name: GaucheOuDroite-Build-${{ needs.Get-Game-Version.outputs.game-version }}_FRA
+          path: Build\FRA
+
+      - name: Downloading the English Build
+        uses: actions/download-artifact@v8
+        with:
+          name: GaucheOuDroite-Build-${{ needs.Get-Game-Version.outputs.game-version }}_ENG
+          path: Build\ENG
+
+      - name: Creating the ZIP files
+        shell: pwsh
+        run: |
+          $gameVersion = "${{ needs.Get-Game-Version.outputs.game-version }}"
+
+          $frenchDirectory = "Build\FRA"
+          $englishDirectory = "Build\ENG"
+
+          $frenchZip = "Build\GaucheOuDroite-Build-${gameVersion}_FRA.zip"
+          $englishZip = "Build\GaucheOuDroite-Build-${gameVersion}_ENG.zip"
+
+          Compress-Archive `
+            -Path "$frenchDirectory\*" `
+            -DestinationPath $frenchZip `
+            -Force
+
+          Compress-Archive `
+            -Path "$englishDirectory\*" `
+            -DestinationPath $englishZip `
+            -Force
+
+      - name: Creating the GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          $gameVersion = "${{ needs.Get-Game-Version.outputs.game-version }}"
+          $tag = v$gameVersion
+
+          $notes = @"
+          # This Release contains all the Build files for version $gameVersion.
+
+          This includes the FrontEnd (Client) and the BackEnd (Server).
+
+          ### The main point of version $gameVersion is ***[TODO: Add the main point of this version]***
+
+          ### Things added / modified:
+
+          ---
+
+          ***TODO: Add the things added / modified]***
+
+          ---
+
+          ## To play the game:
+
+          - unzip the files
+          - start the GaucheOuDroite_Server.exe
+          - start the GaucheOuDroite.exe
+          - have fun :D
+
+          In the files, there is a small .txt file.
+          If you have forgotten how to launch the game and can't be bothered to come back here, you can read it.
+
+          > [!NOTE]
+          > The server is only running locally on your computer.
+          > So even if you create an account using one of your real passwords, I wouldn't know anything about it.
+
+          ---
+
+          ### You can download the French and English Builds below this release.
+          "@
+
+          $notesFile = "Build\ReleaseNotes.md"
+          $notes | Set-Content $notesFile -Encoding UTF8
+
+          gh release create "$tag" `
+            "Build\GaucheOuDroite-Build-${gameVersion}_FRA.zip" `
+            "Build\GaucheOuDroite-Build-${gameVersion}_ENG.zip" `
+            --title "Project release v$gameVersion" `
+            --notes-file "$notesFile" `
+            --generate-notes `
+            --fail-on-no-commits `
+            --target "${{ github.sha }}"
