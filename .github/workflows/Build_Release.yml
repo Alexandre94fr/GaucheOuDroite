@@ -262,7 +262,7 @@ jobs:
         shell: pwsh
         run: |
           $gameVersion = "${{ needs.Get-Game-Version.outputs.game-version }}"
-          $tag = v$gameVersion
+          $tag = "v$gameVersion"
 
           $notes = @"
           # This Release contains all the Build files for version $gameVersion.
