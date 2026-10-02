@@ -227,34 +227,41 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: GaucheOuDroite-Build-${{ needs.Get-Game-Version.outputs.game-version }}_FRA
-          path: Build\FRA
+          path: Build
+          skip-decompress: true
 
       - name: Downloading the English Build
         uses: actions/download-artifact@v8
         with:
           name: GaucheOuDroite-Build-${{ needs.Get-Game-Version.outputs.game-version }}_ENG
-          path: Build\ENG
+          path: Build
+          skip-decompress: true
 
-      - name: Creating the ZIP files
+      - name: Creating the GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
         run: |
           $gameVersion = "${{ needs.Get-Game-Version.outputs.game-version }}"
+          $tag = "v$gameVersion"
 
-          $frenchDirectory = "Build\FRA"
-          $englishDirectory = "Build\ENG"
+          $owner = "${{ github.repository_owner }}"
+          $repository = "${{ github.event.repository.name }}"
 
-          $frenchZip = "Build\GaucheOuDroite-Build-${gameVersion}_FRA.zip"
-          $englishZip = "Build\GaucheOuDroite-Build-${gameVersion}_ENG.zip"
+          #
+          # Generating the automatic GitHub Release Notes
+          #
 
-          Compress-Archive `
-            -Path "$frenchDirectory\*" `
-            -DestinationPath $frenchZip `
-            -Force
+          $generateNotesBody = @{
+            tag_name = $tag
+            target_commitish = "${{ github.sha }}"
+          } | ConvertTo-Json
 
-          Compress-Archive `
-            -Path "$englishDirectory\*" `
-            -DestinationPath $englishZip `
-            -Force
+          $generatedNotesResponse = gh api `
+            --method POST `
+            "repos/$owner/$repository/releases/generate-notes" `
+            --input - `
+            <<< $generateNotesBody
 
       - name: Creating the GitHub Release
         env:
