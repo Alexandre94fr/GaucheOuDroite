@@ -263,13 +263,33 @@ jobs:
             --input - `
             <<< $generateNotesBody
 
-      - name: Creating the GitHub Release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: pwsh
-        run: |
-          $gameVersion = "${{ needs.Get-Game-Version.outputs.game-version }}"
-          $tag = "v$gameVersion"
+          if ($LASTEXITCODE -ne 0)
+          {
+            Write-Error "ERROR: [Build_Release] Unable to generate GitHub Release Notes."
+            exit 1
+          }
+
+          $generatedNotesResponse = $generatedNotesResponse | ConvertFrom-Json
+
+          $generatedNotes = $generatedNotesResponse.body
+
+          if ([string]::IsNullOrWhiteSpace($generatedNotes))
+          {
+            Write-Error "ERROR: [Build_Release] GitHub generated Release Notes are empty."
+            exit 1
+          }
+
+          Write-Host "Successfully generated GitHub Release Notes."
+
+          $generatedNotesFile = "Build\GeneratedReleaseNotes.md"
+
+          $generatedNotes | Set-Content `
+            $generatedNotesFile `
+            -Encoding UTF8
+
+          #
+          # Creating the custom Release Notes
+          #
 
           $notes = @"
           # This Release contains all the Build files for version $gameVersion.
@@ -283,6 +303,10 @@ jobs:
           ---
 
           ***TODO: Add the things added / modified]***
+
+          ---
+
+          $generatedNotes
 
           ---
 
@@ -306,13 +330,20 @@ jobs:
           "@
 
           $notesFile = "Build\ReleaseNotes.md"
-          $notes | Set-Content $notesFile -Encoding UTF8
 
-          gh release create "$tag" `
+          $notes | Set-Content `
+            $notesFile `
+            -Encoding UTF8
+
+          #
+          # Creating the GitHub Release
+          #
+
+          gh release create `
+            "$tag" `
             "Build\GaucheOuDroite-Build-${gameVersion}_FRA.zip" `
             "Build\GaucheOuDroite-Build-${gameVersion}_ENG.zip" `
             --title "Project release v$gameVersion" `
             --notes-file "$notesFile" `
-            --generate-notes `
             --fail-on-no-commits `
             --target "${{ github.sha }}"
