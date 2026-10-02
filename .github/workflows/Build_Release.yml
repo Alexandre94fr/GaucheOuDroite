@@ -178,24 +178,25 @@ jobs:
           ${{ matrix.instructions-file-content }}
           "@ | Set-Content "$releaseDirectory\${{ matrix.instructions-file-name }}" -Encoding UTF8
 
-      - name: Creating the ZIP
-        shell: pwsh
-        run: |
-          $gameVersion = "${{ needs.Get-Game-Version.outputs.game-version }}"
+      # Commented because that would create a .zip inside a .zip, "Uploading the Builds" already zip the files.
+      #- name: Creating the ZIP
+      #  shell: pwsh
+      #  run: |
+      #    $gameVersion = "${{ needs.Get-Game-Version.outputs.game-version }}"
+      #
+      #    $releaseDirectory = "Build\GaucheOuDroite-Build-${gameVersion}_${{ matrix.language }}"
+      #    $zipPath = "Build\GaucheOuDroite-Build-${gameVersion}_${{ matrix.language }}.zip"
+      #
+      #    Compress-Archive `
+      #      -Path $releaseDirectory `
+      #      -DestinationPath $zipPath `
+      #      -Force
 
-          $releaseDirectory = "Build\GaucheOuDroite-Build-${gameVersion}_${{ matrix.language }}"
-          $zipPath = "Build\GaucheOuDroite-Build-${gameVersion}_${{ matrix.language }}.zip"
-
-          Compress-Archive `
-            -Path $releaseDirectory `
-            -DestinationPath $zipPath `
-            -Force
-
-      - name: Uploading the release
+      - name: Uploading the Builds
         uses: actions/upload-artifact@v7
         with:
           name: GaucheOuDroite-Build-${{ needs.Get-Game-Version.outputs.game-version }}_${{ matrix.language }}
-          path: Build/GaucheOuDroite-Build-${{ needs.Get-Game-Version.outputs.game-version }}_${{ matrix.language }}.zip
+          path: Build/GaucheOuDroite-Build-${{ needs.Get-Game-Version.outputs.game-version }}_${{ matrix.language }}
 
 
 
