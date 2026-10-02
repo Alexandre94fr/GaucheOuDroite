@@ -52,7 +52,13 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Publishing the BackEnd
-        run: dotnet publish ProjectFiles\BackEnd\GaucheOuDroiteBackEnd\GaucheOuDroiteBackEnd.csproj --configuration Release --output Build\Server
+        shell: pwsh
+        run: |
+          dotnet publish `
+            ProjectFiles\BackEnd\GaucheOuDroiteBackEnd\GaucheOuDroiteBackEnd.csproj `
+            --configuration Release `
+            --profile FolderProfile `
+            -p:PublishUrl="$PWD\Build\Server"
               
       - name: Setting the JWT key
         env:
