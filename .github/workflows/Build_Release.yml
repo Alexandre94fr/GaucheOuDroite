@@ -68,7 +68,7 @@ jobs:
           $config | ConvertTo-Json -Depth 10 | Set-Content $configPath
         
       - name: Uploading the BackEnd build
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: BackEnd-Build
           path: Build\Server
@@ -116,7 +116,7 @@ jobs:
           buildName: GaucheOuDroite
 
       - name: Uploading the FrontEnd build
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: FrontEnd-Build_${{ matrix.language }}
           path: Build/StandaloneWindows64
@@ -150,13 +150,13 @@ jobs:
 
     steps:
       - name: Downloading the BackEnd build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: BackEnd-Build
           path: Build\BackEnd
 
       - name: Downloading the FrontEnd build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: ${{ matrix.front-end-artifact }}
           path: Build\FrontEnd
@@ -192,7 +192,7 @@ jobs:
             -Force
 
       - name: Uploading the release
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: GaucheOuDroite-Build-${{ needs.Get-Game-Version.outputs.game-version }}_${{ matrix.language }}
           path: Build/GaucheOuDroite-Build-${{ needs.Get-Game-Version.outputs.game-version }}_${{ matrix.language }}.zip
