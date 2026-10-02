@@ -280,11 +280,12 @@ jobs:
 
           if ([string]::IsNullOrWhiteSpace($generatedNotes))
           {
-            Write-Error "ERROR: [Build_Release] GitHub generated Release Notes are empty."
-            exit 1
+            Write-Warning "WARNING: [Build_Release] GitHub generated Release Notes are empty."
           }
-
-          Write-Host "Successfully generated GitHub Release Notes."
+          else
+          {
+            Write-Host "[Build_Release] Successfully generated GitHub Release notes."
+          }
 
           $generatedNotesFile = "Build\GeneratedReleaseNotes.md"
 
@@ -309,11 +310,7 @@ jobs:
 
           ***TODO: Add the things added / modified]***
 
-          ---
-
           $generatedNotes
-
-          ---
 
           ## To play the game:
 
